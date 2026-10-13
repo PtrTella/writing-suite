@@ -22,6 +22,7 @@ from core.linter import lint_text
 from core.metrics import calculate_readability
 from core.citations import audit_citations
 from core.evaluator_engine import evaluate_document
+from core.project_auditor import audit_directory
 
 SERVER_NAME = "writing-suite"
 SERVER_VERSION = "1.0.0"
@@ -47,6 +48,29 @@ TOOLS = [
                 }
             },
             "required": ["text"]
+        }
+    },
+    {
+        "name": "audit_project",
+        "description": "Esegue l'audit completo multi-file di un intero progetto o tesi (scansiona ricorsivamente .typ, .tex, .md), calcola PPL, burstiness, linter, leggibilità Flesch/Gulpease e incrocia le citazioni con il file references.bib. Restituisce tabella riassuntiva e quadro complessivo.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "directory_path": {
+                    "type": "string",
+                    "description": "Percorso assoluto della directory del progetto o della tesi (es. /path/to/thesis_typst)."
+                },
+                "bib_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file .bib. Se omesso, viene rilevato automaticamente nella directory."
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Lingua di analisi per la leggibilità: 'en' o 'it'. Default: 'en'.",
+                    "enum": ["en", "it"]
+                }
+            },
+            "required": ["directory_path"]
         }
     },
     {
@@ -117,6 +141,13 @@ def execute_tool(name: str, arguments: dict) -> str:
     if name == "evaluate_ai_risk":
         fp = arguments.get("file_path")
         res = evaluate_document(text, file_path=fp)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "audit_project":
+        dp = arguments.get("directory_path", "")
+        bib_p = arguments.get("bib_path")
+        lang = arguments.get("language", "en")
+        res = audit_directory(dp, bib_path=bib_p, lang=lang)
         return json.dumps(res, indent=2, ensure_ascii=False)
 
     elif name == "calculate_readability":
@@ -263,12 +294,14 @@ def run_mcp_server():
 def main():
     parser = argparse.ArgumentParser(description="Writing Suite Engine & MCP Server")
     parser.add_argument("--mcp", action="store_true", help="Avvia il server in modalità MCP stdio JSON-RPC")
-    parser.add_argument("--evaluate", type=str, help="Valuta rischio AI di un file o stringa")
+    parser.add_argument("--audit", type=str, help="Esegue l'audit completo di un progetto o directory (.typ, .tex, .md)")
+    parser.add_argument("--evaluate", type=str, help="Valuta rischio AI di un file, directory o stringa")
     parser.add_argument("--readability", type=str, help="Calcola leggibilità (Gulpease/Flesch)")
     parser.add_argument("--lint", type=str, help="Scansiona cliché e pattern bot")
     parser.add_argument("--citations", type=str, help="Verifica salute citazioni")
     parser.add_argument("--bib", type=str, default=None, help="File .bib associato per verifica chiavi")
-    parser.add_argument("--lang", type=str, default="it", help="Lingua ('it' o 'en')")
+    parser.add_argument("--lang", type=str, default="en", help="Lingua ('it' o 'en')")
+    parser.add_argument("--json", action="store_true", help="Restituisce output in formato JSON grezzo")
 
     args = parser.parse_args()
 
@@ -277,7 +310,46 @@ def main():
         return
 
     # Modalità CLI
-    if args.evaluate:
+    target_audit = args.audit or (args.evaluate and Path(args.evaluate).is_dir() and args.evaluate)
+    if target_audit:
+        res = audit_directory(target_audit, bib_path=args.bib, lang=args.lang)
+        if args.json:
+            print(json.dumps(res, indent=2, ensure_ascii=False))
+        else:
+            print("=" * 88)
+            print("  📊 WRITING SUITE: PROJECT & CORPUS AUDIT REPORT")
+            print("=" * 88)
+            print(res["summary_table"])
+            print("-" * 88)
+            print(f"TOTAL WORDS: {res['total_words']} | TOTAL SENTENCES: {res['total_sentences']}")
+            print(f"CORPUS AI RISK: {res['corpus_badge']} {res['corpus_ai_score']}% ({res['corpus_verdict']})")
+            print(f"CORPUS MEAN PPL: {res['corpus_mean_ppl']} / 100")
+            print("=" * 88)
+
+            lints = res["detailed_findings"]["lints"]
+            missing_bib = res["detailed_findings"]["missing_bib"]
+            unsupported = res["detailed_findings"]["unsupported_claims"]
+
+            if lints:
+                print("\n🔍 DETAILED LINT FINDINGS:")
+                for rel_p, findings in lints.items():
+                    print(f"\n  [{rel_p}] ({len(findings)} findings):")
+                    for find in findings:
+                        print(f"    Line {find.get('line', '?')}: [{find.get('category')}] {find.get('name')}: '{find.get('matched_text')}'")
+
+            if missing_bib:
+                print("\n⚠️ CITATIONS MISSING IN BIB:")
+                for rel_p, keys in missing_bib.items():
+                    print(f"  [{rel_p}]: {', '.join(keys)}")
+
+            if unsupported:
+                print("\n⚠️ UNSUPPORTED CLAIMS ([citation needed]):")
+                for rel_p, claims in unsupported.items():
+                    print(f"\n  [{rel_p}] ({len(claims)} claims):")
+                    for cl in claims:
+                        print(f"    Line {cl.get('line', '?')}: '{cl.get('matched_text')}'")
+
+    elif args.evaluate:
         p = Path(args.evaluate)
         text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.evaluate
         res = evaluate_document(text, file_path=str(p) if p.is_file() else None)
