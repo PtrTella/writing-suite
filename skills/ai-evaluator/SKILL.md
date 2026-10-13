@@ -1,39 +1,46 @@
 ---
 name: ai-evaluator
 description: |
-  Esegue un audit diagnostico multi-prospettiva accurato su testi in italiano o inglese per valutare quanto un testo sia o meno generato da AI.
-  Combina 4 lenti autonome: Emulatore GPTZero locale (Perplessità e Burstiness frase-per-frase), Linter euristico (50+ segnali Clever/Copyleaks),
-  Stilometria accademica (Hapax Legomena e Caratteristica K di Yule), e modulo Anti-Bypass (stile Text2Go).
-  100% autonomo, locale, offline e deterministico. Non modifica il testo dell'utente, genera un referto oggettivo e una heatmap visiva.
+  Runs a comprehensive, multi-lens diagnostic audit on English and Italian text to evaluate AI generation risk.
+  Combines 4 autonomous engines: local GPTZero emulator (sentence-by-sentence Perplexity and Burstiness),
+  heuristic linter (50+ weighted lexical and syntactic tells from CleverHumanizer and Copyleaks),
+  academic stylometrics (Hapax Legomena ratio and Yule's Characteristic K), and anti-bypass detection.
+  100% deterministic, offline, and safe. Never modifies the user's text; returns an objective report and visual heatmap.
 license: MIT
 metadata:
   version: "4.0.0"
 ---
 
-# AI Evaluator: Diagnostica e Audit di Sinteticità del Testo
+# AI Evaluator: Multi-Lens Synthetic Text Diagnostic
 
-L'agente funge da **Diagnosta / Termometro** oggettivo. Non modifica né riscrive il testo esaminato. Restituisce una diagnosi matematica basata sul motore locale deterministico di `writing-suite`.
+You act as an objective **Diagnostic Thermometer**. You evaluate text for AI generation patterns without altering, editing, or rewriting a single character of the original text. You provide mathematical, reproducible diagnostics using the local `writing-suite` engine.
 
-## Come Operare
+## Operational Workflow
 
-1. **Esecuzione dell'Audit**:
-   Quando l'utente richiede la valutazione di un testo o di un file (`.typ`, `.tex`, `.md`), invoca il tool MCP `evaluate_ai_risk(text=..., file_path=...)` oppure esegui:
-   ```bash
-   python3 /Users/tella/Workspace/writing-suite/mcp/server.py --evaluate "<percorso_file_o_testo>"
-   ```
-2. **Generazione del Referto Visivo**:
-   Formatta l'output in modo chiaro e leggibile:
-   - **Score Globale Ponderato** (0–100%) con barra visuale e badge (`🟢` Autentico Umano < 20%, `🟡` Misto/Editato 20-65%, `🔴` Alto Rischio AI > 65%).
-   - **Quadro Comparativo delle 4 Lenti**:
-     - *1. Emulatore GPTZero* (Perplessità media e Burstiness di sorpresa).
-     - *2. Linter Euristico* (Occorrenze dei 50+ tic statistici).
-     - *3. Stilometria Accademica* (Hapax Legomena Ratio e Caratteristica K di Yule).
-     - *4. Anti-Bypass Check* (Rilevamento frammentazione anomala o loose openers).
-   - **Heatmap Frase-per-Frase**:
-     - 🟢 PPL alta (sorpresa autentica umana)
-     - 🟡 PPL media (struttura mista)
-     - 🔴 PPL bassa (completamento lineare standard AI)
-   - **Estremi del Testo**:
-     - Frase più prevedibile/robotica
-     - Frase più umana/sorprendente
-   - **Elenco Dettagliato delle Segnalazioni**: riga, categoria, frammento rilevato e motivazione.
+1. **Execute Diagnostic**:
+   When the user requests an evaluation of a file (`.typ`, `.tex`, `.md`, `.txt`) or raw text:
+   - If MCP tools are available, invoke `evaluate_ai_risk(text=..., file_path=...)`.
+   - Or run the local CLI:
+     ```bash
+     python3 /Users/tella/Workspace/writing-suite/mcp/server.py --evaluate "<file_path_or_text>"
+     ```
+
+2. **Generate Visual Diagnostic Report**:
+   Present the diagnostic findings clearly and rigorously (replying in the language of the user's prompt):
+   - **Overall Weighted AI Score** (0–100%) with status badge:
+     - `🟢` **Authentic Human Text** (< 20%)
+     - `🟡` **Mixed / Heavily AI-Edited** (20–65%)
+     - `🔴` **High Probability Synthetic / AI** (> 65%)
+   - **4-Lens Breakdown**:
+     1. *GPTZero Emulator*: Mean Perplexity (PPL) and Surprise Burstiness (cadence variance).
+     2. *Heuristic Linter*: Density and severity of 50+ weighted structural and lexical AI tells.
+     3. *Academic Stylometrics*: Hapax Legomena ratio and Yule's Characteristic K.
+     4. *Anti-Bypass Filter*: Anomaly check for artificial micro-sentence fragmentation or forced conversational openers.
+   - **Sentence-by-Sentence Heatmap**:
+     - 🟢 High surprise / natural human variation (PPL >= 55)
+     - 🟡 Moderate surprise / mixed phrasing (40 <= PPL < 55)
+     - 🔴 Low surprise / predictable linear LLM completion (PPL < 40)
+   - **Key Outliers**:
+     - Most predictable / robotic sentence
+     - Most human / high-surprise sentence
+   - **Detailed Findings Table**: Line/sentence number, rule ID, category, detected snippet, and rationale.
