@@ -37,8 +37,10 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
     # 2. Linter Euristico
     linter_findings = lint_text(text)
     total_linter_weight = sum(f["weight"] for f in linter_findings)
-    # Calibrazione continua: 0 findings = 0%, 1 finding medio ~15%, 4+ findings = 80-100%
-    score_linter = min(100.0, round(total_linter_weight * 12.5, 1))
+    word_count = len(words)
+    findings_density = (len(linter_findings) / max(1, word_count)) * 100.0
+    # Calibrazione continua: 0 findings = 0%, 1 finding medio ~15-20%, densità alta o 4+ findings = 80-100%
+    score_linter = min(100.0, round(total_linter_weight * 13.0 + findings_density * 4.0, 1))
 
     # 3. Stilometria
     stylometrics_res = calculate_stylometrics(words)
@@ -48,14 +50,15 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
     anti_bypass_res = check_anti_bypass(text, sentences)
     score_bypass = anti_bypass_res["risk_score"]
 
-    # Punteggio Ponderato Complessivo
-    weighted_ai_score = round(
-        (0.35 * score_gptzero) +
-        (0.35 * score_linter) +
-        (0.15 * score_stylo) +
-        (0.15 * score_bypass),
-        1
-    )
+    # Punteggio Ponderato Complessivo:
+    # 45% GPTZero emulato + 45% Linter Euristico + 10% Stilometria
+    base_score = (0.45 * score_gptzero) + (0.45 * score_linter) + (0.10 * score_stylo)
+
+    # Booster additivo se rilevate anomalie da bypasser (frammentazione forzata o espressioni spurie)
+    if score_bypass > 0:
+        base_score = min(100.0, base_score + 0.25 * score_bypass)
+
+    weighted_ai_score = round(min(100.0, max(0.0, base_score)), 1)
 
     # Verdetto
     if weighted_ai_score >= 65.0:
