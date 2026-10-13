@@ -73,5 +73,17 @@ class TestWritingSuite(unittest.TestCase):
         self.assertIn("lenses", res)
         self.assertIn("heatmap", res)
 
+    def test_project_auditor(self):
+        from core.project_auditor import audit_directory
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_p = Path(tmpdir)
+            (tmp_p / "ch1.typ").write_text("This is an authentic human test file.")
+            (tmp_p / "ch2.typ").write_text("In today's fast-paced world, AI plays a crucial role.")
+            res = audit_directory(tmpdir)
+            self.assertEqual(res["total_files"], 2)
+            self.assertIn("summary_table", res)
+            self.assertGreater(res["total_words"], 0)
+
 if __name__ == "__main__":
     unittest.main()
