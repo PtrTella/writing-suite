@@ -13,20 +13,56 @@ from collections import Counter
 from .cleaner import extract_sentences, extract_words
 
 # Dizionario di frequenze lessicali di riferimento (Top frequent token stopwords)
+# Dizionario di frequenze lessicali di riferimento (Top frequent token stopwords)
 COMMON_TOKENS_IT = {
     "di", "a", "da", "in", "con", "su", "per", "tra", "fra", "il", "lo", "la", "i", "gli", "le",
     "un", "uno", "una", "e", "ed", "o", "ma", "se", "perché", "che", "cui", "quale", "quali",
     "è", "sono", "era", "erano", "stato", "stata", "stati", "state", "ha", "hanno", "aveva",
     "questo", "questa", "questi", "queste", "quello", "quella", "quelli", "quelle", "come", "anche",
-    "più", "molto", "tutto", "tutti", "tutta", "tutte", "non", "solo", "prima", "dopo", "mentre"
+    "più", "molto", "tutto", "tutti", "tutta", "tutte", "non", "solo", "prima", "dopo", "mentre",
+    "ci", "vi", "si", "ne", "loro", "suo", "sua", "suoi", "sue", "nostro", "nostra", "nostri", "nostre",
+    "ogni", "alcuni", "alcune", "qualche", "quindi", "dunque", "invece", "così", "allora", "già", "mai",
+    "sempre", "ancora", "oggi", "ora", "modo", "parte", "tempo", "caso", "fatto", "punto", "cosa",
+    "bene", "male", "nuovo", "altro", "stesso", "proprio", "grande", "piccolo", "primo", "ultimo",
+    "mondo", "società", "individuo", "processo", "sistema", "tecnologia", "lavoro", "forma", "vita"
 }
 
 COMMON_TOKENS_EN = {
     "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on",
     "with", "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "we",
     "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", "their",
-    "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make"
+    "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make",
+    "can", "like", "time", "no", "just", "him", "know", "take", "people", "into", "year", "your",
+    "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come",
+    "its", "over", "think", "also", "back", "after", "use", "two", "how", "our", "work", "first",
+    "well", "way", "even", "new", "want", "because", "any", "these", "give", "day", "most", "us",
+    "is", "are", "was", "were", "been", "being", "has", "had", "does", "did", "doing",
+    "world", "system", "process", "digital", "technology", "modern", "role", "development", "data"
 }
+
+LOW_ENTROPY_COLLOCATIONS = [
+    r"in today\x27s (?:rapidly evolving )?(?:digital |modern )?(?:landscape|world|society|era)",
+    r"plays? a (?:pivotal|crucial|vital|key) role",
+    r"stands? as a testament",
+    r"underscor(?:ing|es|ed) the (?:importance|significance)",
+    r"not (?:merely|only) [^,]+,? but (?:rather|also)",
+    r"delv(?:e|ing|es) into",
+    r"seamlessly (?:integrate|embrac|navigat|blend)",
+    r"(?:holistic|paradigm) shift",
+    r"in conclusion",
+    r"it is (?:crucial|essential|imperative|important) to",
+    r"a testament to",
+    r"fosters? (?:collaboration|innovation|growth)",
+    r"gioca un ruolo (?:cruciale|fondamentale|chiave)",
+    r"non (?:solo|soltanto) [^,]+,? ma (?:anche|bensì)",
+    r"nel (?:panorama attuale|contesto odierno)",
+    r"è fondamentale (?:sottolineare|evidenziare|ricordare)",
+    r"funge da (?:catalizzatore|ponte|volano)",
+    r"rappresenta una (?:pietra miliare|testimonianza)",
+    r"si configura come",
+    r"alla luce di quanto (?:sopra|esposto)",
+    r"apre la strada a"
+]
 
 def count_syllables_it(word: str) -> int:
     """Stima approssimata delle sillabe per l'italiano (conteggio vocali e dittonghi normalizzati)."""
@@ -47,8 +83,8 @@ def count_syllables_en(word: str) -> int:
 def calculate_sentence_ppl_proxy(sentence: str) -> float:
     """
     Calcola un indice di sorpresa locale (0-100) per la frase.
-    Frasi composte da token comuni adiacenti in ordine lineare ottengono sorpresa bassa (tipico AI).
-    Frasi con lessico specialistico, punteggiatura complessa e variazioni ottengono sorpresa alta.
+    Frasi composte da token comuni adiacenti o formule collocate a bassa entropia ottengono sorpresa bassa (tipico AI).
+    Frasi con lessico specialistico, punteggiatura complessa e variazioni sintattiche ottengono sorpresa alta.
     """
     words = re.findall(r"\b[a-zA-ZàèéìòùÀÈÉÌÒÙ0-9'-]+\b", sentence.lower())
     if not words:
@@ -59,6 +95,9 @@ def calculate_sentence_ppl_proxy(sentence: str) -> float:
     common_count = sum(1 for w in words if w in common_set)
     rare_count = length - common_count
 
+    # Rilevamento collocazioni a bassa entropia (formule fisse tipiche AI)
+    collocation_hits = sum(1 for p in LOW_ENTROPY_COLLOCATIONS if re.search(p, sentence, re.IGNORECASE))
+
     # Calcolo entropia n-gramma approssimata
     bigrams = list(zip(words[:-1], words[1:])) if len(words) > 1 else []
     repeated_bigrams = len(bigrams) - len(set(bigrams))
@@ -66,8 +105,9 @@ def calculate_sentence_ppl_proxy(sentence: str) -> float:
     base_surprise = (rare_count / max(1, length)) * 75.0
     structural_bonus = min(25.0, (len(set(words)) / max(1, length)) * 20.0)
     repetition_penalty = repeated_bigrams * 5.0
+    collocation_penalty = collocation_hits * 22.0
 
-    score = max(5.0, min(100.0, base_surprise + structural_bonus - repetition_penalty))
+    score = max(5.0, min(100.0, base_surprise + structural_bonus - repetition_penalty - collocation_penalty))
     return round(score, 1)
 
 def calculate_perplexity_and_burstiness(sentences: list[str]) -> dict:
@@ -121,10 +161,13 @@ def calculate_perplexity_and_burstiness(sentences: list[str]) -> dict:
 
     # Calibrazione lineare continua del rischio (niente scatti fissi)
     # Target umano autentico: mean_ppl >= 55 e burstiness >= 18
-    # Testo AI puro: mean_ppl <= 38 e burstiness <= 8
+    # Testo AI puro: mean_ppl <= 38, burstiness <= 8 e alta percentuale di frasi sospette
+    ai_suspect_ratio = sum(1 for h in heatmap if h["status"] == "AI_SUSPECT") / max(1, len(heatmap))
+    risk_suspect = ai_suspect_ratio * 100.0
+
     risk_ppl = max(0.0, min(100.0, (55.0 - mean_ppl) * 4.0))
     risk_burst = max(0.0, min(100.0, (18.0 - burstiness) * 5.0))
-    risk_score = round(0.55 * risk_ppl + 0.45 * risk_burst, 1)
+    risk_score = round(0.40 * risk_ppl + 0.30 * risk_burst + 0.30 * risk_suspect, 1)
 
     return {
         "mean_ppl": round(mean_ppl, 1),
