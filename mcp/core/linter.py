@@ -17,7 +17,7 @@ RULES = [
         "severity": "CRITICAL",
         "weight": 4.0,
         "name": "Contrasto vuoto 'Non solo X ma Y'",
-        "regex": r"(?i)\b(?:non (?:è|si tratta di) (?:solo|soltanto|semplicemente|un semplice) [^.!?\n]+?,? ma (?:è|di|rappresenta|costituisce)|not (?:only|just|merely) [^.!?\n]+?,? but (?:also|rather))\b",
+        "regex": r"(?i)\b(?:non (?:è|sia|si tratta di) (?:solo|soltanto|semplicemente|un semplice) [^.!?\n]+?,? ma (?:è|sia|di|rappresenti|rappresenta|costituisca|costituisce|anche)|not (?:only|just|merely) [^.!?\n]+?,? but (?:also|rather))\b",
         "explanation": "Costrutto artificiale tipico dei modelli per conferire enfasi retorica senza aggiungere contenuto fattuale."
     },
     {
@@ -44,7 +44,7 @@ RULES = [
         "severity": "HIGH",
         "weight": 3.0,
         "name": "Incipit stereotipato temporale/mondiale",
-        "regex": r"(?i)\b(?:nel mondo frenetico di oggi|in today'?s (?:fast-paced|digital|rapidly changing|interconnected) world|nell'?era (?:digitale|dell'?informazione|dell'?intelligenza artificiale)|in an era (?:of|where|characterized by))\b",
+        "regex": r"(?i)\b(?:nel mondo frenetico di oggi|nel panorama (?:contemporaneo|attuale|moderno) in continua evoluzione|in today'?s (?:fast-paced|digital|rapidly changing|rapidly evolving|interconnected) (?:world|landscape|society)|nell'?era (?:digitale|dell'?informazione|dell'?intelligenza artificiale)|in an era (?:of|where|characterized by))\b",
         "explanation": "Apertura generica a stampino (tipica di ChatGPT) usata per contestualizzare in modo vacuo qualunque argomento."
     },
     {
@@ -53,7 +53,7 @@ RULES = [
         "severity": "MEDIUM",
         "weight": 2.0,
         "name": "Formule di conclusione o transizione forzata",
-        "regex": r"(?im)^(?:\s*[-*]\s*)?(?:in conclusion|to sum up|in summary|all in all|tirando le somme|in conclusione|in definitiva|per riassumere),?\b",
+        "regex": r"(?i)(?:^|[.!?]\s+)(?:in conclusion|to sum up|in summary|all in all|tirando le somme|in conclusione|in definitiva|per riassumere),?\b",
         "explanation": "Riepilogo forzato e prevedibile tipico delle risposte strutturate da chatbot scolastico."
     },
 
@@ -64,7 +64,7 @@ RULES = [
         "severity": "HIGH",
         "weight": 2.5,
         "name": "Clausole finali -ing posticce",
-        "regex": r"(?i),\s*(?:evidenziando l'?importanza di|sottolineando la necessità di|garantendo al contempo|highlighting the (?:importance|need|critical)|underscoring the (?:importance|significance)|thereby ensuring|fostering a sense of)\b",
+        "regex": r"(?i),\s*(?:aprendo la strada a|evidenziando l'?importanza di|sottolineando la necessità di|garantendo al contempo|highlighting the (?:importance|need|critical)|underscoring the (?:importance|significance)|thereby ensuring|fostering a sense of)\b",
         "explanation": "Clausola participiale agganciata a fine frase per conferire artificialmente profondità a un'affermazione semplice."
     },
     {
@@ -73,7 +73,7 @@ RULES = [
         "severity": "MEDIUM",
         "weight": 2.0,
         "name": "Verbi artificiosi per evitare 'essere' o 'avere'",
-        "regex": r"(?i)\b(?:stands as a testament|serves as a (?:crucial|vital|pivotal|prime) example|funge da pilastro|si pone come testimonianza|si erge a|boasts a (?:wide|rich))\b",
+        "regex": r"(?i)\b(?:stands as a testament|serves as a (?:crucial|vital|pivotal|prime) example|funge da (?:pilastro|catalizzatore|ponte|volano)|si configura come|si pone come testimonianza|si erge a|boasts a (?:wide|rich))\b",
         "explanation": "Sostituzione forzata di predicati semplici con perifrasi ridondanti ad alta probabilità di completamento."
     },
 
@@ -84,7 +84,7 @@ RULES = [
         "severity": "HIGH",
         "weight": 3.0,
         "name": "Metafore cliché dell'AI",
-        "regex": r"(?i)\b(?:un faro di (?:speranza|innovazione|luce)|tessere una (?:trama|narrazione|tessitura)|un testamento duraturo|la linfa vitale di|a testament to|beacon of (?:hope|innovation)|tapestry of|vital lifeblood|intricate tapestry)\b",
+        "regex": r"(?i)\b(?:un faro di (?:speranza|innovazione|luce)|tessere una (?:trama|narrazione|tessitura)|un testamento duraturo|la linfa vitale di|rappresenta una pietra miliare|a testament to|beacon of (?:hope|innovation)|tapestry of|vital lifeblood|intricate tapestry)\b",
         "explanation": "Metafore stereotipate che compaiono con frequenza sproporzionata nei corpora generati da LLM."
     },
     {
@@ -93,7 +93,7 @@ RULES = [
         "severity": "MEDIUM",
         "weight": 2.0,
         "name": "Formule di importanza fittizia",
-        "regex": r"(?i)\b(?:è (?:fondamentale|cruciale|imprescindibile|doveroso) (?:sottolineare|notare|evidenziare|comprendere) che|it is (?:crucial|pivotal|essential|worth noting) that|plays a (?:pivotal|crucial) role)\b",
+        "regex": r"(?i)\b(?:è (?:fondamentale|cruciale|imprescindibile|doveroso) (?:sottolineare|notare|evidenziare|comprendere) (?:che|come)|gioca un ruolo (?:cruciale|fondamentale|chiave)|it is (?:crucial|pivotal|essential|worth noting) that|plays a (?:pivotal|crucial) role)\b",
         "explanation": "Riempitivo statistico usato dall'AI per segnalare rilevanza anziché dimostrarla con dati o argomentazioni."
     },
     {
