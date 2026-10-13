@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+"""
+Writing Suite - Unified MCP Server & CLI Engine
+Fornisce servizi deterministici per l'analisi stilometrica, la diagnosi AI e il rigore accademico.
+Compatibile con lo standard Model Context Protocol (MCP stdio JSON-RPC 2.0).
+Zero dipendenze esterne: funziona nativamente con Python 3.9+ su macOS, Linux e Windows.
+"""
+
+import sys
+import os
+import json
+import argparse
+from pathlib import Path
+
+# Aggiunge la directory corrente al path di importazione
+current_dir = Path(__file__).resolve().parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
+
+from core.cleaner import clean_markup, extract_sentences, extract_words
+from core.linter import lint_text
+from core.metrics import calculate_readability
+from core.citations import audit_citations
+from core.evaluator_engine import evaluate_document
+
+SERVER_NAME = "writing-suite"
+SERVER_VERSION = "1.0.0"
+
+# ==============================================================================
+# TOOL SCHEMAS & DEFINITIONS
+# ==============================================================================
+
+TOOLS = [
+    {
+        "name": "evaluate_ai_risk",
+        "description": "Valuta il rischio e l'indice di sinteticità AI di un testo combinando 4 lenti autonome: GPTZero emulato (PPL & Burstiness), Linter euristico (50+ pattern Clever/Copyleaks), Stilometria accademica (Yule K, Hapax) e Anti-Bypass check. Restituisce referto completo con heatmap frase-per-frase.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il testo (o porzione di testo) da sottoporre ad audit diagnostico."
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md)."
+                }
+            },
+            "required": ["text"]
+        }
+    },
+    {
+        "name": "calculate_readability",
+        "description": "Calcola gli indici di leggibilità e cadenza ritmica: Indice Gulpease (Italiano), Flesch-Kincaid (Inglese), Varianza lunghezza frasi (Burstiness) e Dispersione sillabica (stile Copyleaks).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il testo da analizzare."
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Lingua di analisi: 'it' (Italiano) o 'en' (Inglese). Default: 'it'.",
+                    "enum": ["it", "en"]
+                }
+            },
+            "required": ["text"]
+        }
+    },
+    {
+        "name": "lint_writing",
+        "description": "Scansiona il testo identificando i 50+ tic, formule e cliché statistici tipici dei modelli generativi (CleverHumanizer signals, Wikipedia AI tells, transizioni artificiali, riders participiali).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il testo da scansionare."
+                }
+            },
+            "required": ["text"]
+        }
+    },
+    {
+        "name": "audit_citations",
+        "description": "Verifica il rigore citazionale e bibliografico: rileva asserzioni fattuali non dimostrate privi di fonte ('gli studi dimostrano', 'research indicates') e convalida le chiavi citazionali rispetto a un file .bib.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il testo da analizzare (Typst, LaTeX o Markdown)."
+                },
+                "bib_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso assoluto del file bibliografico (.bib)."
+                }
+            },
+            "required": ["text"]
+        }
+    }
+]
+
+# ==============================================================================
+# TOOL DISPATCHER
+# ==============================================================================
+
+def execute_tool(name: str, arguments: dict) -> str:
+    """Esegue il tool specificato e restituisce il risultato formattato in formato testuale/JSON."""
+    text = arguments.get("text", "")
+    if not text and "file_path" in arguments:
+        fp = Path(arguments["file_path"])
+        if fp.is_file():
+            text = fp.read_text(encoding="utf-8", errors="ignore")
+
+    if name == "evaluate_ai_risk":
+        fp = arguments.get("file_path")
+        res = evaluate_document(text, file_path=fp)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "calculate_readability":
+        lang = arguments.get("language", "it")
+        res = calculate_readability(text, lang=lang)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "lint_writing":
+        findings = lint_text(text)
+        return json.dumps({
+            "total_findings": len(findings),
+            "findings": findings
+        }, indent=2, ensure_ascii=False)
+
+    elif name == "audit_citations":
+        bib_p = arguments.get("bib_path")
+        res = audit_citations(text, bib_path=bib_p)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    else:
+        raise ValueError(f"Tool sconosciuto: {name}")
+
+# ==============================================================================
+# MCP STDIO JSON-RPC 2.0 PROTOCOL LOOP
+# ==============================================================================
+
+def run_mcp_server():
+    """Ascolta ed evade richieste JSON-RPC 2.0 su stdin/stdout secondo lo standard MCP."""
+    while True:
+        try:
+            line = sys.stdin.readline()
+            if not line:
+                break
+            line = line.strip()
+            if not line:
+                continue
+
+            request = json.loads(line)
+            req_id = request.get("id")
+            method = request.get("method")
+            params = request.get("params", {})
+
+            if method == "initialize":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "protocolVersion": "2024-11-05",
+                        "capabilities": {
+                            "tools": {}
+                        },
+                        "serverInfo": {
+                            "name": SERVER_NAME,
+                            "version": SERVER_VERSION
+                        }
+                    }
+                }
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+
+            elif method == "notifications/initialized":
+                # Notifica client di avvenuta inizializzazione, nessuna risposta richiesta
+                pass
+
+            elif method == "tools/list":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "tools": TOOLS
+                    }
+                }
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+
+            elif method == "tools/call":
+                tool_name = params.get("name")
+                tool_args = params.get("arguments", {})
+                try:
+                    result_text = execute_tool(tool_name, tool_args)
+                    response = {
+                        "jsonrpc": "2.0",
+                        "id": req_id,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": result_text
+                                }
+                            ]
+                        }
+                    }
+                except Exception as e:
+                    response = {
+                        "jsonrpc": "2.0",
+                        "id": req_id,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": f"Errore durante l'esecuzione del tool {tool_name}: {str(e)}"
+                                }
+                            ],
+                            "isError": True
+                        }
+                    }
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+
+            elif method == "ping":
+                response = {"jsonrpc": "2.0", "id": req_id, "result": {}}
+                sys.stdout.write(json.dumps(response) + "\n")
+                sys.stdout.flush()
+
+            else:
+                if req_id is not None:
+                    response = {
+                        "jsonrpc": "2.0",
+                        "id": req_id,
+                        "error": {
+                            "code": -32601,
+                            "message": f"Metodo non supportato: {method}"
+                        }
+                    }
+                    sys.stdout.write(json.dumps(response) + "\n")
+                    sys.stdout.flush()
+
+        except Exception as err:
+            err_response = {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32603,
+                    "message": f"Errore interno del server: {str(err)}"
+                }
+            }
+            sys.stdout.write(json.dumps(err_response) + "\n")
+            sys.stdout.flush()
+
+# ==============================================================================
+# CLI ENTRYPOINT
+# ==============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(description="Writing Suite Engine & MCP Server")
+    parser.add_argument("--mcp", action="store_true", help="Avvia il server in modalità MCP stdio JSON-RPC")
+    parser.add_argument("--evaluate", type=str, help="Valuta rischio AI di un file o stringa")
+    parser.add_argument("--readability", type=str, help="Calcola leggibilità (Gulpease/Flesch)")
+    parser.add_argument("--lint", type=str, help="Scansiona cliché e pattern bot")
+    parser.add_argument("--citations", type=str, help="Verifica salute citazioni")
+    parser.add_argument("--bib", type=str, default=None, help="File .bib associato per verifica chiavi")
+    parser.add_argument("--lang", type=str, default="it", help="Lingua ('it' o 'en')")
+
+    args = parser.parse_args()
+
+    if args.mcp or (len(sys.argv) == 1 and not sys.stdin.isatty()):
+        run_mcp_server()
+        return
+
+    # Modalità CLI
+    if args.evaluate:
+        p = Path(args.evaluate)
+        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.evaluate
+        res = evaluate_document(text, file_path=str(p) if p.is_file() else None)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.readability:
+        p = Path(args.readability)
+        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.readability
+        res = calculate_readability(text, lang=args.lang)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.lint:
+        p = Path(args.lint)
+        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.lint
+        res = lint_text(text)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    elif args.citations:
+        p = Path(args.citations)
+        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.citations
+        res = audit_citations(text, bib_path=args.bib)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()
