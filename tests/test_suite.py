@@ -173,5 +173,35 @@ class TestWritingSuite(unittest.TestCase):
         res_pt = evaluate_document(pt_sample, language="pt")
         self.assertEqual(res_pt["language"], "pt")
 
+    def test_calibration_and_separation(self):
+        # 1. Synthetic AI technical document with list, contrast, and robotic cadence
+        ai_sample = (
+            "# Architettura di Batching e Multicall\n\n"
+            "Il progetto non è solo un esercizio di stile, ma una risposta architetturale necessaria.\n\n"
+            "Negli ultimi anni, gli sviluppatori hanno affrontato colli di bottiglia critici.\n\n"
+            "Tuttavia, un'analisi approfondita condotta sui sistemi decentralizzati dimostra che il batching è vitale:\n\n"
+            "1. **Latenza Ridotta:** Il Relayer aggrega tutte le chiamate in una sola transazione atomica.\n"
+            "2. **Risparmio Gas:** Si riducono le fee di rete drasticamente, eliminando i costi fissi per transazione.\n"
+            "3. **Atomicità:** O tutte le registrazioni vanno a buon fine, o nessuna viene confermata.\n\n"
+            "Questo approccio cattura l'essenza pura del software e funge da pilastro per la scalabilità."
+        )
+        res_ai = evaluate_document(ai_sample)
+        self.assertGreaterEqual(res_ai["overall_ai_score"], 70.0)
+        self.assertEqual(res_ai["verdict_badge"], "🔴")
+
+        # 2. Authentic human academic paragraph with rich vocabulary, bursty cadence, and no formulas
+        human_sample = (
+            "Abbiamo condotto gli esperimenti su un cluster eterogeneo di tre macchine fisiche connesse "
+            "tramite uno switch a 10 Gbps. A differenza delle simulazioni sintetiche comunemente riportate "
+            "nella letteratura precedente, dove i ritardi di propagazione della rete vengono spesso trascurati "
+            "oppure modellati tramite distribuzioni gaussiane stazionarie, le nostre misurazioni sul campo "
+            "hanno registrato variazioni empiriche significative e picchi intermittenti di latenza che dipendono "
+            "direttamente dal carico concorrente del garbage collector della macchina virtuale. Questi rilievi "
+            "smentiscono parzialmente le ipotesi iniziali."
+        )
+        res_human = evaluate_document(human_sample)
+        self.assertLessEqual(res_human["overall_ai_score"], 30.0)
+        self.assertEqual(res_human["verdict_badge"], "🟢")
+
 if __name__ == "__main__":
     unittest.main()

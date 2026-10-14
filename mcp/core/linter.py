@@ -17,7 +17,7 @@ RULES = [
         "severity": "CRITICAL",
         "weight": 4.0,
         "name": "Contrasto vuoto 'Non solo X ma Y'",
-        "regex": r"(?i)\b(?:non (?:è|sia|si tratta di) (?:solo|soltanto|semplicemente|un semplice) [^.!?\n]+?,? ma (?:è|sia|di|rappresenti|rappresenta|costituisca|costituisce|anche)|not (?:only|just|merely) [^.!?\n]+?,? but (?:also|rather))\b",
+        "regex": r"(?i)\b(?:non\s+(?:(?:è|sia|si\s+tratta\s+di)\s+)?(?:solo|soltanto|semplicemente)\s+[^.!?\n]+?,?\s+ma\s+(?:anche\s+|invece\s+|una?\s+|il\s+|la\s+|lo\s+|i\s+|le\s+|piuttosto\s+|soprattutto\s+|sopratutto\s+|al\s+contrario\s+|[a-zàèéìòù]+)\b|not\s+(?:only|just|merely)\s+[^.!?\n]+?,?\s+but\s+(?:also\s+|rather\s+|instead\s+|a\s+|an\s+|the\s+|[a-z]+)\b)",
         "explanation": "Costrutto artificiale tipico dei modelli per conferire enfasi retorica senza aggiungere contenuto fattuale."
     },
     {
@@ -113,7 +113,7 @@ RULES = [
         "severity": "LOW",
         "weight": 1.0,
         "name": "Em-dash o En-dash come connettore universale",
-        "regex": r"(?:[\w\s]—[\w\s]|[\w\s]–[\w\s]| -- )",
+        "regex": r"(?:[a-zA-Z\s]—[a-zA-Z\s]|[a-zA-Z\s]–[a-zA-Z\s]| -- )",
         "explanation": "Uso massiccio del trattino lungo al posto di subordinate, parentesi o punteggiatura standard."
     },
     {
@@ -178,6 +178,42 @@ RULES = [
         "name": "Cliché enfatici o iperbolici per scelte architetturali software",
         "regex": r"(?i)\b(?:pura follia architetturale|design pattern aureo|immutable root of trust|cost of trust|shift(?:s)? the security paradigm|paradigmatic shift|holy grail of|passo evolutivo obbligato)\b",
         "explanation": "Iperboli o formule solenni usate dai modelli per descrivere scelte architetturali software ordinarie."
+    },
+    {
+        "id": "WS-SYN-008",
+        "category": "Sintassi da Modello",
+        "severity": "HIGH",
+        "weight": 3.5,
+        "name": "Incipit teatrale di contrasto e finta analisi oggettiva",
+        "regex": r"(?i)(?:^|[.!?]\s+)(?:tuttavia|nondimeno|ciò\s+nonostante),\s*(?:un\'?\s*(?:analisi\s+(?:attenta|approfondita|accurata|oggettiva|critica)|(?:attenta|approfondita)\s*analisi)|un\s*esame\s*più\s*approfondito|a\s*(?:closer|deeper|more\s*careful|thorough)\s*(?:look|examination|analysis))[^.!?\n]*?\b(?:dimostra|rivela|mostra|ha\s*dimostrato|evidenzia|reveals|shows|demonstrates)\b",
+        "explanation": "Formula stereotipata di svolta teatrale in cui il modello simula un'analisi critica oggettiva per rovesciare la premessa precedente."
+    },
+    {
+        "id": "WS-SYN-009",
+        "category": "Incipit Template",
+        "severity": "HIGH",
+        "weight": 3.0,
+        "name": "Incipit temporale stereotipato",
+        "regex": r"(?i)(?:^|[.!?]\s+)(?:negli\s+ultimi\s+anni|nel\s+corso\s+degli\s+ultimi\s+anni|in\s+recent\s+years|over\s+the\s+past\s+few\s+years),\s*(?:gli\s+|i\s+|le\s+|la\s+|il\s+|we\s+|the\s+|researchers|developers|hacker|aziende)",
+        "explanation": "Apertura cronologica convenzionale usata dai modelli per contestualizzare genericamente una problematica tecnica o storica."
+    },
+    {
+        "id": "WS-FMT-002",
+        "category": "Formattazione AI",
+        "severity": "MEDIUM",
+        "weight": 2.5,
+        "name": "Etichetta di sezione in grassetto isolata",
+        "regex": r"(?im)^\s*(?:#{2,4}\s+)?\*\*(?:Il Problema|La Soluzione|Vantaggio|Vantaggi|Limite|Limiti|Obiettivo|Conclusione|Risposta fondamentale per la tesi|The Problem|The Solution|Key Insight|Core Trade-off|Architectural Pivot)[^*:\n]*:\*\*\s*",
+        "explanation": "Marker visivo isolato a etichetta in grassetto per simulare categorizzazione strutturata da chatbot."
+    },
+    {
+        "id": "WS-LEX-004",
+        "category": "Lessico Sovrarappresentato",
+        "severity": "MEDIUM",
+        "weight": 2.0,
+        "name": "Cliché enfatici o iperbolici di profondità concettuale",
+        "regex": r"(?i)\b(?:cattura l'?essenza pura|radicalmente diverso e molto più profondo|in modo inequivocabile|in un mondo sempre più|risposta architetturale a due dei problemi più pressanti)\b",
+        "explanation": "Formule enfatiche ricorrenti generate dai modelli per attribuire profondità filosofica o concettuale ad argomenti tecnici."
     }
 ]
 
@@ -211,10 +247,10 @@ def lint_text(text: str) -> list[dict]:
         if re.search(r"^\s*(?:[-*+]|\d+\.)\s+\*\*[^*]+?\*\*[:\s-]", line):
             bold_list_items.append((line_idx, line.strip()))
 
-    if len(bold_list_items) >= 3:
+    if len(bold_list_items) >= 2:
         first_line = bold_list_items[0][0]
-        # Ponderazione proporzionale al numero di elementi seriali
-        cluster_weight = min(5.0, 2.5 + (len(bold_list_items) - 3) * 0.5)
+        # Ponderazione progressiva continua (min 2.0 per 2 elementi, max 6.0 per cluster ampi)
+        cluster_weight = min(6.0, 2.0 + (len(bold_list_items) - 2) * 0.75)
         findings.append({
             "id": "WS-FMT-001",
             "line": first_line,
