@@ -69,4 +69,7 @@ def extract_sentences(text: str) -> list[str]:
 def extract_words(text: str) -> list[str]:
     """Estrae parole normalizzate per il calcolo lessicale e frequenziale."""
     clean_text = clean_markup(text)
-    return re.findall(r"\b[a-zA-ZàèéìòùÀÈÉÌÒÙ0-9'-]+\b", clean_text.lower())
+    # Normalizza elisioni clitiche italiane (l'utente -> lo utente / l' utente)
+    normalized = re.sub(r"\b([ldnsmtc]|dell|all|dall|sull|nell|un)'", r"\1 ", clean_text, flags=re.IGNORECASE)
+    raw_words = re.findall(r"\b[a-zA-ZàèéìòùÀÈÉÌÒÙ-]+\b", normalized.lower())
+    return [w for w in raw_words if any(c.isalpha() for c in w) and len(w) >= 2]
