@@ -60,8 +60,13 @@ Systematically scan for and eliminate:
 3. **Staged openers**: *"In today's fast-paced world"*, *"Nel panorama contemporaneo in continua evoluzione"*, *"Let's dive in"*.
 4. **Trailing -ing riders**: *", highlighting the importance of"*, *", thereby ensuring..."*, *", aprendo la strada a"*.
 5. **Copula avoidance**: *"serves as"*, *"stands as a testament"*, *"funge da catalizzatore"* -> use direct verbs (*is, enables, provides, constitutes*).
-6. **Forced triads**: arbitrary groups of three adjectives or nouns (*"innovation, inspiration, and insights"*).
+6. **Forced triads**: arbitrary groups of three adjectives or nouns (*"innovation, inspiration, and insights"*, *"per tre ragioni fondamentali"*).
 7. **Em-dash addiction (—)**: replace overused dashes with periods, commas, colons, or natural conjunctions.
+8. **Bold List Formatting Clusters (`WS-FMT-001`)**: serial bullet lists where every item is structured as `**Label:** Description`. Destructure them into organic paragraphs or varied bullet points.
+9. **Phantom Dilemmas / Naive Approach Traps (`WS-SYN-006`)**: *"Un approccio ingenuo suggerirebbe... Tuttavia, questo porta a..."*. State architectural constraints and trade-offs directly without setting up strawman alternatives.
+10. **Chatbot Self-Dialogue (`WS-SYN-007`)**: rhetorical questions immediately followed by self-answers (*"...? La risposta risiede in..."*). State the rationale directly.
+11. **Hyperbolic Tech Clichés (`WS-LEX-003`)**: hyperbolic drama (*"pura follia architetturale"*, *"design pattern aureo"*, *"immutable root of trust"*). Use rigorous, objective engineering terminology.
+12. **Trailing Gerund Riders (`WS-RID-003`)**: loose gerund clauses attached with commas at sentence ends (*", garantendo alla CLI..."*, *", delegando al Client..."*). Turn them into independent coordinated clauses or active verbs.
 
 ---
 
