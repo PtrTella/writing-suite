@@ -1,26 +1,30 @@
 """
 Writing Suite - Evaluator Engine Module
-Orchestra i 4 valutatori autonomi e calcola il punteggio unificato ponderato di rischio AI:
-1. Emulatore GPTZero Locale (35%)
-2. Linter Euristico Ponderato (35%)
-3. Stilometria Accademica (15%)
-4. Modulo Anti-Bypass (15%)
-Restituisce output JSON strutturato e report formattato in puro Markdown.
+Orchestra i 6 valutatori forensi autonomi calcolando un indice di rischio continuo (senza soglie discrete):
+1. Linter Euristico Ponderato (35%): 50+ regole sintattiche, serialità elenchi markdown e costrutti AI
+2. Cadence Burstiness (25%): Varianza continua della lunghezza delle frasi (Asimmetria ritmica umana vs monotonia robotica)
+3. Predittività Forense (25%): GLTR (Harvard/MIT) a 5 ranghi Zipf + Emulatore Perplessità locale GPTZero
+4. Stilometria Accademica & MTLD (15%): Diversità lessicale continua invariante alla lunghezza + Yule's K
+5. Analizzatore Anti-Bypass: Rilevamento frammentazione artificiale e prompt injection residui
+6. Indici di Leggibilità: Gulpease (Italiano) / Flesch Reading Ease (Inglese) tramite LanguageRegistry
+
+Restituisce output strutturato (JSON compatibile MCP) e heatmap frase per frase.
 """
 
 import math
+from typing import Dict, Optional
 from .cleaner import clean_markup, extract_sentences, extract_words
 from .linter import lint_text
 from .word_freq import calculate_gltr_profile, calculate_mtld
+from .languages import LanguageRegistry
 from .metrics import (
     calculate_perplexity_and_burstiness,
     calculate_stylometrics,
-    check_anti_bypass,
-    calculate_readability
+    check_anti_bypass
 )
 
-def evaluate_document(text: str, file_path: str = None) -> dict:
-    """Esegue l'audit completo multi-prospettiva e restituisce il report analitico."""
+def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
+    """Esegue l'audit diagnostico completo multi-prospettiva su testo o file."""
     cleaned_prose = clean_markup(text)
     sentences = extract_sentences(text)
     words = extract_words(text)
@@ -29,20 +33,23 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
         return {
             "error": "Testo troppo breve per una valutazione attendibile (minimo 15-20 parole).",
             "overall_ai_score": 0.0,
-            "verdict": "NON_VALUTABILE"
+            "verdict": "NON_VALUTABILE",
+            "verdict_badge": "⚪"
         }
 
-    lang = "it" if any(w in words for w in ["di", "il", "la", "che", "per", "in", "un", "con"]) else "en"
+    # Rilevamento automatico della lingua in O(N)
+    pack = LanguageRegistry.detect_language(words)
+    lang = pack.lang_code
 
-    # 1. GPTZero emulato (Perplessità locale e Burstiness di sorpresa)
+    # 1. GPTZero emulato (Perplessità locale continua)
     gptzero_res = calculate_perplexity_and_burstiness(sentences)
     score_gptzero = gptzero_res["risk_score"]
 
-    # 2. GLTR Forensics (Profilazione ranghi Zipf e saturazione lessicale)
+    # 2. GLTR Forensics (Profilazione ranghi Zipf continua)
     gltr_res = calculate_gltr_profile(words, lang=lang)
     score_gltr = gltr_res["gltr_risk_score"]
 
-    # 3. Cadence Burstiness (Deviazione standard della lunghezza delle frasi)
+    # 3. Cadence Burstiness (Curva logistica continua sulla deviazione standard della lunghezza)
     s_lens = [len(extract_words(s)) for s in sentences if len(extract_words(s)) >= 2]
     if len(s_lens) >= 2:
         mean_len = round(sum(s_lens) / len(s_lens), 1)
@@ -51,28 +58,29 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
     else:
         mean_len = 15.0
         std_len = 10.0
-    # Cadence risk: se std_len < 7.0 -> ritmo robotico uniforme (100%), se std_len >= 13.0 -> varianza umana (0%)
-    score_cadence = round(max(0.0, min(100.0, (13.5 - std_len) * 9.0)), 1)
+    
+    # Curva logistica continua: midpoint 10.5 parole, steepness 0.35
+    score_cadence = round(100.0 / (1.0 + math.exp(0.35 * (std_len - 10.5))), 1)
 
-    # 4. Linter Euristico (50+ pattern statistici, formattazione seriale e costrutti AI)
+    # 4. Linter Euristico (Saturazione esponenziale continua)
     linter_findings = lint_text(text)
     total_linter_weight = sum(f["weight"] for f in linter_findings)
     word_count = len(words)
     findings_density = (len(linter_findings) / max(1, word_count)) * 100.0
-    score_linter = min(100.0, round(total_linter_weight * 13.0 + findings_density * 4.0, 1))
+    score_linter = round(100.0 * (1.0 - math.exp(-0.10 * total_linter_weight - 0.15 * findings_density)), 1)
 
-    # 5. Stilometria Accademica & MTLD (Invariante rispetto alla lunghezza)
+    # 5. Stilometria Accademica & MTLD (Curva continua)
     stylometrics_res = calculate_stylometrics(words)
     mtld_val = calculate_mtld(words)
-    score_mtld = max(0.0, min(100.0, (80.0 - mtld_val) * 1.5))
-    score_stylo = round(0.6 * stylometrics_res["risk_score"] + 0.4 * score_mtld, 1)
+    score_mtld = 100.0 / (1.0 + math.exp(0.04 * (mtld_val - 65.0)))
+    score_stylo = round(0.5 * stylometrics_res["risk_score"] + 0.5 * score_mtld, 1)
 
-    # 6. Anti-Bypass (Rilevamento frammentazione artificiale o prompt injects)
+    # 6. Anti-Bypass
     anti_bypass_res = check_anti_bypass(text, sentences)
     score_bypass = anti_bypass_res["risk_score"]
 
-    # Punteggio Ponderato Complessivo:
-    # 35% Linter Euristico + 25% Cadence Burstiness + 25% Predittività (GPTZero + GLTR) + 15% Stilometria & MTLD
+    # Punteggio Ponderato Continuo Complessivo:
+    # 35% Linter Euristico + 25% Cadence Burstiness + 25% Predittività (GLTR + GPTZero) + 15% Stilometria & MTLD
     predictability_score = (0.5 * score_gptzero) + (0.5 * score_gltr)
     base_score = (
         (0.35 * score_linter) +
@@ -81,13 +89,12 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
         (0.15 * score_stylo)
     )
 
-    # Booster additivo se rilevate anomalie da bypasser
     if score_bypass > 0:
         base_score = min(100.0, base_score + 0.25 * score_bypass)
 
     weighted_ai_score = round(min(100.0, max(0.0, base_score)), 1)
 
-    # Verdetto
+    # Verdetto Continuo Calibrato
     if weighted_ai_score >= 65.0:
         verdict = "ALTISSIMA PROBABILITÀ DI TESTO SINTETICO / AI"
         badge = "🔴"
@@ -101,10 +108,12 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
         verdict = "ALTISSIMA NATURALEZZA / SCRITTURA AUTENTICA UMANA"
         badge = "🟢"
 
-    readability_res = calculate_readability(cleaned_prose, lang=lang)
+    readability_res = pack.calculate_readability(cleaned_prose, words, sentences)
 
     return {
         "file_path": file_path,
+        "language": lang,
+        "language_name": pack.name,
         "overall_ai_score": weighted_ai_score,
         "verdict": verdict,
         "verdict_badge": badge,
@@ -114,6 +123,20 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
             "findings_count": len(linter_findings)
         },
         "lenses": {
+            "cadence": {
+                "risk_score": score_cadence,
+                "mean_sentence_length": mean_len,
+                "sentence_length_std": std_len
+            },
+            "gltr_forensics": {
+                "risk_score": score_gltr,
+                "top_10_pct": gltr_res["top_10_pct"],
+                "top_100_pct": gltr_res["top_100_pct"],
+                "top_1000_pct": gltr_res["top_1000_pct"],
+                "top_3000_pct": gltr_res["top_3000_pct"],
+                "tail_pct": gltr_res["tail_pct"],
+                "saturation_pct": gltr_res["saturation_pct"]
+            },
             "gptzero_emulator": {
                 "risk_score": score_gptzero,
                 "mean_ppl": gptzero_res["mean_ppl"],
@@ -121,28 +144,16 @@ def evaluate_document(text: str, file_path: str = None) -> dict:
                 "most_robotic_sentence": gptzero_res["most_robotic"],
                 "most_human_sentence": gptzero_res["most_human"]
             },
-            "gltr_forensics": {
-                "risk_score": score_gltr,
-                "top_10_pct": gltr_res["top_10_pct"],
-                "top_100_pct": gltr_res["top_100_pct"],
-                "top_1000_pct": gltr_res["top_1000_pct"],
-                "tail_pct": gltr_res["tail_pct"],
-                "saturation_pct": gltr_res["saturation_pct"]
-            },
-            "cadence": {
-                "risk_score": score_cadence,
-                "mean_sentence_length": mean_len,
-                "sentence_length_std": std_len
-            },
             "heuristic_linter": {
                 "risk_score": score_linter,
+                "total_weight": round(total_linter_weight, 1),
                 "findings": linter_findings
             },
             "stylometrics": {
                 "risk_score": score_stylo,
                 "hapax_ratio": stylometrics_res["hapax_ratio"],
                 "yule_k": stylometrics_res["yule_k"],
-                "mtld": mtld_val
+                "mtld": round(mtld_val, 1)
             },
             "anti_bypass": {
                 "risk_score": score_bypass,
