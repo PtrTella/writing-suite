@@ -5,7 +5,6 @@ comprehensive multi-file audits, cross-referencing citations and formatting tabu
 Eliminates the need for external boilerplate or scratch scripts.
 """
 
-import json
 import os
 from pathlib import Path
 from typing import Any, Optional
@@ -60,7 +59,7 @@ def audit_directory(
         name = p.name.lower()
         if "main" in name or "thesis" in name:
             return (0, name)
-        if name.startswith("ch") or name.startswith("cap"):
+        if name.startswith(("ch", "cap")):
             return (1, name)
         if name.startswith("app"):
             return (2, name)

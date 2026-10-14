@@ -48,16 +48,16 @@ class BaseLanguagePack:
         if json_path.is_file():
             try:
                 data = json.loads(json_path.read_text(encoding="utf-8"))
-                if "top_10" in data and data["top_10"]:
-                    self.top_10 = set(data["top_10"])
-                if "top_100" in data and data["top_100"]:
-                    self.top_100 = set(data["top_100"])
-                if "top_1000" in data and data["top_1000"]:
-                    self.top_1000 = set(data["top_1000"])
-                if "top_3000" in data and data["top_3000"]:
-                    self.top_3000 = set(data["top_3000"])
-                if "name" in data and data["name"]:
-                    self.name = data["name"]
+                if top_10 := data.get("top_10"):
+                    self.top_10 = set(top_10)
+                if top_100 := data.get("top_100"):
+                    self.top_100 = set(top_100)
+                if top_1000 := data.get("top_1000"):
+                    self.top_1000 = set(top_1000)
+                if top_3000 := data.get("top_3000"):
+                    self.top_3000 = set(top_3000)
+                if name := data.get("name"):
+                    self.name = name
             except Exception:
                 pass
 

@@ -141,7 +141,6 @@ COMMON_TOKENS_IT = {
     "piccolo",
     "piccoli",
     "primo",
-    "prima",
     "primi",
     "prime",
     "ultimo",
