@@ -45,6 +45,24 @@ TOOLS = [
                 "file_path": {
                     "type": "string",
                     "description": "Opzionale. Percorso del file originale (.typ, .tex, .md)."
+                },
+                "domain": {
+                    "type": "string",
+                    "description": "Opzionale. Dominio del testo (es. 'cryptography', 'biomedical', 'legal', 'general')."
+                },
+                "domain_terms": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Opzionale. Lista oggettiva di 5-15 termini tecnici o acronimi del dominio estratti dall'agente (es. ['Sepolia', 'zk-SNARKs', 'rollup']). Vengono esclusi dal tail statistico come terminologia attesa."
+                },
+                "target_style": {
+                    "type": "string",
+                    "enum": ["academic_thesis", "technical_documentation", "essay", "conversational"],
+                    "description": "Opzionale. Profilo di stile atteso: 'academic_thesis' (default, σ0=10.5), 'technical_documentation' (σ0=8.0), 'essay' (σ0=11.5), 'conversational' (σ0=9.0)."
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Opzionale. Lingua del testo ('it', 'en'). Se omesso, viene rilevata automaticamente in O(N)."
                 }
             },
             "required": ["text"]
@@ -140,7 +158,18 @@ def execute_tool(name: str, arguments: dict) -> str:
 
     if name == "evaluate_ai_risk":
         fp = arguments.get("file_path")
-        res = evaluate_document(text, file_path=fp)
+        domain = arguments.get("domain")
+        domain_terms = arguments.get("domain_terms")
+        target_style = arguments.get("target_style", "academic_thesis")
+        lang = arguments.get("language")
+        res = evaluate_document(
+            text,
+            file_path=fp,
+            domain=domain,
+            domain_terms=domain_terms,
+            target_style=target_style,
+            language=lang
+        )
         return json.dumps(res, indent=2, ensure_ascii=False)
 
     elif name == "audit_project":
@@ -300,6 +329,9 @@ def main():
     parser.add_argument("--lint", type=str, help="Scansiona cliché e pattern bot")
     parser.add_argument("--citations", type=str, help="Verifica salute citazioni")
     parser.add_argument("--bib", type=str, default=None, help="File .bib associato per verifica chiavi")
+    parser.add_argument("--domain", type=str, default=None, help="Dominio del testo (es. cryptography, biomedical, legal)")
+    parser.add_argument("--terms", type=str, default=None, help="Termini di dominio separati da virgola (es. 'Sepolia,zk-SNARKs,rollup')")
+    parser.add_argument("--style", type=str, default="academic_thesis", help="Profilo stilistico: academic_thesis, technical_documentation, essay, conversational")
     parser.add_argument("--lang", type=str, default="en", help="Lingua ('it' o 'en')")
     parser.add_argument("--json", action="store_true", help="Restituisce output in formato JSON grezzo")
 
@@ -352,7 +384,15 @@ def main():
     elif args.evaluate:
         p = Path(args.evaluate)
         text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.evaluate
-        res = evaluate_document(text, file_path=str(p) if p.is_file() else None)
+        domain_terms_list = [t.strip() for t in args.terms.split(",")] if args.terms else None
+        res = evaluate_document(
+            text,
+            file_path=str(p) if p.is_file() else None,
+            domain=args.domain,
+            domain_terms=domain_terms_list,
+            target_style=args.style,
+            language=args.lang
+        )
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
     elif args.readability:
