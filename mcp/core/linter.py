@@ -111,10 +111,10 @@ RULES = [
         "id": "WS-PUN-001",
         "category": "Punteggiatura",
         "severity": "LOW",
-        "weight": 1.0,
+        "weight": 0.5,
         "name": "Em-dash o En-dash come connettore universale",
-        "regex": r"(?:[a-zA-Z\s]—[a-zA-Z\s]|[a-zA-Z\s]–[a-zA-Z\s]| -- )",
-        "explanation": "Uso massiccio del trattino lungo al posto di subordinate, parentesi o punteggiatura standard."
+        "regex": r"(?: [—–] | -- )",
+        "explanation": "Uso massiccio del trattino lungo isolato al posto di subordinate, parentesi o punteggiatura standard."
     },
     {
         "id": "WS-STR-001",
@@ -140,7 +140,7 @@ RULES = [
         "severity": "HIGH",
         "weight": 3.0,
         "name": "Domanda retorica con auto-risposta immediata",
-        "regex": r"(?i)\?\s*(?:La risposta (?:risiede|è|si trova|sta)|The answer (?:lies in|is|comes down to)|Why does this matter\?|How does this work\?)\b",
+        "regex": r"(?i)\?\s*(?:La risposta (?:risiede|è|si trova|sta|consiste)|The answer (?:lies in|is|comes down to|consists of|can be found in)|Why does this matter\?|How does this work\?)\b",
         "explanation": "Domanda retorica a cui il testo risponde immediatamente da solo, tipico formato didascalico da chatbot."
     },
     {
@@ -158,8 +158,8 @@ RULES = [
         "severity": "MEDIUM",
         "weight": 2.0,
         "name": "Perifrasi per evitare il verbo 'essere' in definizioni",
-        "regex": r"(?i)\b(?:funge (?:esclusivamente |meramente )?da|acts (?:exclusively |merely )?as (?:an?|the)|serves (?:exclusively |merely )?as (?:an?|the))\b",
-        "explanation": "Perifrasi per evitare il verbo 'essere' o 'rappresentare' in definizioni tecniche (Sign of AI writing §18)."
+        "regex": r"(?i)\b(?:funge (?:esclusivamente |meramente )?da (?:pilastro|catalizzatore|ponte|volano|guida|faro|ancora|collante|indice|tramite)|serves as a (?:testament|crucial|vital|pivotal|compelling|prime|lasting|powerful|strong) example|acts as a (?:testament|vital pillar|prime catalyst))\b",
+        "explanation": "Perifrasi enfatica per evitare il verbo 'essere' o 'rappresentare' in definizioni tecniche (Sign of AI writing §18)."
     },
     {
         "id": "WS-STR-002",
