@@ -14,13 +14,20 @@ Implementa:
 
 import math
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional, Set
 from .languages import LanguageRegistry, BaseLanguagePack
 
-def calculate_gltr_profile(words: List[str], lang: str = "it") -> Dict:
+def calculate_gltr_profile(
+    words: List[str],
+    lang: str = "it",
+    domain_terms: Optional[Set[str]] = None,
+    tail_midpoint: float = 14.0
+) -> Dict:
     """
     Calcola la distribuzione forense GLTR del testo sui 5 bucket di probabilità Zipf.
     Applica una funzione logistica continua su tail_pct (senza scatti o soglie fisse).
+    Se fornito domain_terms, i termini tecnici di settore vengono mappati nel bucket 4 (standard domain terminology),
+    evitando che gonfino artificialmente il tail creativo umano o generino falsi negativi/positivi.
     """
     pack = LanguageRegistry.get(lang)
     total = len(words)
@@ -31,25 +38,36 @@ def calculate_gltr_profile(words: List[str], lang: str = "it") -> Dict:
             "top_1000_pct": 0.0,
             "top_3000_pct": 0.0,
             "tail_pct": 0.0,
+            "domain_terms_pct": 0.0,
             "saturation_pct": 0.0,
             "gltr_risk_score": 50.0
         }
 
+    norm_domain = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
     b_counts = [0, 0, 0, 0, 0]
+    domain_count = 0
+
     for w in words:
-        b = pack.get_word_bucket(w)
-        b_counts[b - 1] += 1
+        w_lower = w.lower()
+        if norm_domain and w_lower in norm_domain:
+            domain_count += 1
+            b_counts[3] += 1
+        else:
+            b = pack.get_word_bucket(w_lower)
+            b_counts[b - 1] += 1
 
     p1 = round((b_counts[0] / total) * 100.0, 1)
     p2 = round((b_counts[1] / total) * 100.0, 1)
     p3 = round((b_counts[2] / total) * 100.0, 1)
     p4 = round((b_counts[3] / total) * 100.0, 1)
     p5 = round((b_counts[4] / total) * 100.0, 1)
+    p_domain = round((domain_count / total) * 100.0, 1)
     saturation = round(p1 + p2 + p3 + p4, 1)
     tail_pct = p5
 
-    # Curva logistica continua: midpoint a 14% di coda, steepness 0.25
-    gltr_risk = 100.0 / (1.0 + math.exp(0.25 * (tail_pct - 14.0)))
+    # Curva logistica continua: midpoint calibrabile, steepness 0.25 (con clamping anti-overflow)
+    z_gltr = max(-60.0, min(60.0, 0.25 * (tail_pct - tail_midpoint)))
+    gltr_risk = 100.0 / (1.0 + math.exp(z_gltr))
 
     return {
         "top_10_pct": p1,
@@ -57,18 +75,31 @@ def calculate_gltr_profile(words: List[str], lang: str = "it") -> Dict:
         "top_1000_pct": p3,
         "top_3000_pct": p4,
         "tail_pct": tail_pct,
+        "domain_terms_pct": p_domain,
         "saturation_pct": saturation,
         "gltr_risk_score": round(gltr_risk, 1)
     }
 
-def calculate_sentence_zipf_surprisal(sentence: str, lang: str = "it") -> float:
+def calculate_sentence_zipf_surprisal(
+    sentence: str,
+    lang: str = "it",
+    domain_terms: Optional[Set[str]] = None
+) -> float:
     """Calcola l'entropia media della frase basata sul valore Zipf reale delle parole."""
     pack = LanguageRegistry.get(lang)
     words = re.findall(r"\b[a-zA-ZàèéìòùÀÈÉÌÒÙ0-9'-]+\b", sentence.lower())
     if not words:
         return 50.0
 
-    surprisals = [(7.5 - pack.get_word_zipf(w)) for w in words]
+    norm_domain = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    surprisals = []
+    for w in words:
+        if norm_domain and w in norm_domain:
+            z = 4.5
+        else:
+            z = pack.get_word_zipf(w)
+        surprisals.append(7.5 - z)
+
     mean_surprisal = sum(surprisals) / len(words)
     score = (mean_surprisal / 5.0) * 85.0
     return round(max(5.0, min(100.0, score)), 1)
