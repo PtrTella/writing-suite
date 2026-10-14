@@ -157,30 +157,40 @@ print(pack.name) # "Italian"
 ```
 
 ### Supported Languages Out-of-the-Box:
-1. **Italian (`ItalianLanguagePack`)**:
+1. **Italian (`ItalianLanguagePack` - `it`)**:
    * Native elision and clitic splitting: automatically separates `l'`, `d'`, `dell'`, `all'`, `un'`, `quest'`.
-   * Italian syllabification engine based on vowel hiatus, diphthongs, and consonant clusters.
    * Native **Indice Gulpease** readability formula.
-   * 5-tier Zipf frequency lexicons calibrated on academic, technical, and general Italian corpora.
-2. **English (`EnglishLanguagePack`)**:
-   * English contraction handling (`don't`, `it's`, `they're`).
-   * Syllable counting engine handling silent *e*, consonant *-le*, and diphthong groups.
+   * 5-tier Zipf frequency lexicons calibrated on CoLFIS and Subtlex-IT corpora.
+2. **English (`EnglishLanguagePack` - `en`)**:
+   * Contraction normalization (`don't`, `it's`, `they're`).
    * **Flesch Reading Ease** and **Flesch-Kincaid Grade Level**.
-   * 5-tier Zipf frequency lexicons calibrated on general, academic, and software engineering corpora.
+   * 5-tier Zipf frequency lexicons calibrated on SUBTLEX-US and Brown corpora.
+3. **Spanish (`SpanishLanguagePack` - `es`)**:
+   * Native **Índice Fernández-Huerta** readability formula.
+   * Closed-class diagnostic vectors based on Real Academia Española (RAE) frequencies.
+4. **French (`FrenchLanguagePack` - `fr`)**:
+   * Native **Formule Kandel & Moles** readability formula.
+   * Closed-class diagnostic vectors calibrated on Lexique 3.
+5. **German (`GermanLanguagePack` - `de`)**:
+   * Native **Amstad Lesbarkeitsindex** readability formula.
+   * Closed-class diagnostic vectors calibrated on dlexDB and DeReWo.
 
-### Adding a New Language in 3 Steps:
-Subclass `BaseLanguagePack` and register it:
+### 🌐 Universal Zero-Shot Fallback (`UniversalLanguagePack`):
+For any other natural language without pre-compiled dictionaries (e.g., Latin, Portuguese, Dutch, Russian, Swedish):
+* **Sonority Sequencing Principle (SSP)**: Universal phonotactic syllabification across vowels, diphthongs, and consonant valleys.
+* **Universal Readability**: Computes **LIX (Björnsson 1968)**, the internationally recognized language-independent readability standard.
+* **Corpus-Relative Zipf Rank Profiling**: Dynamically derives the Top 10/100 function tokens from the document itself in $O(N)$ without needing external databases.
+
+### ⚡ Dynamic Runtime Injection by Agents:
+The Agent or caller can inject new languages at runtime without restarting the server:
 ```python
-from mcp.core.languages import BaseLanguagePack, LanguageRegistry
+from mcp.core.languages import LanguageRegistry
 
-class SpanishLanguagePack(BaseLanguagePack):
-    @property
-    def code(self) -> str: return "es"
-    @property
-    def name(self) -> str: return "Spanish"
-    # Implement count_syllables(), calculate_readability(), zipf tiers...
-
-LanguageRegistry.register(SpanishLanguagePack())
+LanguageRegistry.register_dynamic(
+    lang_code="pt",
+    name="Português",
+    top_10=["o", "a", "de", "que", "e", "do", "da", "em", "um", "para"]
+)
 ```
 
 ---
