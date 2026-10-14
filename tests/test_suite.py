@@ -85,5 +85,23 @@ class TestWritingSuite(unittest.TestCase):
             self.assertIn("summary_table", res)
             self.assertGreater(res["total_words"], 0)
 
+    def test_technical_ai_patterns(self):
+        tech_ai_sample = (
+            "Un approccio ingenuo suggerirebbe di salvare questo albero direttamente on-chain.\n"
+            "Tuttavia, questo approccio porta a pura follia architetturale per tre ragioni fondamentali:\n"
+            "1. **Architectural Security:** Qualitative mapping against threat taxonomies.\n"
+            "2. **Smart Contract Robustness:** Formal verification using static analysis.\n"
+            "3. **Economic Feasibility:** State bloat projections across blockchains.\n"
+            "Il componente funge da indice, garantendo al contempo un'infrastruttura resiliente."
+        )
+        findings = lint_text(tech_ai_sample)
+        rule_ids = {f["id"] for f in findings}
+        self.assertIn("WS-SYN-006", rule_ids)  # Un approccio ingenuo suggerirebbe
+        self.assertIn("WS-STR-002", rule_ids)  # per tre ragioni fondamentali
+        self.assertIn("WS-LEX-003", rule_ids)  # pura follia architetturale
+        self.assertIn("WS-FMT-001", rule_ids)  # Bold list items cluster
+        self.assertIn("WS-RID-004", rule_ids)  # funge da indice
+        self.assertIn("WS-RID-003", rule_ids)  # , garantendo
+
 if __name__ == "__main__":
     unittest.main()
