@@ -112,12 +112,13 @@ def evaluate_document(
     z_cadence = max(-60.0, min(60.0, profile["k_cadence"] * (std_len - profile["sigma_0"])))
     score_cadence = round(100.0 / (1.0 + math.exp(z_cadence)), 1)
 
-    # 4. Linter Euristico (Saturazione esponenziale continua)
+    # 4. Linter Euristico (Normalizzazione scientifica per lunghezza testo per 1,000 parole)
     linter_findings = lint_text(text)
     total_linter_weight = sum(f["weight"] for f in linter_findings)
     word_count = len(words)
-    findings_density = (len(linter_findings) / max(1, word_count)) * 100.0
-    z_linter = max(-60.0, min(60.0, -0.10 * total_linter_weight - 0.15 * findings_density))
+    norm_weight_per_1k = (total_linter_weight / max(40, word_count)) * 1000.0
+    findings_per_1k = (len(linter_findings) / max(40, word_count)) * 1000.0
+    z_linter = max(-60.0, min(60.0, -0.055 * norm_weight_per_1k - 0.02 * findings_per_1k))
     score_linter = round(100.0 * (1.0 - math.exp(z_linter)), 1)
 
     # 5. Stilometria Accademica & MTLD (Curva continua con MTLD bounded)
@@ -133,14 +134,22 @@ def evaluate_document(
     score_bypass = anti_bypass_res["risk_score"]
 
     # Punteggio Ponderato Continuo Complessivo:
-    # 35% Linter Euristico + 25% Cadence Burstiness + 25% Predittività (GLTR + GPTZero) + 15% Stilometria & MTLD
-    predictability_score = (0.5 * score_gptzero) + (0.5 * score_gltr)
+    # 40% Linter Euristico + 30% Cadence Burstiness + 25% Predittività Forense + 5% Stilometria & MTLD
+    # Principio di non-diluizione: se il test GLTR rileva grave tail starvation (fame di coda statistica),
+    # l'acronimia di dominio che alza la PPL non deve dimezzare artificialmente il segnale forense sintetico.
+    predictability_score = max(score_gltr, 0.70 * score_gltr + 0.30 * score_gptzero)
     base_score = (
-        (0.35 * score_linter) +
-        (0.25 * score_cadence) +
+        (0.40 * score_linter) +
+        (0.30 * score_cadence) +
         (0.25 * predictability_score) +
-        (0.15 * score_stylo)
+        (0.05 * score_stylo)
     )
+
+    # Multi-Lens Evidence Synergy:
+    # Quando lenti statisticamente ortogonali (GLTR starvation >= 85% e cadenza monotona o alta densità linter)
+    # convergono indipendentemente, la confidenza statistica complessiva aumenta (+10% synergy boost).
+    if score_gltr >= 85.0 and (score_cadence >= 60.0 or score_linter >= 40.0):
+        base_score += 10.0
 
     if score_bypass > 0:
         base_score = min(100.0, base_score + 0.25 * score_bypass)

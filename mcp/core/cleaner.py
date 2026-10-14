@@ -50,19 +50,28 @@ def clean_markup(text: str) -> str:
     return text.strip()
 
 def extract_sentences(text: str) -> list[str]:
-    """Segmentazione avanzata delle frasi con protezione abbreviazioni comuni (IT/EN/Academic)."""
+    """Segmentazione avanzata delle frasi con protezione abbreviazioni comuni (IT/EN/Academic) e delimitazione strutturale."""
     clean_text = clean_markup(text)
     protected = re.sub(
         r"(?i)\b(et al|es|ad es|dott|prof|ing|avv|fig|tab|vol|pag|cap|art|vs|i\.e|e\.g|etc|ecc|approx|cf)\.",
         r"\1<PROTECTED_DOT>",
         clean_text
     )
-    raw_splits = re.split(r"(?<=[.!?])\s+", protected)
+    # Delimitazione strutturale: i due punti seguiti da newline e lista, o nuovi paragrafi (\n{2,})
+    # non devono fondere paragrafi distinti in un'unica frase artificiale di 100+ parole
+    p_text = re.sub(r":\s*\n\s*[-*•0-9]+[.)]?\s*", ". ", protected)
+    p_text = re.sub(r"\n\s*[-*•]\s+", ". ", p_text)
+    p_text = re.sub(r"\n{2,}", ". ", p_text)
+
+    raw_splits = re.split(r"(?<=[.!?])\s+", p_text)
     sentences = []
     for s in raw_splits:
         clean_s = s.replace("<PROTECTED_DOT>", ".").strip()
+        clean_s = re.sub(r"^[0-9]+[.)]\s*", "", clean_s)
+        clean_s = re.sub(r"^[-*•]\s*", "", clean_s)
+        words = clean_s.split()
         # Considera frasi con almeno 2 parole e non meri residui di codice o elenchi
-        if clean_s and not clean_s.startswith("#") and len(clean_s.split()) >= 2:
+        if clean_s and not clean_s.startswith("#") and len(words) >= 2:
             sentences.append(clean_s)
     return sentences
 
