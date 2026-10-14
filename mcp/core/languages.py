@@ -2,27 +2,31 @@
 Writing Suite - Multi-Language Architecture & Universal Language Engine
 Fornisce:
 1. BaseLanguagePack: Interfaccia unificata per qualsiasi lingua naturale.
-2. UniversalLanguagePack: Motore zero-shot linguistico indipendente basato su:
    - Sillabazione universale tramite Sonority Sequencing Principle (SSP)
-   - Indice di leggibilità universale LIX (Björnsson 1968) e Coleman-Liau
+   - Indice di leggibilità universale LIX (Björnsson 1968) language-independent
    - Stima corpus-relative dei ranghi Zipf (legge di Zipf universale per qualsiasi lingua)
-3. DataDrivenLanguagePack: Generatore configurabile a runtime per nuove lingue o iniezioni dell'Agente.
-4. Pacchetti nativi completi preconfigurati:
-   - ItalianLanguagePack ('it'): CoLFIS / Subtlex-IT, clitici, Indice Gulpease
-   - EnglishLanguagePack ('en'): SUBTLEX-US / Brown, contrazioni, Flesch-Kincaid
-   - SpanishLanguagePack ('es'): RAE / SUBTLEX-ESP, Indice Fernández-Huerta
-   - FrenchLanguagePack ('fr'): Lexique 3 / FrWac, Indice Kandel & Moles
-   - GermanLanguagePack ('de'): dlexDB / DeReWo, Indice Amstad
-5. LanguageRegistry: Rilevamento automatico multilingua O(N), dispatch dinamico e caricamento on-demand.
+2. UniversalLanguagePack: Motore zero-shot linguistico indipendente per qualsiasi lingua non censita.
+3. DataDrivenLanguagePack: Generatore configurabile a runtime da JSON o parametri dell'Agente.
+4. Pacchetti linguistici specifici con formule di leggibilità nazionali:
+   - ItalianLanguagePack ('it'): Clitici, sillabazione vocalica, Indice Gulpease
+   - EnglishLanguagePack ('en'): Contrazioni, sillabe fonotattiche, Flesch-Kincaid
+   - SpanishLanguagePack ('es'): Sillabe spagnole, Indice Fernández-Huerta
+   - FrenchLanguagePack ('fr'): Elisioni francesi, Formule Kandel & Moles
+   - GermanLanguagePack ('de'): Nessi consonantici tedeschi, Amstad Lesbarkeitsindex
+5. LanguageRegistry: Rilevamento automatico O(N), caricamento dinamico da data/languages/*.json e dispatch.
 """
 
+import json
 import math
 import re
 import collections
+from pathlib import Path
 from typing import Dict, List, Optional, Set
 
+DATA_LANGUAGES_DIR = Path(__file__).resolve().parent.parent / "data" / "languages"
+
 class BaseLanguagePack:
-    """Interfaccia astratta per un Language Pack estendibile."""
+    """Interfaccia unificata e motore linguistico universale."""
     lang_code: str = "base"
     name: str = "Base Language"
     
@@ -32,6 +36,29 @@ class BaseLanguagePack:
     top_3000: Set[str] = set()
     low_entropy_collocations: List[str] = []
     corpus_word_freq: Optional[Dict[str, float]] = None
+
+    def __init__(self):
+        # Carica automaticamente dal file JSON in data/languages/ se presente
+        self._load_from_data_dir()
+
+    def _load_from_data_dir(self) -> None:
+        """Carica dizionari di frequenza da data/languages/{code}.json se esiste su disco."""
+        json_path = DATA_LANGUAGES_DIR / f"{self.lang_code}.json"
+        if json_path.is_file():
+            try:
+                data = json.loads(json_path.read_text(encoding="utf-8"))
+                if "top_10" in data and data["top_10"]:
+                    self.top_10 = set(data["top_10"])
+                if "top_100" in data and data["top_100"]:
+                    self.top_100 = set(data["top_100"])
+                if "top_1000" in data and data["top_1000"]:
+                    self.top_1000 = set(data["top_1000"])
+                if "top_3000" in data and data["top_3000"]:
+                    self.top_3000 = set(data["top_3000"])
+                if "name" in data and data["name"]:
+                    self.name = data["name"]
+            except Exception:
+                pass
 
     def set_corpus(self, words: List[str]) -> None:
         """Calcola la distribuzione corpus-relative dei token per la stima Zipf dinamica."""
@@ -125,14 +152,11 @@ class BaseLanguagePack:
             return 2.2
 
 # ==============================================================================
-# UNIVERSAL ZERO-SHOT LANGUAGE PACK
+# UNIVERSAL ZERO-SHOT & DATA-DRIVEN PACKS
 # ==============================================================================
 
 class UniversalLanguagePack(BaseLanguagePack):
-    """
-    Language Pack universale a bootstrap statistico (Zero-Shot).
-    Funziona per qualsiasi lingua del mondo senza dizionari preesistenti.
-    """
+    """Language Pack universale a bootstrap statistico (Zero-Shot) per qualsiasi lingua non censita."""
     def __init__(self, lang_code: str = "auto", name: str = "Universal / Auto-Calibrated"):
         self.lang_code = lang_code
         self.name = name
@@ -142,10 +166,7 @@ class UniversalLanguagePack(BaseLanguagePack):
         self.top_3000 = set()
         self.low_entropy_collocations = []
         self.corpus_word_freq = None
-
-# ==============================================================================
-# DATA-DRIVEN LANGUAGE PACK
-# ==============================================================================
+        self._load_from_data_dir()
 
 class DataDrivenLanguagePack(BaseLanguagePack):
     """Language Pack configurabile dinamicamente a runtime o tramite file dati/JSON."""
@@ -169,13 +190,14 @@ class DataDrivenLanguagePack(BaseLanguagePack):
         self.corpus_word_freq = None
 
 # ==============================================================================
-# LINGUA ITALIANA (Nativo: Gulpease, clitici, CoLFIS)
+# LINGUE PRECONFIGURATE CON FORMULE NAZIONALI
 # ==============================================================================
 
 class ItalianLanguagePack(BaseLanguagePack):
     lang_code = "it"
     name = "Italiano"
 
+    # Vettori chiusi di grammatical function words (fallback se JSON non presente)
     top_10 = {
         "il", "di", "e", "ed", "a", "ad", "la", "in", "che", "per", "un", "una", "sono", "del", "della",
         "dei", "degli", "dello", "delle"
@@ -191,44 +213,11 @@ class ItalianLanguagePack(BaseLanguagePack):
         "quello", "quella", "quelli", "quelle", "come", "anche", "solo", "prima", "dopo",
         "mentre", "ogni", "alcuni", "alcune", "qualche", "quindi", "dunque", "invece",
         "così", "allora", "già", "mai", "sempre", "ancora", "oggi", "ora", "modo", "modi",
-        "parte", "parti", "tempo", "tempi", "caso", "casi", "fatto", "fatti", "punto", "punti",
-        "cosa", "cose", "bene", "male", "nuovo", "nuova", "nuovi", "nuove", "altro", "altra",
-        "altri", "altre", "stesso", "stessa", "stessi", "stesse", "proprio", "propria", "propri",
-        "proprie", "grande", "grandi", "piccolo", "piccoli", "primo", "prima", "primi", "prime",
-        "ultimo", "ultima", "ultimi", "ultime", "è", "era", "erano", "stato", "stata", "stati",
-        "state", "ha", "hanno", "aveva", "avevano", "può", "possono", "deve", "devono",
-        "fare", "fa", "fanno", "dare", "viene", "vengono", "dove", "quando", "durante", "verso",
-        "essere", "qualsiasi", "ciascuno", "ciascuna", "oppure", "appena", "frattempo"
-    }
-
-    top_1000 = {
-        "uomo", "donna", "persona", "persone", "giorno", "giorni", "anno", "anni", "mese", "mesi",
-        "vita", "mondo", "paese", "paesi", "città", "casa", "lavoro", "lavori", "scuola", "mano",
-        "mani", "occhio", "occhi", "voce", "parola", "parole", "aria", "luce", "notte", "sera",
-        "acqua", "terra", "fine", "inizio", "faccia", "storia", "storie", "senso", "forza", "valore",
-        "valori", "forma", "forme", "idea", "idee", "momento", "momenti", "ragione", "ragioni",
-        "diritto", "diritti", "legge", "leggi", "ordine", "livello", "livelli", "grado", "gradi",
-        "numero", "numeri", "linea", "linee", "gruppo", "gruppi", "campo", "campi", "spazio", "spazi",
-        "sistema", "sistemi", "processo", "processi", "sviluppo", "funzione", "funzioni", "tipo", "tipi",
-        "misura", "misure", "effetto", "effetti", "azione", "azioni", "condizione", "condizioni",
-        "rapporto", "rapporti", "società", "cultura", "politica", "economia", "mercato", "prezzo",
-        "opera", "opere", "attività", "struttura", "strutture", "servizio", "servizi", "problema", "problemi",
-        "soluzione", "soluzioni", "metodo", "metodi", "tecnica", "tecniche", "risultato", "risultati",
-        "obiettivo", "obiettivi", "dati", "informazioni", "scelta", "scelte", "ruolo", "ruoli",
-        "base", "criterio", "criteri", "settore", "settori", "scopo", "scopi", "fonte", "fonti",
-        "livello", "ipotesi", "analisi", "fase", "fasi", "modello", "modelli", "progetto", "progetti",
-        "contesto", "quadro", "ricerca", "studio", "studi", "esperienza", "esperienze",
-        "aspetto", "aspetti", "elemento", "elementi", "fattore", "fattori", "origine", "causa", "cause"
-    }
-
-    top_3000 = {
-        "algoritmo", "architettura", "interfaccia", "protocollo", "transazione", "rete", "reti",
-        "computazione", "memorizzazione", "trasmissione", "configurazione", "prestazione", "prestazioni",
-        "validazione", "verifica", "integrità", "sicurezza", "vulnerabilità", "componente", "componenti",
-        "modulo", "moduli", "parametro", "parametri", "variabile", "variabili", "funzionalità",
-        "infrastruttura", "ottimizzazione", "implementazione", "allocazione", "esecuzione",
-        "decentralizzato", "decentralizzata", "asincrono", "asincrona", "distribuito", "distribuita",
-        "crittografico", "crittografica", "scalabilità", "throughput", "latenza", "resilienza"
+        "parte", "tempo", "caso", "fatto", "punto", "cosa", "bene", "male", "nuovo", "altro",
+        "stesso", "proprio", "grande", "piccolo", "primo", "ultimo", "è", "era", "erano",
+        "stato", "stata", "stati", "state", "ha", "hanno", "aveva", "avevano", "può", "possono",
+        "deve", "devono", "fare", "fa", "fanno", "dare", "viene", "vengono", "dove", "quando",
+        "durante", "verso", "essere", "qualsiasi", "ciascuno", "ciascuna", "oppure", "appena"
     }
 
     def count_syllables(self, word: str) -> int:
@@ -245,7 +234,7 @@ class ItalianLanguagePack(BaseLanguagePack):
         tot_sents = max(1, len(sentences))
         letters_count = sum(len(w) for w in words)
 
-        # Indice Gulpease = 89 + (300 * parole - 10 * lettere) / parole
+        # Indice Gulpease = 89 + (300 * frasi - 10 * lettere) / parole
         gulpease = 89.0 + ((300.0 * tot_sents - 10.0 * letters_count) / tot_words)
         gulpease_score = round(max(0.0, min(100.0, gulpease)), 1)
 
@@ -268,10 +257,6 @@ class ItalianLanguagePack(BaseLanguagePack):
             "sentences_count": tot_sents
         }
 
-# ==============================================================================
-# LINGUA INGLESE (Nativo: Flesch-Kincaid, SUBTLEX-US)
-# ==============================================================================
-
 class EnglishLanguagePack(BaseLanguagePack):
     lang_code = "en"
     name = "English"
@@ -288,23 +273,6 @@ class EnglishLanguagePack(BaseLanguagePack):
         "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", "way", "even", "new",
         "want", "because", "any", "these", "give", "day", "most", "us", "is", "are", "was", "were", "been", "has", "had",
         "does", "did", "having", "may", "might", "must", "should", "shall", "cannot"
-    }
-
-    top_1000 = {
-        "system", "program", "data", "fact", "world", "state", "problem", "hand", "part", "case", "point", "child",
-        "group", "number", "night", "life", "place", "area", "course", "company", "eye", "side", "water", "head",
-        "service", "power", "line", "order", "end", "member", "law", "car", "city", "community", "name", "president",
-        "team", "minute", "idea", "kid", "body", "information", "back", "parent", "face", "others", "level", "office",
-        "door", "health", "person", "art", "war", "history", "party", "result", "change", "morning", "reason", "research",
-        "girl", "guy", "food", "moment", "air", "teacher", "force", "education", "process", "approach", "structure",
-        "analysis", "method", "model", "study", "performance", "issue", "security", "framework", "function", "network",
-        "concept", "context", "design", "development", "feature", "strategy", "technology", "theory", "source"
-    }
-
-    top_3000 = {
-        "algorithm", "architecture", "computational", "throughput", "latency", "distributed", "asynchronous",
-        "decentralized", "blockchain", "cryptographic", "verification", "validation", "infrastructure", "optimization",
-        "implementation", "scalability", "resilience", "redundancy", "deterministic", "heterogeneous", "orchestration"
     }
 
     def count_syllables(self, word: str) -> int:
@@ -347,10 +315,6 @@ class EnglishLanguagePack(BaseLanguagePack):
             "sentences_count": tot_sents
         }
 
-# ==============================================================================
-# LINGUA SPAGNOLA (Nativo: Fernández-Huerta, RAE)
-# ==============================================================================
-
 class SpanishLanguagePack(BaseLanguagePack):
     lang_code = "es"
     name = "Español"
@@ -369,7 +333,6 @@ class SpanishLanguagePack(BaseLanguagePack):
     }
 
     def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
-        """Indice Fernández-Huerta (adattamento scientifico del Flesch per lo spagnolo)."""
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -398,10 +361,6 @@ class SpanishLanguagePack(BaseLanguagePack):
             "sentences_count": tot_sents
         }
 
-# ==============================================================================
-# LINGUA FRANCESE (Nativo: Kandel & Moles, Lexique 3)
-# ==============================================================================
-
 class FrenchLanguagePack(BaseLanguagePack):
     lang_code = "fr"
     name = "Français"
@@ -420,7 +379,6 @@ class FrenchLanguagePack(BaseLanguagePack):
     }
 
     def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
-        """Formule Kandel & Moles (adattamento scientifico del Flesch per il francese)."""
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -449,10 +407,6 @@ class FrenchLanguagePack(BaseLanguagePack):
             "sentences_count": tot_sents
         }
 
-# ==============================================================================
-# LINGUA TEDESCA (Nativo: Amstad, dlexDB)
-# ==============================================================================
-
 class GermanLanguagePack(BaseLanguagePack):
     lang_code = "de"
     name = "Deutsch"
@@ -471,7 +425,6 @@ class GermanLanguagePack(BaseLanguagePack):
     }
 
     def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
-        """Formel Amstad (adattamento scientifico del Flesch per il tedesco)."""
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -525,7 +478,7 @@ class LanguageRegistry:
 
     @classmethod
     def register(cls, pack: BaseLanguagePack) -> None:
-        """Registra un LanguagePack statico."""
+        """Registra un LanguagePack statico o aggiorna un pack esistente."""
         cls._packs[pack.lang_code] = pack
         if pack.top_10:
             cls.DIAGNOSTIC_VECTORS[pack.lang_code] = set(list(pack.top_10)[:20])
@@ -558,6 +511,14 @@ class LanguageRegistry:
         code = lang_code.lower().strip()
         if code in cls._packs:
             return cls._packs[code]
+        
+        # Prova a caricare da data/languages/{code}.json se esiste
+        json_path = DATA_LANGUAGES_DIR / f"{code}.json"
+        if json_path.is_file():
+            universal_pack = UniversalLanguagePack(lang_code=code, name=f"Language ({code.upper()})")
+            cls._packs[code] = universal_pack
+            return universal_pack
+
         # Fallback universale zero-shot per qualsiasi codice lingua sconosciuto (es. 'pt', 'la', 'nl', 'ru')
         universal_pack = UniversalLanguagePack(lang_code=code, name=f"Universal ({code.upper()})")
         cls._packs[code] = universal_pack
