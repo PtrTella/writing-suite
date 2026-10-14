@@ -124,13 +124,69 @@ RULES = [
         "name": "Apertura teatrale o finta confidenza",
         "regex": r"(?i)\b(?:in questo capitolo ci immergeremo|senza ulteriori indugi|immergiamoci in|let'?s (?:dive in|explore|take a closer look)|here'?s the thing|let'?s be honest|real talk)\b",
         "explanation": "Dichiarazione teatrale dell'azione prima di esporla o finta intimità con il lettore."
+    },
+    {
+        "id": "WS-SYN-006",
+        "category": "Sintassi da Modello",
+        "severity": "HIGH",
+        "weight": 3.5,
+        "name": "Costruzione a finto dilemma o approccio ingenuo",
+        "regex": r"(?i)\b(?:un approccio ingenuo (?:suggerirebbe|potrebbe|porterebbe)|a (?:naive|tempting) approach would (?:be|suggest)|one might be tempted to|rather than (?:evaluating|relying|using|adopting) [^,]+,\s*(?:we|this approach|the system)|anziché [^,]+,\s*(?:abbiamo|il sistema|questo approccio))\b",
+        "explanation": "Costruzione retorica a finto dilemma o 'approccio ingenuo' per introdurre la propria soluzione come unica via razionale (Sign of AI writing §5)."
+    },
+    {
+        "id": "WS-SYN-007",
+        "category": "Sintassi da Modello",
+        "severity": "HIGH",
+        "weight": 3.0,
+        "name": "Domanda retorica con auto-risposta immediata",
+        "regex": r"(?i)\?\s*(?:La risposta (?:risiede|è|si trova|sta)|The answer (?:lies in|is|comes down to)|Why does this matter\?|How does this work\?)\b",
+        "explanation": "Domanda retorica a cui il testo risponde immediatamente da solo, tipico formato didascalico da chatbot."
+    },
+    {
+        "id": "WS-RID-003",
+        "category": "Riders Participiali",
+        "severity": "HIGH",
+        "weight": 2.5,
+        "name": "Clausola gerundio / participio agganciata a fine frase",
+        "regex": r"(?i),\s*(?:garantendo|delegando|permettendo|consentendo|facilitando|eliminando|assicurando|rendendo (?:il|la|l'|i|le)|evitando di|spostando totalmente|thereby ensuring|thereby enabling|thereby reducing|allowing for a|ensuring that)\b",
+        "explanation": "Clausola gerundio o participiale posticcia agganciata con virgola per chiudere un periodo in modo enfatico o riassuntivo."
+    },
+    {
+        "id": "WS-RID-004",
+        "category": "Lessico di Facciata",
+        "severity": "MEDIUM",
+        "weight": 2.0,
+        "name": "Perifrasi per evitare il verbo 'essere' in definizioni",
+        "regex": r"(?i)\b(?:funge (?:esclusivamente |meramente )?da|acts (?:exclusively |merely )?as (?:an?|the)|serves (?:exclusively |merely )?as (?:an?|the))\b",
+        "explanation": "Perifrasi per evitare il verbo 'essere' o 'rappresentare' in definizioni tecniche (Sign of AI writing §18)."
+    },
+    {
+        "id": "WS-STR-002",
+        "category": "Struttura Rigida",
+        "severity": "MEDIUM",
+        "weight": 2.0,
+        "name": "Annuncio rigido di triadi o dimensioni prefissate",
+        "regex": r"(?i)\b(?:per tre ragioni fondamentali|for three (?:fundamental|key|primary) reasons|quattro dimensioni critiche|four critical dimensions|in modo sincrono:|il flusso ideale diventa il seguente:|for the following reasons:)\b",
+        "explanation": "Annuncio rigido di triadi o dimensioni prefissate tipico delle risposte strutturate da modello."
+    },
+    {
+        "id": "WS-LEX-003",
+        "category": "Lessico Sovrarappresentato",
+        "severity": "MEDIUM",
+        "weight": 2.0,
+        "name": "Cliché enfatici o iperbolici per scelte architetturali software",
+        "regex": r"(?i)\b(?:pura follia architetturale|design pattern aureo|immutable root of trust|cost of trust|shift(?:s)? the security paradigm|paradigmatic shift|holy grail of|passo evolutivo obbligato)\b",
+        "explanation": "Iperboli o formule solenni usate dai modelli per descrivere scelte architetturali software ordinarie."
     }
 ]
 
 def lint_text(text: str) -> list[dict]:
-    """Scansiona il testo linea per linea rilevando le occorrenze delle regole."""
+    """Scansiona il testo linea per linea e strutturalmente rilevando le occorrenze delle regole."""
     findings = []
     lines = text.split("\n")
+
+    # 1. Scansione linea per linea per regole regolari
     for line_idx, line in enumerate(lines, 1):
         line_clean = line.strip()
         if not line_clean:
@@ -148,4 +204,26 @@ def lint_text(text: str) -> list[dict]:
                     "matched_text": m.group(0).strip(),
                     "explanation": rule["explanation"]
                 })
+
+    # 2. Rilevamento cluster di elenchi con etichette in grassetto (WS-FMT-001)
+    bold_list_items = []
+    for line_idx, line in enumerate(lines, 1):
+        if re.search(r"^\s*(?:[-*+]|\d+\.)\s+\*\*[^*]+?\*\*[:\s-]", line):
+            bold_list_items.append((line_idx, line.strip()))
+
+    if len(bold_list_items) >= 3:
+        first_line = bold_list_items[0][0]
+        # Ponderazione proporzionale al numero di elementi seriali
+        cluster_weight = min(5.0, 2.5 + (len(bold_list_items) - 3) * 0.5)
+        findings.append({
+            "id": "WS-FMT-001",
+            "line": first_line,
+            "name": "Elenco puntato a etichette in grassetto (Pattern di formattazione AI)",
+            "severity": "HIGH",
+            "category": "Formattazione AI",
+            "weight": round(cluster_weight, 1),
+            "matched_text": f"Cluster di {len(bold_list_items)} elementi puntati strutturati a '**Etichetta:** Descrizione'",
+            "explanation": "Elenco seriale con ogni punto introdotto sistematicamente da un'etichetta in grassetto, layout tipico generato dai modelli linguistici."
+        })
+
     return findings
