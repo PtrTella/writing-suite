@@ -64,10 +64,11 @@ class BaseLanguagePack:
         """Calcola la distribuzione corpus-relative dei token per la stima Zipf dinamica."""
         if not words:
             self.corpus_word_freq = None
+            self.corpus_counts = None
             return
-        counts = collections.Counter(w.lower() for w in words)
+        self.corpus_counts = collections.Counter(w.lower() for w in words)
         tot = float(len(words))
-        self.corpus_word_freq = {w: cnt / tot for w, cnt in counts.items()}
+        self.corpus_word_freq = {w: cnt / tot for w, cnt in self.corpus_counts.items()}
 
     def count_syllables(self, word: str) -> int:
         """Sillabazione universale di default basata sul Sonority Sequencing Principle (SSP)."""
@@ -123,16 +124,28 @@ class BaseLanguagePack:
         if w in self.top_3000:
             return 4
         
-        # Fallback corpus-relative se non presente nei dizionari statici
+        # Stima del rango basata sulla frequenza corpus-relative
+        if hasattr(self, 'corpus_counts') and self.corpus_counts and w in self.corpus_counts:
+            cnt = self.corpus_counts[w]
+            # Se la parola è un hapax legomenon (compare 1 sola volta) ed è lunga almeno 3 caratteri,
+            # appartiene al vocabolario specialistico/creativo non-standard (Tail / Bucket 5)
+            if cnt == 1 and len(w) >= 3:
+                return 5
+            elif cnt == 2:
+                return 4
+            elif cnt <= 4:
+                return 3
+
+        # Fallback basato su frequenza normalizzata
         if self.corpus_word_freq and w in self.corpus_word_freq:
             f = self.corpus_word_freq[w]
-            if f >= 0.025:
+            if f >= 0.030:
                 return 1
-            elif f >= 0.010:
+            elif f >= 0.015:
                 return 2
-            elif f >= 0.003:
+            elif f >= 0.005:
                 return 3
-            elif f >= 0.001:
+            elif f >= 0.002:
                 return 4
 
         return 5
@@ -325,7 +338,7 @@ class SpanishLanguagePack(BaseLanguagePack):
 
     top_100 = {
         "por", "para", "con", "no", "su", "lo", "como", "más", "pero", "sus", "le", "ya", "o", "este", "sí", "porque",
-        "esta", "entre", "cuando", "muy", "sin", "sobre", "también", "me", "hasta", "hay", "donde", "quien", "desde",
+        "esta", "entre", "quando", "muy", "sin", "sobre", "también", "me", "hasta", "hay", "donde", "quien", "desde",
         "todo", "nos", "durante", "todos", "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante", "ellos", "e",
         "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro", "otras", "otra", "él", "tanto", "esa", "estos",
         "mucho", "quienes", "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas", "algo", "nosotros",
