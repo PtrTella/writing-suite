@@ -31,11 +31,13 @@ You act as an objective **Diagnostic Thermometer**. You evaluate text for AI gen
      - `🟢` **Authentic Human Text** (< 20%)
      - `🟡` **Mixed / Heavily AI-Edited** (20–65%)
      - `🔴` **High Probability Synthetic / AI** (> 65%)
-   - **4-Lens Breakdown**:
-     1. *GPTZero Emulator*: Mean Perplexity (PPL) and Surprise Burstiness (cadence variance).
-     2. *Heuristic Linter*: Density and severity of 50+ weighted structural and lexical AI tells.
-     3. *Academic Stylometrics*: Hapax Legomena ratio and Yule's Characteristic K.
-     4. *Anti-Bypass Filter*: Anomaly check for artificial micro-sentence fragmentation or forced conversational openers.
+   - **6-Lens Forensic Breakdown**:
+     1. *Cadence Burstiness*: Sentence word length standard deviation ($\sigma_{\text{len}}$) and rhythmic variance (human $> 13$w vs robot $< 8$w).
+     2. *GLTR Forensics (MIT/Harvard)*: Token probability distribution across Top 10 (Green), Top 100 (Yellow), Top 1000 (Red), and Tail (Purple).
+     3. *GPTZero Emulator*: Mean Perplexity (PPL) and Surprise Burstiness ($\sigma_{\text{PPL}}$).
+     4. *Heuristic Linter*: Density and severity of 50+ weighted structural, syntactic, and markdown tells.
+     5. *Academic Stylometrics & MTLD*: Measure of Textual Lexical Diversity (length-invariant), Hapax Legomena ratio, and Yule's Characteristic K.
+     6. *Anti-Bypass Filter*: Anomaly check for artificial micro-sentence fragmentation or forced conversational openers.
    - **Sentence-by-Sentence Heatmap**:
      - 🟢 High surprise / natural human variation (PPL >= 55)
      - 🟡 Moderate surprise / mixed phrasing (40 <= PPL < 55)
