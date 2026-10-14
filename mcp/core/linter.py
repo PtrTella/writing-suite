@@ -110,11 +110,11 @@ RULES = [
     {
         "id": "WS-PUN-001",
         "category": "Punteggiatura",
-        "severity": "LOW",
-        "weight": 0.5,
-        "name": "Em-dash o En-dash come connettore universale",
-        "regex": r"(?: [—–] | -- )",
-        "explanation": "Uso massiccio del trattino lungo isolato al posto di subordinate, parentesi o punteggiatura standard."
+        "severity": "MEDIUM",
+        "weight": 1.5,
+        "name": "Em-dash o doppio trattino come connettore universale",
+        "regex": r"(?:[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+[—–][a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+|\s[—–]\s|\s--\s|[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+--[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+|[—–]\s)",
+        "explanation": "Uso massiccio del trattino lungo (—, –) o doppio trattino (--) isolato o attaccato alle parole al posto di subordinate, parentesi o punteggiatura standard."
     },
     {
         "id": "WS-STR-001",
