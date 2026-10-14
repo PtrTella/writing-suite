@@ -203,5 +203,46 @@ class TestWritingSuite(unittest.TestCase):
         self.assertLessEqual(res_human["overall_ai_score"], 30.0)
         self.assertEqual(res_human["verdict_badge"], "🟢")
 
+    def test_benchmark_corpus_regression(self):
+        """Test di regressione forense su tutto il corpus autentico umano vs sintetico AI."""
+        import json
+        corpus_path = root_dir / "tests" / "benchmark_corpus" / "corpus_data.json"
+        if not corpus_path.exists():
+            self.skipTest("Corpus data bundle non trovato.")
+        
+        with open(corpus_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        human_scores = []
+        for name, text in data.get("human", {}).items():
+            res = evaluate_document(text, target_style="academic_thesis")
+            score = res["overall_ai_score"]
+            human_scores.append(score)
+            # Ogni testo umano della letteratura classica deve rimanere nella safe zone (<= 35%)
+            self.assertLessEqual(
+                score, 35.0,
+                f"Falso allarme su testo umano: {name} (score: {score}%)"
+            )
+            self.assertEqual(res["verdict_badge"], "🟢")
+
+        ai_scores = []
+        for name, text in data.get("ai", {}).items():
+            res = evaluate_document(text, target_style="academic_thesis")
+            score = res["overall_ai_score"]
+            ai_scores.append(score)
+            # Ogni testo sintetico deve essere identificato con certezza (>= 60%)
+            self.assertGreaterEqual(
+                score, 60.0,
+                f"Falso negativo su testo AI: {name} (score: {score}%)"
+            )
+            self.assertEqual(res["verdict_badge"], "🔴")
+
+        avg_human = sum(human_scores) / len(human_scores)
+        avg_ai = sum(ai_scores) / len(ai_scores)
+        gap = avg_ai - avg_human
+
+        # Il margine di separazione deve essere superiore al 40% netto
+        self.assertGreaterEqual(gap, 40.0, f"Margine di separazione insufficiente: {gap:.1f}%")
+
 if __name__ == "__main__":
     unittest.main()
