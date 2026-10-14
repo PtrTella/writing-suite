@@ -121,5 +121,57 @@ class TestWritingSuite(unittest.TestCase):
         self.assertGreater(res_calibrated["lenses"]["gltr_forensics"]["domain_terms_pct"], 0.0)
         self.assertEqual(res_calibrated["context_calibration"]["domain_terms_count"], 4)
 
+    def test_multilingual_and_universal_pack(self):
+        from core.languages import LanguageRegistry, UniversalLanguagePack
+
+        # 1. Spanish Detection & Evaluation
+        es_sample = (
+            "El sistema descentralizado utiliza contratos inteligentes en la red de pruebas para garantizar "
+            "la seguridad y la transparencia de todas las transacciones financieras en tiempo real."
+        )
+        res_es = evaluate_document(es_sample)
+        self.assertEqual(res_es["language"], "es")
+        self.assertIn("Fernández-Huerta", res_es["lenses"]["readability"]["index_name"])
+
+        # 2. French Detection & Evaluation
+        fr_sample = (
+            "Le système décentralisé utilise des protocoles cryptographiques pour valider les blocs "
+            "dans le grand livre distribué, avec une haute performance et une résilience prouvée."
+        )
+        res_fr = evaluate_document(fr_sample)
+        self.assertEqual(res_fr["language"], "fr")
+        self.assertIn("Kandel & Moles", res_fr["lenses"]["readability"]["index_name"])
+
+        # 3. German Detection & Evaluation
+        de_sample = (
+            "Das dezentrale System verwendet kryptographische Protokolle und intelligente Verträge, "
+            "um die Sicherheit und Integrität der Daten in dem verteilten Netzwerk zu gewährleisten."
+        )
+        res_de = evaluate_document(de_sample)
+        self.assertEqual(res_de["language"], "de")
+        self.assertIn("Amstad", res_de["lenses"]["readability"]["index_name"])
+
+        # 4. Unknown Language Fallback -> Universal Zero-Shot Pack (LIX)
+        la_sample = (
+            "Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, "
+            "tertiam qui ipsorum lingua Celtae, nostra Galli appellantur."
+        )
+        res_la = evaluate_document(la_sample)
+        self.assertEqual(res_la["language"], "auto")
+        self.assertIn("LIX", res_la["lenses"]["readability"]["index_name"])
+
+        # 5. Dynamic Agent-injected language
+        LanguageRegistry.register_dynamic(
+            lang_code="pt",
+            name="Português",
+            top_10=["o", "a", "de", "que", "e", "do", "da", "em", "um", "para"]
+        )
+        pt_sample = (
+            "O sistema descentralizado utiliza contratos inteligentes para validar as transações financeiras "
+            "na rede global de nós distribuídos, garantindo a integridade dos dados sem intermediários."
+        )
+        res_pt = evaluate_document(pt_sample, language="pt")
+        self.assertEqual(res_pt["language"], "pt")
+
 if __name__ == "__main__":
     unittest.main()
