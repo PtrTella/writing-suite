@@ -12,52 +12,54 @@ Restituisce output strutturato (JSON compatibile MCP) e heatmap frase per frase.
 """
 
 import math
-from typing import Dict, List, Optional, Set
+from typing import Optional
+
 from .cleaner import clean_markup, extract_sentences, extract_words
-from .linter import lint_text
-from .word_freq import calculate_gltr_profile, calculate_mtld
 from .languages import LanguageRegistry
+from .linter import lint_text
 from .metrics import (
     calculate_perplexity_and_burstiness,
     calculate_stylometrics,
-    check_anti_bypass
+    check_anti_bypass,
 )
+from .word_freq import calculate_gltr_profile, calculate_mtld
 
 STYLE_PROFILES = {
     "academic_thesis": {
         "sigma_0": 10.5,
         "k_cadence": 0.35,
         "tail_midpoint": 14.0,
-        "name": "Academic Thesis / Scientific Paper"
+        "name": "Academic Thesis / Scientific Paper",
     },
     "technical_documentation": {
         "sigma_0": 8.0,
         "k_cadence": 0.40,
         "tail_midpoint": 12.0,
-        "name": "Technical Documentation / Developer Manual"
+        "name": "Technical Documentation / Developer Manual",
     },
     "essay": {
         "sigma_0": 11.5,
         "k_cadence": 0.35,
         "tail_midpoint": 15.0,
-        "name": "Literary Essay / Editorial"
+        "name": "Literary Essay / Editorial",
     },
     "conversational": {
         "sigma_0": 9.0,
         "k_cadence": 0.35,
         "tail_midpoint": 10.0,
-        "name": "Informal / Conversational Article"
-    }
+        "name": "Informal / Conversational Article",
+    },
 }
+
 
 def evaluate_document(
     text: str,
     file_path: Optional[str] = None,
     domain: Optional[str] = None,
-    domain_terms: Optional[List[str]] = None,
+    domain_terms: Optional[list[str]] = None,
     target_style: str = "academic_thesis",
-    language: Optional[str] = None
-) -> Dict:
+    language: Optional[str] = None,
+) -> dict:
     """Esegue l'audit diagnostico completo multi-prospettiva su testo o file con calibrazione contestuale."""
     cleaned_prose = clean_markup(text)
     sentences = extract_sentences(text)
@@ -68,14 +70,16 @@ def evaluate_document(
             "error": "Testo troppo breve per una valutazione attendibile (minimo 15-20 parole).",
             "overall_ai_score": 0.0,
             "verdict": "NON_VALUTABILE",
-            "verdict_badge": "⚪"
+            "verdict_badge": "⚪",
         }
 
     # Risoluzione profilo stilistico
     profile = STYLE_PROFILES.get(target_style, STYLE_PROFILES["academic_thesis"])
 
     # Normalizzazione termini di dominio passati dall'agente
-    domain_set = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    domain_set = (
+        {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    )
 
     # Selezione o rilevamento automatico della lingua
     if language:
@@ -94,7 +98,7 @@ def evaluate_document(
         words,
         lang=lang,
         domain_terms=domain_set,
-        tail_midpoint=profile["tail_midpoint"]
+        tail_midpoint=profile["tail_midpoint"],
     )
     score_gltr = gltr_res["gltr_risk_score"]
 
@@ -107,9 +111,11 @@ def evaluate_document(
     else:
         mean_len = 15.0
         std_len = 10.0
-    
+
     # Curva logistica continua con parametri del profilo (con clamping numerico anti-overflow)
-    z_cadence = max(-60.0, min(60.0, profile["k_cadence"] * (std_len - profile["sigma_0"])))
+    z_cadence = max(
+        -60.0, min(60.0, profile["k_cadence"] * (std_len - profile["sigma_0"]))
+    )
     score_cadence = round(100.0 / (1.0 + math.exp(z_cadence)), 1)
 
     # 4. Linter Euristico (Normalizzazione scientifica per lunghezza testo per 1,000 parole)
@@ -118,7 +124,9 @@ def evaluate_document(
     word_count = len(words)
     norm_weight_per_1k = (total_linter_weight / max(40, word_count)) * 1000.0
     findings_per_1k = (len(linter_findings) / max(40, word_count)) * 1000.0
-    z_linter = max(-60.0, min(60.0, -0.055 * norm_weight_per_1k - 0.02 * findings_per_1k))
+    z_linter = max(
+        -60.0, min(60.0, -0.055 * norm_weight_per_1k - 0.02 * findings_per_1k)
+    )
     score_linter = round(100.0 * (1.0 - math.exp(z_linter)), 1)
 
     # 5. Stilometria Accademica & MTLD (Curva continua con MTLD bounded)
@@ -139,10 +147,10 @@ def evaluate_document(
     # l'acronimia di dominio che alza la PPL non deve dimezzare artificialmente il segnale forense sintetico.
     predictability_score = max(score_gltr, 0.70 * score_gltr + 0.30 * score_gptzero)
     base_score = (
-        (0.40 * score_linter) +
-        (0.30 * score_cadence) +
-        (0.25 * predictability_score) +
-        (0.05 * score_stylo)
+        (0.40 * score_linter)
+        + (0.30 * score_cadence)
+        + (0.25 * predictability_score)
+        + (0.05 * score_stylo)
     )
 
     # Multi-Lens Evidence Synergy:
@@ -182,13 +190,13 @@ def evaluate_document(
         "stats": {
             "total_words": len(words),
             "total_sentences": len(sentences),
-            "findings_count": len(linter_findings)
+            "findings_count": len(linter_findings),
         },
         "lenses": {
             "cadence": {
                 "risk_score": score_cadence,
                 "mean_sentence_length": mean_len,
-                "sentence_length_std": std_len
+                "sentence_length_std": std_len,
             },
             "gltr_forensics": {
                 "risk_score": score_gltr,
@@ -198,37 +206,37 @@ def evaluate_document(
                 "top_3000_pct": gltr_res["top_3000_pct"],
                 "tail_pct": gltr_res["tail_pct"],
                 "domain_terms_pct": gltr_res.get("domain_terms_pct", 0.0),
-                "saturation_pct": gltr_res["saturation_pct"]
+                "saturation_pct": gltr_res["saturation_pct"],
             },
             "gptzero_emulator": {
                 "risk_score": score_gptzero,
                 "mean_ppl": gptzero_res["mean_ppl"],
                 "burstiness": gptzero_res["burstiness"],
                 "most_robotic_sentence": gptzero_res["most_robotic"],
-                "most_human_sentence": gptzero_res["most_human"]
+                "most_human_sentence": gptzero_res["most_human"],
             },
             "heuristic_linter": {
                 "risk_score": score_linter,
                 "total_weight": round(total_linter_weight, 1),
-                "findings": linter_findings
+                "findings": linter_findings,
             },
             "stylometrics": {
                 "risk_score": score_stylo,
                 "hapax_ratio": stylometrics_res["hapax_ratio"],
                 "yule_k": stylometrics_res["yule_k"],
-                "mtld": round(mtld_val, 1)
+                "mtld": round(mtld_val, 1),
             },
             "anti_bypass": {
                 "risk_score": score_bypass,
-                "anomalies": anti_bypass_res["anomalies"]
+                "anomalies": anti_bypass_res["anomalies"],
             },
-            "readability": readability_res
+            "readability": readability_res,
         },
         "context_calibration": {
             "domain": domain or "general",
             "target_style": profile["name"],
             "domain_terms_count": len(domain_set),
-            "domain_terms_sample": sorted(list(domain_set))[:10]
+            "domain_terms_sample": sorted(list(domain_set))[:10],
         },
-        "heatmap": gptzero_res["heatmap"]
+        "heatmap": gptzero_res["heatmap"],
     }

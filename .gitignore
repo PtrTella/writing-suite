@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+*.lock
+mcp/data/languages/test.json
+tests/benchmark_corpus/human/test.txt

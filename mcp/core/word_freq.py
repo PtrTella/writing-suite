@@ -14,15 +14,17 @@ Implementa:
 
 import math
 import re
-from typing import Dict, List, Optional, Set
-from .languages import LanguageRegistry, BaseLanguagePack
+from typing import Optional
+
+from .languages import LanguageRegistry
+
 
 def calculate_gltr_profile(
-    words: List[str],
+    words: list[str],
     lang: str = "it",
-    domain_terms: Optional[Set[str]] = None,
-    tail_midpoint: float = 14.0
-) -> Dict:
+    domain_terms: Optional[set[str]] = None,
+    tail_midpoint: float = 14.0,
+) -> dict:
     """
     Calcola la distribuzione forense GLTR del testo sui 5 bucket di probabilità Zipf.
     Applica una funzione logistica continua su tail_pct (senza scatti o soglie fisse).
@@ -40,10 +42,12 @@ def calculate_gltr_profile(
             "tail_pct": 0.0,
             "domain_terms_pct": 0.0,
             "saturation_pct": 0.0,
-            "gltr_risk_score": 50.0
+            "gltr_risk_score": 50.0,
         }
 
-    norm_domain = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    norm_domain = (
+        {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    )
     b_counts = [0, 0, 0, 0, 0]
     domain_count = 0
 
@@ -77,13 +81,12 @@ def calculate_gltr_profile(
         "tail_pct": tail_pct,
         "domain_terms_pct": p_domain,
         "saturation_pct": saturation,
-        "gltr_risk_score": round(gltr_risk, 1)
+        "gltr_risk_score": round(gltr_risk, 1),
     }
 
+
 def calculate_sentence_zipf_surprisal(
-    sentence: str,
-    lang: str = "it",
-    domain_terms: Optional[Set[str]] = None
+    sentence: str, lang: str = "it", domain_terms: Optional[set[str]] = None
 ) -> float:
     """Calcola l'entropia media della frase basata sul valore Zipf reale delle parole."""
     pack = LanguageRegistry.get(lang)
@@ -91,7 +94,9 @@ def calculate_sentence_zipf_surprisal(
     if not words:
         return 50.0
 
-    norm_domain = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    norm_domain = (
+        {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+    )
     surprisals = []
     for w in words:
         if norm_domain and w in norm_domain:
@@ -104,7 +109,8 @@ def calculate_sentence_zipf_surprisal(
     score = (mean_surprisal / 5.0) * 85.0
     return round(max(5.0, min(100.0, score)), 1)
 
-def calculate_mtld(words: List[str], threshold: float = 0.72) -> float:
+
+def calculate_mtld(words: list[str], threshold: float = 0.72) -> float:
     """
     Calcola il Measure of Textual Lexical Diversity (MTLD, McCarthy & Jarvis 2010).
     Invariante rispetto alla lunghezza del documento.
@@ -112,7 +118,7 @@ def calculate_mtld(words: List[str], threshold: float = 0.72) -> float:
     if len(words) < 15:
         return 50.0
 
-    def _factor_count(seq: List[str]) -> float:
+    def _factor_count(seq: list[str]) -> float:
         factors = 0.0
         current_types = set()
         tokens = 0

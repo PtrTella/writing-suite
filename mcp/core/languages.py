@@ -16,26 +16,27 @@ Fornisce:
 5. LanguageRegistry: Rilevamento automatico O(N), caricamento dinamico da data/languages/*.json e dispatch.
 """
 
-import json
-import math
-import re
 import collections
+import json
+import re
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Optional
 
 DATA_LANGUAGES_DIR = Path(__file__).resolve().parent.parent / "data" / "languages"
 
+
 class BaseLanguagePack:
     """Interfaccia unificata e motore linguistico universale."""
+
     lang_code: str = "base"
     name: str = "Base Language"
-    
-    top_10: Set[str] = set()
-    top_100: Set[str] = set()
-    top_1000: Set[str] = set()
-    top_3000: Set[str] = set()
-    low_entropy_collocations: List[str] = []
-    corpus_word_freq: Optional[Dict[str, float]] = None
+
+    top_10: set[str] = set()
+    top_100: set[str] = set()
+    top_1000: set[str] = set()
+    top_3000: set[str] = set()
+    low_entropy_collocations: list[str] = []
+    corpus_word_freq: Optional[dict[str, float]] = None
 
     def __init__(self):
         # Carica automaticamente dal file JSON in data/languages/ se presente
@@ -60,7 +61,7 @@ class BaseLanguagePack:
             except Exception:
                 pass
 
-    def set_corpus(self, words: List[str]) -> None:
+    def set_corpus(self, words: list[str]) -> None:
         """Calcola la distribuzione corpus-relative dei token per la stima Zipf dinamica."""
         if not words:
             self.corpus_word_freq = None
@@ -81,7 +82,9 @@ class BaseLanguagePack:
             count -= 1
         return max(1, count)
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         """Calcola l'indice di leggibilità universale LIX (Björnsson 1968) indipendente dalla lingua."""
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
@@ -109,7 +112,7 @@ class BaseLanguagePack:
             "interpretation": interp,
             "avg_sentence_length": round(tot_words / tot_sents, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
 
     def get_word_bucket(self, word: str) -> int:
@@ -123,9 +126,13 @@ class BaseLanguagePack:
             return 3
         if w in self.top_3000:
             return 4
-        
+
         # Stima del rango basata sulla frequenza corpus-relative
-        if hasattr(self, 'corpus_counts') and self.corpus_counts and w in self.corpus_counts:
+        if (
+            hasattr(self, "corpus_counts")
+            and self.corpus_counts
+            and w in self.corpus_counts
+        ):
             cnt = self.corpus_counts[w]
             # Se la parola è un hapax legomenon (compare 1 sola volta) ed è lunga almeno 3 caratteri,
             # appartiene al vocabolario specialistico/creativo non-standard (Tail / Bucket 5)
@@ -164,13 +171,18 @@ class BaseLanguagePack:
         else:
             return 2.2
 
+
 # ==============================================================================
 # UNIVERSAL ZERO-SHOT & DATA-DRIVEN PACKS
 # ==============================================================================
 
+
 class UniversalLanguagePack(BaseLanguagePack):
     """Language Pack universale a bootstrap statistico (Zero-Shot) per qualsiasi lingua non censita."""
-    def __init__(self, lang_code: str = "auto", name: str = "Universal / Auto-Calibrated"):
+
+    def __init__(
+        self, lang_code: str = "auto", name: str = "Universal / Auto-Calibrated"
+    ):
         self.lang_code = lang_code
         self.name = name
         self.top_10 = set()
@@ -181,17 +193,19 @@ class UniversalLanguagePack(BaseLanguagePack):
         self.corpus_word_freq = None
         self._load_from_data_dir()
 
+
 class DataDrivenLanguagePack(BaseLanguagePack):
     """Language Pack configurabile dinamicamente a runtime o tramite file dati/JSON."""
+
     def __init__(
         self,
         lang_code: str,
         name: str,
-        top_10: Set[str],
-        top_100: Set[str],
-        top_1000: Optional[Set[str]] = None,
-        top_3000: Optional[Set[str]] = None,
-        collocations: Optional[List[str]] = None
+        top_10: set[str],
+        top_100: set[str],
+        top_1000: Optional[set[str]] = None,
+        top_3000: Optional[set[str]] = None,
+        collocations: Optional[list[str]] = None,
     ):
         self.lang_code = lang_code
         self.name = name
@@ -202,9 +216,11 @@ class DataDrivenLanguagePack(BaseLanguagePack):
         self.low_entropy_collocations = collocations or []
         self.corpus_word_freq = None
 
+
 # ==============================================================================
 # LINGUE PRECONFIGURATE CON FORMULE NAZIONALI
 # ==============================================================================
+
 
 class ItalianLanguagePack(BaseLanguagePack):
     lang_code = "it"
@@ -212,25 +228,165 @@ class ItalianLanguagePack(BaseLanguagePack):
 
     # Vettori chiusi di grammatical function words (fallback se JSON non presente)
     top_10 = {
-        "il", "di", "e", "ed", "a", "ad", "la", "in", "che", "per", "un", "una", "sono", "del", "della",
-        "dei", "degli", "dello", "delle"
+        "il",
+        "di",
+        "e",
+        "ed",
+        "a",
+        "ad",
+        "la",
+        "in",
+        "che",
+        "per",
+        "un",
+        "una",
+        "sono",
+        "del",
+        "della",
+        "dei",
+        "degli",
+        "dello",
+        "delle",
     }
 
     top_100 = {
-        "lo", "i", "gli", "le", "uno", "da", "dal", "dalla", "dallo", "dai", "dagli", "dalle",
-        "su", "sul", "sulla", "sullo", "sui", "sugli", "sulle", "con", "tra", "fra",
-        "al", "alla", "allo", "ai", "agli", "alle", "nel", "nella", "nello", "nei", "negli", "nelle",
-        "o", "ma", "se", "non", "più", "molto", "tutto", "tutti", "tutta", "tutte",
-        "ci", "vi", "si", "ne", "mi", "ti", "loro", "suo", "sua", "suoi", "sue",
-        "nostro", "nostra", "nostri", "nostre", "questo", "questa", "questi", "queste",
-        "quello", "quella", "quelli", "quelle", "come", "anche", "solo", "prima", "dopo",
-        "mentre", "ogni", "alcuni", "alcune", "qualche", "quindi", "dunque", "invece",
-        "così", "allora", "già", "mai", "sempre", "ancora", "oggi", "ora", "modo", "modi",
-        "parte", "tempo", "caso", "fatto", "punto", "cosa", "bene", "male", "nuovo", "altro",
-        "stesso", "proprio", "grande", "piccolo", "primo", "ultimo", "è", "era", "erano",
-        "stato", "stata", "stati", "state", "ha", "hanno", "aveva", "avevano", "può", "possono",
-        "deve", "devono", "fare", "fa", "fanno", "dare", "viene", "vengono", "dove", "quando",
-        "durante", "verso", "essere", "qualsiasi", "ciascuno", "ciascuna", "oppure", "appena"
+        "lo",
+        "i",
+        "gli",
+        "le",
+        "uno",
+        "da",
+        "dal",
+        "dalla",
+        "dallo",
+        "dai",
+        "dagli",
+        "dalle",
+        "su",
+        "sul",
+        "sulla",
+        "sullo",
+        "sui",
+        "sugli",
+        "sulle",
+        "con",
+        "tra",
+        "fra",
+        "al",
+        "alla",
+        "allo",
+        "ai",
+        "agli",
+        "alle",
+        "nel",
+        "nella",
+        "nello",
+        "nei",
+        "negli",
+        "nelle",
+        "o",
+        "ma",
+        "se",
+        "non",
+        "più",
+        "molto",
+        "tutto",
+        "tutti",
+        "tutta",
+        "tutte",
+        "ci",
+        "vi",
+        "si",
+        "ne",
+        "mi",
+        "ti",
+        "loro",
+        "suo",
+        "sua",
+        "suoi",
+        "sue",
+        "nostro",
+        "nostra",
+        "nostri",
+        "nostre",
+        "questo",
+        "questa",
+        "questi",
+        "queste",
+        "quello",
+        "quella",
+        "quelli",
+        "quelle",
+        "come",
+        "anche",
+        "solo",
+        "prima",
+        "dopo",
+        "mentre",
+        "ogni",
+        "alcuni",
+        "alcune",
+        "qualche",
+        "quindi",
+        "dunque",
+        "invece",
+        "così",
+        "allora",
+        "già",
+        "mai",
+        "sempre",
+        "ancora",
+        "oggi",
+        "ora",
+        "modo",
+        "modi",
+        "parte",
+        "tempo",
+        "caso",
+        "fatto",
+        "punto",
+        "cosa",
+        "bene",
+        "male",
+        "nuovo",
+        "altro",
+        "stesso",
+        "proprio",
+        "grande",
+        "piccolo",
+        "primo",
+        "ultimo",
+        "è",
+        "era",
+        "erano",
+        "stato",
+        "stata",
+        "stati",
+        "state",
+        "ha",
+        "hanno",
+        "aveva",
+        "avevano",
+        "può",
+        "possono",
+        "deve",
+        "devono",
+        "fare",
+        "fa",
+        "fanno",
+        "dare",
+        "viene",
+        "vengono",
+        "dove",
+        "quando",
+        "durante",
+        "verso",
+        "essere",
+        "qualsiasi",
+        "ciascuno",
+        "ciascuna",
+        "oppure",
+        "appena",
     }
 
     def count_syllables(self, word: str) -> int:
@@ -242,7 +398,9 @@ class ItalianLanguagePack(BaseLanguagePack):
         count = len(vowels) - diphthongs
         return max(1, count)
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         letters_count = sum(len(w) for w in words)
@@ -267,25 +425,134 @@ class ItalianLanguagePack(BaseLanguagePack):
             "interpretation": interp,
             "avg_sentence_length": round(tot_words / tot_sents, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
+
 
 class EnglishLanguagePack(BaseLanguagePack):
     lang_code = "en"
     name = "English"
 
     top_10 = {
-        "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at"
+        "the",
+        "be",
+        "to",
+        "of",
+        "and",
+        "a",
+        "in",
+        "that",
+        "have",
+        "i",
+        "it",
+        "for",
+        "not",
+        "on",
+        "with",
+        "he",
+        "as",
+        "you",
+        "do",
+        "at",
     }
 
     top_100 = {
-        "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all",
-        "would", "there", "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
-        "when", "make", "can", "like", "time", "no", "just", "him", "know", "take", "people", "into", "year", "your",
-        "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come", "its", "over",
-        "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", "way", "even", "new",
-        "want", "because", "any", "these", "give", "day", "most", "us", "is", "are", "was", "were", "been", "has", "had",
-        "does", "did", "having", "may", "might", "must", "should", "shall", "cannot"
+        "this",
+        "but",
+        "his",
+        "by",
+        "from",
+        "they",
+        "we",
+        "say",
+        "her",
+        "she",
+        "or",
+        "an",
+        "will",
+        "my",
+        "one",
+        "all",
+        "would",
+        "there",
+        "their",
+        "what",
+        "so",
+        "up",
+        "out",
+        "if",
+        "about",
+        "who",
+        "get",
+        "which",
+        "go",
+        "me",
+        "when",
+        "make",
+        "can",
+        "like",
+        "time",
+        "no",
+        "just",
+        "him",
+        "know",
+        "take",
+        "people",
+        "into",
+        "year",
+        "your",
+        "good",
+        "some",
+        "could",
+        "them",
+        "see",
+        "other",
+        "than",
+        "then",
+        "now",
+        "look",
+        "only",
+        "come",
+        "its",
+        "over",
+        "think",
+        "also",
+        "back",
+        "after",
+        "use",
+        "two",
+        "how",
+        "our",
+        "work",
+        "first",
+        "well",
+        "way",
+        "even",
+        "new",
+        "want",
+        "because",
+        "any",
+        "these",
+        "give",
+        "day",
+        "most",
+        "us",
+        "is",
+        "are",
+        "was",
+        "were",
+        "been",
+        "has",
+        "had",
+        "does",
+        "did",
+        "having",
+        "may",
+        "might",
+        "must",
+        "should",
+        "shall",
+        "cannot",
     }
 
     def count_syllables(self, word: str) -> int:
@@ -297,7 +564,9 @@ class EnglishLanguagePack(BaseLanguagePack):
         vowels = re.findall(r"[aeiouy]{1,2}", w)
         return max(1, len(vowels))
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -325,27 +594,117 @@ class EnglishLanguagePack(BaseLanguagePack):
             "interpretation": interp,
             "avg_sentence_length": round(asl, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
+
 
 class SpanishLanguagePack(BaseLanguagePack):
     lang_code = "es"
     name = "Español"
 
     top_10 = {
-        "el", "la", "de", "que", "y", "en", "un", "una", "los", "las", "del", "al"
+        "el",
+        "la",
+        "de",
+        "que",
+        "y",
+        "en",
+        "un",
+        "una",
+        "los",
+        "las",
+        "del",
+        "al",
     }
 
     top_100 = {
-        "por", "para", "con", "no", "su", "lo", "como", "más", "pero", "sus", "le", "ya", "o", "este", "sí", "porque",
-        "esta", "entre", "quando", "muy", "sin", "sobre", "también", "me", "hasta", "hay", "donde", "quien", "desde",
-        "todo", "nos", "durante", "todos", "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante", "ellos", "e",
-        "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro", "otras", "otra", "él", "tanto", "esa", "estos",
-        "mucho", "quienes", "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas", "algo", "nosotros",
-        "es", "son", "fue", "era", "ha", "han", "ser", "tiene", "tienen", "puede", "pueden", "hacer", "hace"
+        "por",
+        "para",
+        "con",
+        "no",
+        "su",
+        "lo",
+        "como",
+        "más",
+        "pero",
+        "sus",
+        "le",
+        "ya",
+        "o",
+        "este",
+        "sí",
+        "porque",
+        "esta",
+        "entre",
+        "cuando",
+        "muy",
+        "sin",
+        "sobre",
+        "también",
+        "me",
+        "hasta",
+        "hay",
+        "donde",
+        "quien",
+        "desde",
+        "todo",
+        "nos",
+        "durante",
+        "todos",
+        "uno",
+        "les",
+        "ni",
+        "contra",
+        "otros",
+        "ese",
+        "eso",
+        "ante",
+        "ellos",
+        "e",
+        "esto",
+        "mí",
+        "antes",
+        "algunos",
+        "qué",
+        "unos",
+        "yo",
+        "otro",
+        "otras",
+        "otra",
+        "él",
+        "tanto",
+        "esa",
+        "estos",
+        "mucho",
+        "quienes",
+        "nada",
+        "muchos",
+        "cual",
+        "poco",
+        "ella",
+        "estar",
+        "estas",
+        "algunas",
+        "algo",
+        "nosotros",
+        "es",
+        "son",
+        "fue",
+        "era",
+        "ha",
+        "han",
+        "ser",
+        "tiene",
+        "tienen",
+        "puede",
+        "pueden",
+        "hacer",
+        "hace",
     }
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -371,27 +730,113 @@ class SpanishLanguagePack(BaseLanguagePack):
             "interpretation": interp,
             "avg_sentence_length": round(f, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
+
 
 class FrenchLanguagePack(BaseLanguagePack):
     lang_code = "fr"
     name = "Français"
 
     top_10 = {
-        "le", "la", "de", "et", "un", "une", "les", "des", "en", "est", "du", "qui", "dans", "par", "pour"
+        "le",
+        "la",
+        "de",
+        "et",
+        "un",
+        "une",
+        "les",
+        "des",
+        "en",
+        "est",
+        "du",
+        "qui",
+        "dans",
+        "par",
+        "pour",
     }
 
     top_100 = {
-        "au", "avec", "ce", "il", "sur", "pas", "plus", "ne", "se", "son", "que", "ont", "ses", "mais", "ou",
-        "nous", "sa", "comme", "aussi", "ils", "tout", "fait", "elle", "leur", "y", "cette", "si", "deux", "même",
-        "bien", "ces", "sans", "peut", "faire", "tous", "après", "autres", "été", "temps", "leurs", "sous", "donc",
-        "on", "encore", "entre", "dont", "très", "toute", "alors", "moins", "dire", "avoir", "notre", "peu", "vie",
-        "chose", "trois", "toujours", "mon", "point", "jamais", "cas", "non", "grand", "effet", "voir", "monde",
-        "sont", "été", "avait", "étaient", "serait", "peuvent", "doit", "doivent"
+        "au",
+        "avec",
+        "ce",
+        "il",
+        "sur",
+        "pas",
+        "plus",
+        "ne",
+        "se",
+        "son",
+        "que",
+        "ont",
+        "ses",
+        "mais",
+        "ou",
+        "nous",
+        "sa",
+        "comme",
+        "aussi",
+        "ils",
+        "tout",
+        "fait",
+        "elle",
+        "leur",
+        "y",
+        "cette",
+        "si",
+        "deux",
+        "même",
+        "bien",
+        "ces",
+        "sans",
+        "peut",
+        "faire",
+        "tous",
+        "après",
+        "autres",
+        "été",
+        "temps",
+        "leurs",
+        "sous",
+        "donc",
+        "on",
+        "encore",
+        "entre",
+        "dont",
+        "très",
+        "toute",
+        "alors",
+        "moins",
+        "dire",
+        "avoir",
+        "notre",
+        "peu",
+        "vie",
+        "chose",
+        "trois",
+        "toujours",
+        "mon",
+        "point",
+        "jamais",
+        "cas",
+        "non",
+        "grand",
+        "effet",
+        "voir",
+        "monde",
+        "sont",
+        "été",
+        "avait",
+        "étaient",
+        "serait",
+        "peuvent",
+        "doit",
+        "doivent",
     }
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -417,27 +862,111 @@ class FrenchLanguagePack(BaseLanguagePack):
             "interpretation": interp,
             "avg_sentence_length": round(f, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
+
 
 class GermanLanguagePack(BaseLanguagePack):
     lang_code = "de"
     name = "Deutsch"
 
     top_10 = {
-        "der", "die", "das", "und", "in", "von", "zu", "den", "mit", "ist", "des", "ein", "eine", "auf", "dem"
+        "der",
+        "die",
+        "das",
+        "und",
+        "in",
+        "von",
+        "zu",
+        "den",
+        "mit",
+        "ist",
+        "des",
+        "ein",
+        "eine",
+        "auf",
+        "dem",
     }
 
     top_100 = {
-        "nicht", "auch", "im", "für", "an", "es", "als", "sich", "sie", "nach", "aus", "um", "wir", "er", "einen",
-        "einer", "einem", "hat", "wie", "aber", "zum", "bei", "so", "noch", "nur", "war", "über", "wird",
-        "man", "eines", "wurde", "oder", "durch", "kann", "haben", "seine", "mehr", "wieder", "seiner", "vor", "unter",
-        "wenn", "seines", "ihr", "ihre", "schon", "vom", "seinen", "ihrer", "dann", "sehr", "uns", "waren", "ohne",
-        "dieser", "diese", "dieses", "alle", "immer", "doch", "gut", "jetzt", "während", "zwischen", "jedoch", "da",
-        "sind", "waren", "worden", "werden", "können", "müssen", "sollte"
+        "nicht",
+        "auch",
+        "im",
+        "für",
+        "an",
+        "es",
+        "als",
+        "sich",
+        "sie",
+        "nach",
+        "aus",
+        "um",
+        "wir",
+        "er",
+        "einen",
+        "einer",
+        "einem",
+        "hat",
+        "wie",
+        "aber",
+        "zum",
+        "bei",
+        "so",
+        "noch",
+        "nur",
+        "war",
+        "über",
+        "wird",
+        "man",
+        "eines",
+        "wurde",
+        "oder",
+        "durch",
+        "kann",
+        "haben",
+        "seine",
+        "mehr",
+        "wieder",
+        "seiner",
+        "vor",
+        "unter",
+        "wenn",
+        "seines",
+        "ihr",
+        "ihre",
+        "schon",
+        "vom",
+        "seinen",
+        "ihrer",
+        "dann",
+        "sehr",
+        "uns",
+        "waren",
+        "ohne",
+        "dieser",
+        "diese",
+        "dieses",
+        "alle",
+        "immer",
+        "doch",
+        "gut",
+        "jetzt",
+        "während",
+        "zwischen",
+        "jedoch",
+        "da",
+        "sind",
+        "waren",
+        "worden",
+        "werden",
+        "können",
+        "müssen",
+        "sollte",
     }
 
-    def calculate_readability(self, text: str, words: List[str], sentences: List[str]) -> Dict:
+    def calculate_readability(
+        self, text: str, words: list[str], sentences: list[str]
+    ) -> dict:
         tot_words = max(1, len(words))
         tot_sents = max(1, len(sentences))
         tot_sylls = sum(self.count_syllables(w) for w in words)
@@ -463,30 +992,127 @@ class GermanLanguagePack(BaseLanguagePack):
             "interpretation": interp,
             "avg_sentence_length": round(f, 1),
             "words_count": tot_words,
-            "sentences_count": tot_sents
+            "sentences_count": tot_sents,
         }
+
 
 # ==============================================================================
 # LANGUAGE REGISTRY & DYNAMIC DISPATCH
 # ==============================================================================
 
+
 class LanguageRegistry:
     """Registry universale con rilevamento automatico O(N) e fallback zero-shot."""
-    
-    _packs: Dict[str, BaseLanguagePack] = {
+
+    _packs: dict[str, BaseLanguagePack] = {
         "it": ItalianLanguagePack(),
         "en": EnglishLanguagePack(),
         "es": SpanishLanguagePack(),
         "fr": FrenchLanguagePack(),
-        "de": GermanLanguagePack()
+        "de": GermanLanguagePack(),
     }
 
-    DIAGNOSTIC_VECTORS: Dict[str, Set[str]] = {
-        "it": {"il", "la", "di", "che", "e", "ed", "un", "una", "per", "non", "del", "della", "con", "sono", "in", "al", "delle", "dei"},
-        "en": {"the", "of", "and", "to", "in", "is", "that", "it", "was", "for", "as", "with", "by", "on", "are", "this", "from", "at"},
-        "es": {"el", "la", "de", "que", "y", "en", "un", "una", "los", "las", "por", "para", "con", "del", "como", "es", "al", "su"},
-        "fr": {"le", "la", "de", "et", "un", "une", "les", "des", "en", "est", "du", "qui", "dans", "par", "pour", "au", "avec", "sur"},
-        "de": {"der", "die", "das", "und", "in", "von", "zu", "den", "mit", "ist", "des", "ein", "eine", "auf", "dem", "nicht", "auch", "im"}
+    DIAGNOSTIC_VECTORS: dict[str, set[str]] = {
+        "it": {
+            "il",
+            "la",
+            "di",
+            "che",
+            "e",
+            "ed",
+            "un",
+            "una",
+            "per",
+            "non",
+            "del",
+            "della",
+            "con",
+            "sono",
+            "in",
+            "al",
+            "delle",
+            "dei",
+        },
+        "en": {
+            "the",
+            "of",
+            "and",
+            "to",
+            "in",
+            "is",
+            "that",
+            "it",
+            "was",
+            "for",
+            "as",
+            "with",
+            "by",
+            "on",
+            "are",
+            "this",
+            "from",
+            "at",
+        },
+        "es": {
+            "el",
+            "la",
+            "de",
+            "que",
+            "y",
+            "en",
+            "un",
+            "una",
+            "los",
+            "las",
+            "por",
+            "para",
+            "con",
+            "del",
+            "como",
+            "es",
+            "al",
+            "su",
+        },
+        "fr": {
+            "le",
+            "la",
+            "de",
+            "et",
+            "un",
+            "une",
+            "les",
+            "des",
+            "en",
+            "est",
+            "du",
+            "qui",
+            "dans",
+            "par",
+            "pour",
+            "au",
+            "avec",
+            "sur",
+        },
+        "de": {
+            "der",
+            "die",
+            "das",
+            "und",
+            "in",
+            "von",
+            "zu",
+            "den",
+            "mit",
+            "ist",
+            "des",
+            "ein",
+            "eine",
+            "auf",
+            "dem",
+            "nicht",
+            "auch",
+            "im",
+        },
     }
 
     @classmethod
@@ -501,10 +1127,10 @@ class LanguageRegistry:
         cls,
         lang_code: str,
         name: str,
-        top_10: List[str],
-        top_100: Optional[List[str]] = None,
-        top_1000: Optional[List[str]] = None,
-        collocations: Optional[List[str]] = None
+        top_10: list[str],
+        top_100: Optional[list[str]] = None,
+        top_1000: Optional[list[str]] = None,
+        collocations: Optional[list[str]] = None,
     ) -> BaseLanguagePack:
         """Permette all'Agente o all'utente di iniettare a runtime un nuovo LanguagePack senza riavvii."""
         pack = DataDrivenLanguagePack(
@@ -513,7 +1139,7 @@ class LanguageRegistry:
             top_10=set(top_10),
             top_100=set(top_100 or []),
             top_1000=set(top_1000 or []),
-            collocations=collocations or []
+            collocations=collocations or [],
         )
         cls.register(pack)
         return pack
@@ -524,21 +1150,25 @@ class LanguageRegistry:
         code = lang_code.lower().strip()
         if code in cls._packs:
             return cls._packs[code]
-        
+
         # Prova a caricare da data/languages/{code}.json se esiste
         json_path = DATA_LANGUAGES_DIR / f"{code}.json"
         if json_path.is_file():
-            universal_pack = UniversalLanguagePack(lang_code=code, name=f"Language ({code.upper()})")
+            universal_pack = UniversalLanguagePack(
+                lang_code=code, name=f"Language ({code.upper()})"
+            )
             cls._packs[code] = universal_pack
             return universal_pack
 
         # Fallback universale zero-shot per qualsiasi codice lingua sconosciuto (es. 'pt', 'la', 'nl', 'ru')
-        universal_pack = UniversalLanguagePack(lang_code=code, name=f"Universal ({code.upper()})")
+        universal_pack = UniversalLanguagePack(
+            lang_code=code, name=f"Universal ({code.upper()})"
+        )
         cls._packs[code] = universal_pack
         return universal_pack
 
     @classmethod
-    def detect_language(cls, words: List[str]) -> BaseLanguagePack:
+    def detect_language(cls, words: list[str]) -> BaseLanguagePack:
         """
         Rileva automaticamente la lingua in un singolo passaggio O(N).
         Scansiona i vettori diagnostici chiusi delle lingue registrate.
@@ -547,8 +1177,8 @@ class LanguageRegistry:
         if not words:
             return cls._packs["it"]
 
-        scores: Dict[str, int] = {code: 0 for code in cls.DIAGNOSTIC_VECTORS}
-        
+        scores: dict[str, int] = {code: 0 for code in cls.DIAGNOSTIC_VECTORS}
+
         for w in words:
             wl = w.lower()
             for code, vec in cls.DIAGNOSTIC_VECTORS.items():

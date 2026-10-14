@@ -5,25 +5,32 @@ comprehensive multi-file audits, cross-referencing citations and formatting tabu
 Eliminates the need for external boilerplate or scratch scripts.
 """
 
-import os
 import json
+import os
 from pathlib import Path
-from typing import Optional, Dict, List, Any
+from typing import Any, Optional
 
-from .cleaner import clean_markup, extract_sentences, extract_words
-from .evaluator_engine import evaluate_document
-from .metrics import calculate_readability
-from .linter import lint_text
 from .citations import audit_citations
+from .cleaner import extract_sentences, extract_words
+from .evaluator_engine import evaluate_document
+from .linter import lint_text
+from .metrics import calculate_readability
 
 SUPPORTED_EXTENSIONS = {".typ", ".tex", ".md", ".markdown", ".txt"}
-EXCLUDE_DIRS = {".git", ".system_generated", "node_modules", "target", "build", "dist", "scratch"}
+EXCLUDE_DIRS = {
+    ".git",
+    ".system_generated",
+    "node_modules",
+    "target",
+    "build",
+    "dist",
+    "scratch",
+}
+
 
 def audit_directory(
-    directory_path: str,
-    bib_path: Optional[str] = None,
-    lang: str = "en"
-) -> Dict[str, Any]:
+    directory_path: str, bib_path: Optional[str] = None, lang: str = "en"
+) -> dict[str, Any]:
     """
     Audits all academic/prose files in a directory recursively or at root level.
     Cross-checks citations against a .bib file if found or provided.
@@ -40,7 +47,7 @@ def audit_directory(
             bib_path = str(bib_candidates[0])
 
     # Find all supported files
-    all_files: List[Path] = []
+    all_files: list[Path] = []
     for root, dirs, files in os.walk(dir_p):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS and not d.startswith(".")]
         for file in files:
@@ -86,13 +93,20 @@ def audit_directory(
         words = len(extract_words(content))
         sents = len(extract_sentences(content))
         ai_score = eval_res.get("overall_ai_score", 0.0)
-        ppl = eval_res.get("lenses", {}).get("gptzero_emulator", {}).get("mean_ppl", 0.0)
-        burst = eval_res.get("lenses", {}).get("gptzero_emulator", {}).get("burstiness", 0.0)
+        ppl = (
+            eval_res.get("lenses", {}).get("gptzero_emulator", {}).get("mean_ppl", 0.0)
+        )
+        burst = (
+            eval_res
+            .get("lenses", {})
+            .get("gptzero_emulator", {})
+            .get("burstiness", 0.0)
+        )
 
         total_words += words
         total_sentences += sents
-        weighted_score_accum += (ai_score * words)
-        weighted_ppl_accum += (ppl * words)
+        weighted_score_accum += ai_score * words
+        weighted_ppl_accum += ppl * words
 
         # Collect detailed findings
         if lint_res:
@@ -116,7 +130,7 @@ def audit_directory(
             "gulpease": read_res.get("gulpease"),
             "lint_count": len(lint_res),
             "missing_bib_count": len(cite_res.get("missing_in_bib", [])),
-            "unsupported_count": len(cite_res.get("unsupported_claims", []))
+            "unsupported_count": len(cite_res.get("unsupported_claims", [])),
         })
 
     corpus_ai_score = round(weighted_score_accum / max(1, total_words), 1)
@@ -135,11 +149,15 @@ def audit_directory(
     # Generate Markdown Summary Table
     table_lines = [
         f"| {'File / Chapter':<35} | {'AI Risk %':<10} | {'PPL':<6} | {'Burst':<6} | {'Readability':<11} | {'Lints':<5} | {'Citations':<12} |",
-        f"|:{'-'*35}-|:{'-'*10}:|:{'-'*6}:|:{'-'*6}:|:{'-'*11}:|:{'-'*5}:|:{'-'*12}:|"
+        f"|:{'-' * 35}-|:{'-' * 10}:|:{'-' * 6}:|:{'-' * 6}:|:{'-' * 11}:|:{'-' * 5}:|:{'-' * 12}:|",
     ]
 
     for item in file_results:
-        read_val = f"G:{item['gulpease']:.1f}" if item["gulpease"] is not None else f"F:{item['flesch']:.1f}"
+        read_val = (
+            f"G:{item['gulpease']:.1f}"
+            if item["gulpease"] is not None
+            else f"F:{item['flesch']:.1f}"
+        )
         cite_val = f"bib:{item['missing_bib_count']}, uns:{item['unsupported_count']}"
         table_lines.append(
             f"| `{item['rel_path']:<33}` | {item['badge']} {item['ai_score']:>5.1f}% | {item['ppl']:>5.1f} | {item['burstiness']:>5.1f} | {read_val:>10} | {item['lint_count']:>5} | {cite_val:<12} |"
@@ -162,6 +180,6 @@ def audit_directory(
         "detailed_findings": {
             "lints": all_lint_findings,
             "missing_bib": all_missing_bib,
-            "unsupported_claims": all_unsupported_claims
-        }
+            "unsupported_claims": all_unsupported_claims,
+        },
     }

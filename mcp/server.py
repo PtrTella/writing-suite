@@ -6,10 +6,9 @@ Compatibile con lo standard Model Context Protocol (MCP stdio JSON-RPC 2.0).
 Zero dipendenze esterne: funziona nativamente con Python 3.9+ su macOS, Linux e Windows.
 """
 
-import sys
-import os
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
 
 # Aggiunge la directory corrente al path di importazione
@@ -17,11 +16,10 @@ current_dir = Path(__file__).resolve().parent
 if str(current_dir) not in sys.path:
     sys.path.insert(0, str(current_dir))
 
-from core.cleaner import clean_markup, extract_sentences, extract_words
-from core.linter import lint_text
-from core.metrics import calculate_readability
 from core.citations import audit_citations
 from core.evaluator_engine import evaluate_document
+from core.linter import lint_text
+from core.metrics import calculate_readability
 from core.project_auditor import audit_directory
 
 SERVER_NAME = "writing-suite"
@@ -40,33 +38,38 @@ TOOLS = [
             "properties": {
                 "text": {
                     "type": "string",
-                    "description": "Il testo (o porzione di testo) da sottoporre ad audit diagnostico."
+                    "description": "Il testo (o porzione di testo) da sottoporre ad audit diagnostico.",
                 },
                 "file_path": {
                     "type": "string",
-                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md)."
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md).",
                 },
                 "domain": {
                     "type": "string",
-                    "description": "Opzionale. Dominio del testo (es. 'cryptography', 'biomedical', 'legal', 'general')."
+                    "description": "Opzionale. Dominio del testo (es. 'cryptography', 'biomedical', 'legal', 'general').",
                 },
                 "domain_terms": {
                     "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Opzionale. Lista oggettiva di 5-15 termini tecnici o acronimi del dominio estratti dall'agente (es. ['Sepolia', 'zk-SNARKs', 'rollup']). Vengono esclusi dal tail statistico come terminologia attesa."
+                    "items": {"type": "string"},
+                    "description": "Opzionale. Lista oggettiva di 5-15 termini tecnici o acronimi del dominio estratti dall'agente (es. ['Sepolia', 'zk-SNARKs', 'rollup']). Vengono esclusi dal tail statistico come terminologia attesa.",
                 },
                 "target_style": {
                     "type": "string",
-                    "enum": ["academic_thesis", "technical_documentation", "essay", "conversational"],
-                    "description": "Opzionale. Profilo di stile atteso: 'academic_thesis' (default, σ0=10.5), 'technical_documentation' (σ0=8.0), 'essay' (σ0=11.5), 'conversational' (σ0=9.0)."
+                    "enum": [
+                        "academic_thesis",
+                        "technical_documentation",
+                        "essay",
+                        "conversational",
+                    ],
+                    "description": "Opzionale. Profilo di stile atteso: 'academic_thesis' (default, σ0=10.5), 'technical_documentation' (σ0=8.0), 'essay' (σ0=11.5), 'conversational' (σ0=9.0).",
                 },
                 "language": {
                     "type": "string",
-                    "description": "Opzionale. Lingua del testo ('it', 'en'). Se omesso, viene rilevata automaticamente in O(N)."
-                }
+                    "description": "Opzionale. Lingua del testo ('it', 'en'). Se omesso, viene rilevata automaticamente in O(N).",
+                },
             },
-            "required": ["text"]
-        }
+            "required": ["text"],
+        },
     },
     {
         "name": "audit_project",
@@ -76,20 +79,20 @@ TOOLS = [
             "properties": {
                 "directory_path": {
                     "type": "string",
-                    "description": "Percorso assoluto della directory del progetto o della tesi (es. /path/to/thesis_typst)."
+                    "description": "Percorso assoluto della directory del progetto o della tesi (es. /path/to/thesis_typst).",
                 },
                 "bib_path": {
                     "type": "string",
-                    "description": "Opzionale. Percorso del file .bib. Se omesso, viene rilevato automaticamente nella directory."
+                    "description": "Opzionale. Percorso del file .bib. Se omesso, viene rilevato automaticamente nella directory.",
                 },
                 "language": {
                     "type": "string",
                     "description": "Lingua di analisi per la leggibilità: 'en' o 'it'. Default: 'en'.",
-                    "enum": ["en", "it"]
-                }
+                    "enum": ["en", "it"],
+                },
             },
-            "required": ["directory_path"]
-        }
+            "required": ["directory_path"],
+        },
     },
     {
         "name": "calculate_readability",
@@ -97,18 +100,15 @@ TOOLS = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "text": {
-                    "type": "string",
-                    "description": "Il testo da analizzare."
-                },
+                "text": {"type": "string", "description": "Il testo da analizzare."},
                 "language": {
                     "type": "string",
                     "description": "Lingua di analisi: 'it' (Italiano) o 'en' (Inglese). Default: 'it'.",
-                    "enum": ["it", "en"]
-                }
+                    "enum": ["it", "en"],
+                },
             },
-            "required": ["text"]
-        }
+            "required": ["text"],
+        },
     },
     {
         "name": "lint_writing",
@@ -116,13 +116,10 @@ TOOLS = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "text": {
-                    "type": "string",
-                    "description": "Il testo da scansionare."
-                }
+                "text": {"type": "string", "description": "Il testo da scansionare."}
             },
-            "required": ["text"]
-        }
+            "required": ["text"],
+        },
     },
     {
         "name": "audit_citations",
@@ -132,21 +129,22 @@ TOOLS = [
             "properties": {
                 "text": {
                     "type": "string",
-                    "description": "Il testo da analizzare (Typst, LaTeX o Markdown)."
+                    "description": "Il testo da analizzare (Typst, LaTeX o Markdown).",
                 },
                 "bib_path": {
                     "type": "string",
-                    "description": "Opzionale. Percorso assoluto del file bibliografico (.bib)."
-                }
+                    "description": "Opzionale. Percorso assoluto del file bibliografico (.bib).",
+                },
             },
-            "required": ["text"]
-        }
-    }
+            "required": ["text"],
+        },
+    },
 ]
 
 # ==============================================================================
 # TOOL DISPATCHER
 # ==============================================================================
+
 
 def execute_tool(name: str, arguments: dict) -> str:
     """Esegue il tool specificato e restituisce il risultato formattato in formato testuale/JSON."""
@@ -168,7 +166,7 @@ def execute_tool(name: str, arguments: dict) -> str:
             domain=domain,
             domain_terms=domain_terms,
             target_style=target_style,
-            language=lang
+            language=lang,
         )
         return json.dumps(res, indent=2, ensure_ascii=False)
 
@@ -186,10 +184,11 @@ def execute_tool(name: str, arguments: dict) -> str:
 
     elif name == "lint_writing":
         findings = lint_text(text)
-        return json.dumps({
-            "total_findings": len(findings),
-            "findings": findings
-        }, indent=2, ensure_ascii=False)
+        return json.dumps(
+            {"total_findings": len(findings), "findings": findings},
+            indent=2,
+            ensure_ascii=False,
+        )
 
     elif name == "audit_citations":
         bib_p = arguments.get("bib_path")
@@ -199,9 +198,11 @@ def execute_tool(name: str, arguments: dict) -> str:
     else:
         raise ValueError(f"Tool sconosciuto: {name}")
 
+
 # ==============================================================================
 # MCP STDIO JSON-RPC 2.0 PROTOCOL LOOP
 # ==============================================================================
+
 
 def run_mcp_server():
     """Ascolta ed evade richieste JSON-RPC 2.0 su stdin/stdout secondo lo standard MCP."""
@@ -225,14 +226,9 @@ def run_mcp_server():
                     "id": req_id,
                     "result": {
                         "protocolVersion": "2024-11-05",
-                        "capabilities": {
-                            "tools": {}
-                        },
-                        "serverInfo": {
-                            "name": SERVER_NAME,
-                            "version": SERVER_VERSION
-                        }
-                    }
+                        "capabilities": {"tools": {}},
+                        "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION},
+                    },
                 }
                 sys.stdout.write(json.dumps(response) + "\n")
                 sys.stdout.flush()
@@ -242,13 +238,7 @@ def run_mcp_server():
                 pass
 
             elif method == "tools/list":
-                response = {
-                    "jsonrpc": "2.0",
-                    "id": req_id,
-                    "result": {
-                        "tools": TOOLS
-                    }
-                }
+                response = {"jsonrpc": "2.0", "id": req_id, "result": {"tools": TOOLS}}
                 sys.stdout.write(json.dumps(response) + "\n")
                 sys.stdout.flush()
 
@@ -260,14 +250,7 @@ def run_mcp_server():
                     response = {
                         "jsonrpc": "2.0",
                         "id": req_id,
-                        "result": {
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": result_text
-                                }
-                            ]
-                        }
+                        "result": {"content": [{"type": "text", "text": result_text}]},
                     }
                 except Exception as e:
                     response = {
@@ -277,11 +260,11 @@ def run_mcp_server():
                             "content": [
                                 {
                                     "type": "text",
-                                    "text": f"Errore durante l'esecuzione del tool {tool_name}: {str(e)}"
+                                    "text": f"Errore durante l'esecuzione del tool {tool_name}: {str(e)}",
                                 }
                             ],
-                            "isError": True
-                        }
+                            "isError": True,
+                        },
                     }
                 sys.stdout.write(json.dumps(response) + "\n")
                 sys.stdout.flush()
@@ -298,8 +281,8 @@ def run_mcp_server():
                         "id": req_id,
                         "error": {
                             "code": -32601,
-                            "message": f"Metodo non supportato: {method}"
-                        }
+                            "message": f"Metodo non supportato: {method}",
+                        },
                     }
                     sys.stdout.write(json.dumps(response) + "\n")
                     sys.stdout.flush()
@@ -310,30 +293,63 @@ def run_mcp_server():
                 "id": None,
                 "error": {
                     "code": -32603,
-                    "message": f"Errore interno del server: {str(err)}"
-                }
+                    "message": f"Errore interno del server: {str(err)}",
+                },
             }
             sys.stdout.write(json.dumps(err_response) + "\n")
             sys.stdout.flush()
+
 
 # ==============================================================================
 # CLI ENTRYPOINT
 # ==============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="Writing Suite Engine & MCP Server")
-    parser.add_argument("--mcp", action="store_true", help="Avvia il server in modalità MCP stdio JSON-RPC")
-    parser.add_argument("--audit", type=str, help="Esegue l'audit completo di un progetto o directory (.typ, .tex, .md)")
-    parser.add_argument("--evaluate", type=str, help="Valuta rischio AI di un file, directory o stringa")
-    parser.add_argument("--readability", type=str, help="Calcola leggibilità (Gulpease/Flesch)")
+    parser.add_argument(
+        "--mcp",
+        action="store_true",
+        help="Avvia il server in modalità MCP stdio JSON-RPC",
+    )
+    parser.add_argument(
+        "--audit",
+        type=str,
+        help="Esegue l'audit completo di un progetto o directory (.typ, .tex, .md)",
+    )
+    parser.add_argument(
+        "--evaluate", type=str, help="Valuta rischio AI di un file, directory o stringa"
+    )
+    parser.add_argument(
+        "--readability", type=str, help="Calcola leggibilità (Gulpease/Flesch)"
+    )
     parser.add_argument("--lint", type=str, help="Scansiona cliché e pattern bot")
     parser.add_argument("--citations", type=str, help="Verifica salute citazioni")
-    parser.add_argument("--bib", type=str, default=None, help="File .bib associato per verifica chiavi")
-    parser.add_argument("--domain", type=str, default=None, help="Dominio del testo (es. cryptography, biomedical, legal)")
-    parser.add_argument("--terms", type=str, default=None, help="Termini di dominio separati da virgola (es. 'Sepolia,zk-SNARKs,rollup')")
-    parser.add_argument("--style", type=str, default="academic_thesis", help="Profilo stilistico: academic_thesis, technical_documentation, essay, conversational")
+    parser.add_argument(
+        "--bib", type=str, default=None, help="File .bib associato per verifica chiavi"
+    )
+    parser.add_argument(
+        "--domain",
+        type=str,
+        default=None,
+        help="Dominio del testo (es. cryptography, biomedical, legal)",
+    )
+    parser.add_argument(
+        "--terms",
+        type=str,
+        default=None,
+        help="Termini di dominio separati da virgola (es. 'Sepolia,zk-SNARKs,rollup')",
+    )
+    parser.add_argument(
+        "--style",
+        type=str,
+        default="academic_thesis",
+        help="Profilo stilistico: academic_thesis, technical_documentation, essay, conversational",
+    )
     parser.add_argument("--lang", type=str, default="en", help="Lingua ('it' o 'en')")
-    parser.add_argument("--json", action="store_true", help="Restituisce output in formato JSON grezzo")
+    parser.add_argument(
+        "--json", action="store_true", help="Restituisce output in formato JSON grezzo"
+    )
 
     args = parser.parse_args()
 
@@ -342,7 +358,9 @@ def main():
         return
 
     # Modalità CLI
-    target_audit = args.audit or (args.evaluate and Path(args.evaluate).is_dir() and args.evaluate)
+    target_audit = args.audit or (
+        args.evaluate and Path(args.evaluate).is_dir() and args.evaluate
+    )
     if target_audit:
         res = audit_directory(target_audit, bib_path=args.bib, lang=args.lang)
         if args.json:
@@ -353,8 +371,12 @@ def main():
             print("=" * 88)
             print(res["summary_table"])
             print("-" * 88)
-            print(f"TOTAL WORDS: {res['total_words']} | TOTAL SENTENCES: {res['total_sentences']}")
-            print(f"CORPUS AI RISK: {res['corpus_badge']} {res['corpus_ai_score']}% ({res['corpus_verdict']})")
+            print(
+                f"TOTAL WORDS: {res['total_words']} | TOTAL SENTENCES: {res['total_sentences']}"
+            )
+            print(
+                f"CORPUS AI RISK: {res['corpus_badge']} {res['corpus_ai_score']}% ({res['corpus_verdict']})"
+            )
             print(f"CORPUS MEAN PPL: {res['corpus_mean_ppl']} / 100")
             print("=" * 88)
 
@@ -367,7 +389,9 @@ def main():
                 for rel_p, findings in lints.items():
                     print(f"\n  [{rel_p}] ({len(findings)} findings):")
                     for find in findings:
-                        print(f"    Line {find.get('line', '?')}: [{find.get('category')}] {find.get('name')}: '{find.get('matched_text')}'")
+                        print(
+                            f"    Line {find.get('line', '?')}: [{find.get('category')}] {find.get('name')}: '{find.get('matched_text')}'"
+                        )
 
             if missing_bib:
                 print("\n⚠️ CITATIONS MISSING IN BIB:")
@@ -379,42 +403,61 @@ def main():
                 for rel_p, claims in unsupported.items():
                     print(f"\n  [{rel_p}] ({len(claims)} claims):")
                     for cl in claims:
-                        print(f"    Line {cl.get('line', '?')}: '{cl.get('matched_text')}'")
+                        print(
+                            f"    Line {cl.get('line', '?')}: '{cl.get('matched_text')}'"
+                        )
 
     elif args.evaluate:
         p = Path(args.evaluate)
-        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.evaluate
-        domain_terms_list = [t.strip() for t in args.terms.split(",")] if args.terms else None
+        text = (
+            p.read_text(encoding="utf-8", errors="ignore")
+            if p.is_file()
+            else args.evaluate
+        )
+        domain_terms_list = (
+            [t.strip() for t in args.terms.split(",")] if args.terms else None
+        )
         res = evaluate_document(
             text,
             file_path=str(p) if p.is_file() else None,
             domain=args.domain,
             domain_terms=domain_terms_list,
             target_style=args.style,
-            language=args.lang
+            language=args.lang,
         )
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
     elif args.readability:
         p = Path(args.readability)
-        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.readability
+        text = (
+            p.read_text(encoding="utf-8", errors="ignore")
+            if p.is_file()
+            else args.readability
+        )
         res = calculate_readability(text, lang=args.lang)
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
     elif args.lint:
         p = Path(args.lint)
-        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.lint
+        text = (
+            p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.lint
+        )
         res = lint_text(text)
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
     elif args.citations:
         p = Path(args.citations)
-        text = p.read_text(encoding="utf-8", errors="ignore") if p.is_file() else args.citations
+        text = (
+            p.read_text(encoding="utf-8", errors="ignore")
+            if p.is_file()
+            else args.citations
+        )
         res = audit_citations(text, bib_path=args.bib)
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
