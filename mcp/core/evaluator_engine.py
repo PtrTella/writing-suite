@@ -83,6 +83,7 @@ def evaluate_document(
     else:
         pack = LanguageRegistry.detect_language(words)
     lang = pack.lang_code
+    pack.set_corpus(words)
 
     # 1. GPTZero emulato (Perplessità locale continua)
     gptzero_res = calculate_perplexity_and_burstiness(sentences)
