@@ -12,7 +12,7 @@ Restituisce output strutturato (JSON compatibile MCP) e heatmap frase per frase.
 """
 
 import math
-from typing import Dict, Optional
+from typing import Dict, List, Optional, Set
 from .cleaner import clean_markup, extract_sentences, extract_words
 from .linter import lint_text
 from .word_freq import calculate_gltr_profile, calculate_mtld
@@ -23,8 +23,42 @@ from .metrics import (
     check_anti_bypass
 )
 
-def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
-    """Esegue l'audit diagnostico completo multi-prospettiva su testo o file."""
+STYLE_PROFILES = {
+    "academic_thesis": {
+        "sigma_0": 10.5,
+        "k_cadence": 0.35,
+        "tail_midpoint": 14.0,
+        "name": "Academic Thesis / Scientific Paper"
+    },
+    "technical_documentation": {
+        "sigma_0": 8.0,
+        "k_cadence": 0.40,
+        "tail_midpoint": 12.0,
+        "name": "Technical Documentation / Developer Manual"
+    },
+    "essay": {
+        "sigma_0": 11.5,
+        "k_cadence": 0.35,
+        "tail_midpoint": 15.0,
+        "name": "Literary Essay / Editorial"
+    },
+    "conversational": {
+        "sigma_0": 9.0,
+        "k_cadence": 0.35,
+        "tail_midpoint": 10.0,
+        "name": "Informal / Conversational Article"
+    }
+}
+
+def evaluate_document(
+    text: str,
+    file_path: Optional[str] = None,
+    domain: Optional[str] = None,
+    domain_terms: Optional[List[str]] = None,
+    target_style: str = "academic_thesis",
+    language: Optional[str] = None
+) -> Dict:
+    """Esegue l'audit diagnostico completo multi-prospettiva su testo o file con calibrazione contestuale."""
     cleaned_prose = clean_markup(text)
     sentences = extract_sentences(text)
     words = extract_words(text)
@@ -37,19 +71,33 @@ def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
             "verdict_badge": "⚪"
         }
 
-    # Rilevamento automatico della lingua in O(N)
-    pack = LanguageRegistry.detect_language(words)
+    # Risoluzione profilo stilistico
+    profile = STYLE_PROFILES.get(target_style, STYLE_PROFILES["academic_thesis"])
+
+    # Normalizzazione termini di dominio passati dall'agente
+    domain_set = {t.lower().strip() for t in domain_terms if t} if domain_terms else set()
+
+    # Selezione o rilevamento automatico della lingua
+    if language:
+        pack = LanguageRegistry.get(language)
+    else:
+        pack = LanguageRegistry.detect_language(words)
     lang = pack.lang_code
 
     # 1. GPTZero emulato (Perplessità locale continua)
     gptzero_res = calculate_perplexity_and_burstiness(sentences)
     score_gptzero = gptzero_res["risk_score"]
 
-    # 2. GLTR Forensics (Profilazione ranghi Zipf continua)
-    gltr_res = calculate_gltr_profile(words, lang=lang)
+    # 2. GLTR Forensics con calibrazione sui termini di dominio
+    gltr_res = calculate_gltr_profile(
+        words,
+        lang=lang,
+        domain_terms=domain_set,
+        tail_midpoint=profile["tail_midpoint"]
+    )
     score_gltr = gltr_res["gltr_risk_score"]
 
-    # 3. Cadence Burstiness (Curva logistica continua sulla deviazione standard della lunghezza)
+    # 3. Cadence Burstiness (Curva logistica calibrata sul profilo di stile atteso)
     s_lens = [len(extract_words(s)) for s in sentences if len(extract_words(s)) >= 2]
     if len(s_lens) >= 2:
         mean_len = round(sum(s_lens) / len(s_lens), 1)
@@ -59,20 +107,24 @@ def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
         mean_len = 15.0
         std_len = 10.0
     
-    # Curva logistica continua: midpoint 10.5 parole, steepness 0.35
-    score_cadence = round(100.0 / (1.0 + math.exp(0.35 * (std_len - 10.5))), 1)
+    # Curva logistica continua con parametri del profilo (con clamping numerico anti-overflow)
+    z_cadence = max(-60.0, min(60.0, profile["k_cadence"] * (std_len - profile["sigma_0"])))
+    score_cadence = round(100.0 / (1.0 + math.exp(z_cadence)), 1)
 
     # 4. Linter Euristico (Saturazione esponenziale continua)
     linter_findings = lint_text(text)
     total_linter_weight = sum(f["weight"] for f in linter_findings)
     word_count = len(words)
     findings_density = (len(linter_findings) / max(1, word_count)) * 100.0
-    score_linter = round(100.0 * (1.0 - math.exp(-0.10 * total_linter_weight - 0.15 * findings_density)), 1)
+    z_linter = max(-60.0, min(60.0, -0.10 * total_linter_weight - 0.15 * findings_density))
+    score_linter = round(100.0 * (1.0 - math.exp(z_linter)), 1)
 
-    # 5. Stilometria Accademica & MTLD (Curva continua)
+    # 5. Stilometria Accademica & MTLD (Curva continua con MTLD bounded)
     stylometrics_res = calculate_stylometrics(words)
-    mtld_val = calculate_mtld(words)
-    score_mtld = 100.0 / (1.0 + math.exp(0.04 * (mtld_val - 65.0)))
+    raw_mtld = calculate_mtld(words)
+    mtld_val = min(400.0, max(10.0, raw_mtld))
+    z_mtld = max(-60.0, min(60.0, 0.04 * (mtld_val - 65.0)))
+    score_mtld = 100.0 / (1.0 + math.exp(z_mtld))
     score_stylo = round(0.5 * stylometrics_res["risk_score"] + 0.5 * score_mtld, 1)
 
     # 6. Anti-Bypass
@@ -135,6 +187,7 @@ def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
                 "top_1000_pct": gltr_res["top_1000_pct"],
                 "top_3000_pct": gltr_res["top_3000_pct"],
                 "tail_pct": gltr_res["tail_pct"],
+                "domain_terms_pct": gltr_res.get("domain_terms_pct", 0.0),
                 "saturation_pct": gltr_res["saturation_pct"]
             },
             "gptzero_emulator": {
@@ -160,6 +213,12 @@ def evaluate_document(text: str, file_path: Optional[str] = None) -> Dict:
                 "anomalies": anti_bypass_res["anomalies"]
             },
             "readability": readability_res
+        },
+        "context_calibration": {
+            "domain": domain or "general",
+            "target_style": profile["name"],
+            "domain_terms_count": len(domain_set),
+            "domain_terms_sample": sorted(list(domain_set))[:10]
         },
         "heatmap": gptzero_res["heatmap"]
     }
