@@ -103,5 +103,23 @@ class TestWritingSuite(unittest.TestCase):
         self.assertIn("WS-RID-004", rule_ids)  # funge da indice
         self.assertIn("WS-RID-003", rule_ids)  # , garantendo
 
+    def test_domain_terms_calibration(self):
+        text = (
+            "L'architettura decentralizzata utilizza zkTLS, zk-SNARKs, Sepolia e Merkle DAG per convalidare "
+            "le transazioni nello stato globale, garantendo un'infrastruttura crittografica ad alte prestazioni e privacy."
+        )
+        # Senza termini di dominio
+        res_raw = evaluate_document(text, domain_terms=[])
+        # Con termini di dominio
+        res_calibrated = evaluate_document(
+            text,
+            domain="blockchain",
+            domain_terms=["zkTLS", "zk-SNARKs", "Sepolia", "Merkle DAG"],
+            target_style="technical_documentation"
+        )
+        self.assertEqual(res_calibrated["context_calibration"]["domain"], "blockchain")
+        self.assertGreater(res_calibrated["lenses"]["gltr_forensics"]["domain_terms_pct"], 0.0)
+        self.assertEqual(res_calibrated["context_calibration"]["domain_terms_count"], 4)
+
 if __name__ == "__main__":
     unittest.main()
