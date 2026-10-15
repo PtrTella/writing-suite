@@ -25,15 +25,15 @@ async def run_live_comparison():
     with open(corpus_path, "r", encoding="utf-8") as f:
         corpus = json.load(f)
 
-    # 1. AI sample
-    ai_text = corpus["ai"]["ai_cs_consensus.txt"]
-    # 2. Human sample
-    human_text = corpus["human"]["human_math_shannon_1948.txt"]
+    # 1. AI sample (English)
+    ai_text = corpus["ai"]["ai_bio_crispr.txt"]
+    # 2. Human samples (English)
+    shannon_text = corpus["human"]["human_math_shannon_1948.txt"]
+    lamport_text = corpus["human"]["human_cs_lamport_1978.txt"]
     
-    # 3. Chapter 1 Thesis Sample (PyChain Section 1.4 & Intro)
+    # 3. Chapter 1 Thesis Sample (PyChain Section 1.0 Intro)
     thesis_file = Path("/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch1_intro.typ")
     thesis_content = thesis_file.read_text(encoding="utf-8")
-    # Estrarre 2 paragrafi sostanziosi (circa 180 parole) da Section 1.0 / PyChain architecture
     thesis_sample = (
         "Public package repositories, including the Python Package Index (PyPI) and npm, stream untrusted "
         "third-party code straight onto developer workstations, cloud clusters, and continuous integration pipelines. "
@@ -54,9 +54,10 @@ async def run_live_comparison():
     )
 
     samples = [
-        ("AI Benchmark (Consensus)", "AI_SYNTHETIC", ai_text),
-        ("Human Classic (Shannon 1948)", "HUMAN_ORIGINAL", human_text),
-        ("Thesis Ch1 Intro (PyChain)", "HUMANIZED_THESIS", thesis_sample)
+        ("AI Benchmark (CRISPR)", "AI_SYNTHETIC", ai_text),
+        ("Human Classic (Shannon 1948)", "HUMAN_ORIGINAL", shannon_text),
+        ("Human Classic (Lamport 1978)", "HUMAN_ORIGINAL", lamport_text),
+        ("Thesis Ch1 Intro (PyChain Draft)", "THESIS_DRAFT", thesis_sample)
     ]
 
     print("=" * 100)

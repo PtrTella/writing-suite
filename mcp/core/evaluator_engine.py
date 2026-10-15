@@ -163,21 +163,32 @@ def evaluate_document(
             score_neural = None
 
     # Punteggio Ponderato Continuo Calibrato su Benchmark Commerciali (Copyleaks / CleverHumanizer / RAID):
-    # I rilevatori commerciali moderni si basano primariamente su modelli transformer contestuali (DeBERTa-v3/RoBERTa)
-    # e sull'asimmetria di cadenza (burstiness). Il linter euristico serve come feedback diagnostico ma non deve
-    # mascherare un punteggio neurale elevato.
     predictability_score = max(score_gltr, 0.70 * score_gltr + 0.30 * score_gptzero)
-    if score_neural is not None:
+
+    # Bayesian Multi-Lens Gating per prose assiomatiche / formali (Lamport, Turing, Watson & Crick):
+    # I modelli neurali transformer allenati su RAID possono mostrare falsi positivi OOD
+    # su testi accademici formali ricchi di definizioni matematiche e gergo CS.
+    # Se il testo ha ZERO tell euristici (score_linter == 0.0) e una distribuzione Zipf
+    # tipicamente umana a coda lunga (score_gltr <= 25.0), il punteggio neurale e la cadenza
+    # vengono modulati dall'evidenza statistica lessicale autentica.
+    eff_neural = score_neural
+    eff_cadence = score_cadence
+    if score_linter == 0.0 and score_gltr <= 25.0:
+        if eff_neural is not None:
+            eff_neural = min(score_neural, 0.30 * score_neural + 0.70 * score_gltr)
+        eff_cadence = min(score_cadence, 45.0)
+
+    if eff_neural is not None:
         base_score = (
-            (0.60 * score_neural)
-            + (0.25 * score_cadence)
-            + (0.05 * score_linter)
-            + (0.05 * predictability_score)
+            (0.50 * eff_neural)
+            + (0.20 * eff_cadence)
+            + (0.15 * score_linter)
+            + (0.10 * predictability_score)
             + (0.05 * score_stylo)
         )
     else:
         base_score = (
-            (0.40 * score_cadence)
+            (0.40 * eff_cadence)
             + (0.35 * score_linter)
             + (0.20 * predictability_score)
             + (0.05 * score_stylo)
@@ -185,20 +196,25 @@ def evaluate_document(
 
     # Multi-Lens Evidence Synergy:
     # 1. Quando GLTR starvation converge con cadenza monotona o linter
-    if score_gltr >= 85.0 and (score_cadence >= 60.0 or score_linter >= 40.0):
+    if score_gltr >= 80.0 and (score_cadence >= 60.0 or score_linter >= 40.0):
         base_score += 10.0
 
-    # 2. Quando il modello neurale DeBERTa e la cadenza monotona convergono
-    # (hallmark dei moderni testi AI accademici: fluidità priva di refusi ma cadenza e modello sintetici)
-    if score_neural is not None and score_neural >= 40.0 and score_cadence >= 60.0:
+    # 2. Quando il modello neurale DeBERTa e la cadenza monotona convergono con evidenza di AI
+    if eff_neural is not None and eff_neural >= 50.0 and score_cadence >= 60.0 and (score_linter >= 20.0 or predictability_score >= 30.0):
         base_score += 10.0
 
-    # 3. Peak AI Floor: se il detector neurale ha individuato una frase con probabilità AI >= 75%
-    # il documento non può essere classificato come 100% verde (floor a 35% minimo)
-    if neural_heatmap:
-        max_sent_p = max((s.get("ai_probability", 0.0) for s in neural_heatmap), default=0.0)
-        if max_sent_p >= 75.0 and base_score < 35.0:
-            base_score = 35.0
+    # 3. Quando linter euristico e cadenza monotona convergono pesantemente (hallmark di testo sintetico multilingua)
+    if score_linter >= 70.0 and score_cadence >= 60.0:
+        base_score += 20.0
+        if score_linter >= 90.0 and score_cadence >= 80.0:
+            base_score = max(base_score, 68.0)
+
+    # 4. Peak AI Floor: se il detector neurale contestuale ha individuato più frasi con probabilità AI >= 80%
+    # in presenza di segnali sintetici concomitanti, assicura un floor minimo coerente (escluso testi con zero tell e Zipf autentica).
+    if neural_heatmap and not (score_linter == 0.0 and score_gltr <= 25.0):
+        ai_sents_count = sum(1 for s in neural_heatmap if s.get("ai_probability", 0.0) >= 80.0)
+        if ai_sents_count >= 2 and base_score < 40.0:
+            base_score = 40.0
 
     if score_bypass > 0:
         base_score = min(100.0, base_score + 0.25 * score_bypass)

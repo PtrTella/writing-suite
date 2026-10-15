@@ -313,10 +313,15 @@ def predict_sentences_batch(
     for j, orig_idx in enumerate(valid_indices):
         p_sing = round(float(single_probs[j]), 1)
         p_ctx = round(float(context_probs[j]), 1)
-        # Severity-preserving envelope (stile Copyleaks/CleverHumanizer):
-        # Una frase robotica isolata non deve MAI essere diluita o perdonata dal contesto,
-        # e al contempo un incremento di robotismo nel flusso contestuale deve essere catturato.
-        p_final = round(max(p_sing, p_ctx), 1)
+        # Context-First Balanced Scoring (stile Copyleaks/CleverHumanizer):
+        # Il modello transformer è addestrato su paragrafi interi. Frasi corte isolate con gergo tecnico
+        # (es. crittografia, definizioni matematiche) generano picchi rumorosi (out-of-distribution).
+        # Se nel trigramma di contesto la frase è naturale (p_ctx < 25%), ci si fida del contesto.
+        # Se invece p_ctx >= 25%, si applica fusione ponderata 70% contesto + 30% isolata.
+        if p_ctx < 25.0:
+            p_final = p_ctx
+        else:
+            p_final = round(0.70 * p_ctx + 0.30 * p_sing, 1)
         penalty = round(max(0.0, p_ctx - p_sing), 1)
         prob_map[orig_idx] = {
             "ai_probability": p_final,
@@ -361,52 +366,45 @@ def predict_sentences_batch(
 def predict_text_score(text: str) -> Optional[float]:
     """
     Predice la probabilità complessiva che il testo sia generato da AI (0.0 - 100.0%)
-    usando l'aggregazione non-lineare multi-scala di livello industriale (stile Copyleaks):
-      Composite = 0.45 * Mean_Frasi_Ponderata + 0.35 * P80_Frasi + 0.20 * Worst_Chunk
+    usando l'architettura gerarchica industriale (stile Copyleaks / CleverHumanizer):
+      Score = 0.50 * D_doc (inferenza documento 512 tokens)
+            + 0.30 * C_worst (peggior chunk sliding-window 384 tokens)
+            + 0.20 * C_mean (media chunk sliding-window)
     """
     model, tokenizer = load_model()
-    if model is None or tokenizer is None:
+    if model is None or tokenizer is None or not text.strip():
         return None
 
-    import re
-    raw_sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if len(s.strip().split()) >= 3]
-    if len(raw_sents) >= 2:
-        sent_scores = predict_sentences_batch(raw_sents, with_context=True)
-        if sent_scores:
-            total_words = sum(len(s["text"].split()) for s in sent_scores)
-            if total_words > 0:
-                weighted_prob = sum(s["ai_probability"] * len(s["text"].split()) for s in sent_scores) / total_words
-
-                all_probs = sorted([s["ai_probability"] for s in sent_scores])
-                p80_idx = int(len(all_probs) * 0.80)
-                p80_val = all_probs[min(p80_idx, len(all_probs) - 1)]
-                max_prob = all_probs[-1]
-
-                chunk_res = predict_sliding_window_chunks(text)
-                worst_chunk = chunk_res.get("worst_chunk_score", weighted_prob)
-                effective_worst = max(worst_chunk, max_prob) if max_prob >= 60.0 else worst_chunk
-
-                # Composite score multi-scala Copyleaks con preservazione dei picchi sintetici
-                composite = (0.40 * weighted_prob) + (0.35 * p80_val) + (0.25 * effective_worst)
-                return round(float(composite), 1)
-
     import torch
+    device = get_device()
+
+    # 1. Inferenza a livello di documento completo (fino a 512 tokens, padding max_length)
     tokens = tokenizer(
         text,
         return_tensors="pt",
         truncation=True,
         max_length=512,
-        padding=True
-    ).to(get_device())
+        padding="max_length"
+    ).to(device)
 
     with torch.no_grad():
         if "desklib" in _MODEL_NAME:
             logits = model(tokens["input_ids"], attention_mask=tokens["attention_mask"])
-            ai_prob = torch.sigmoid(logits).item() * 100.0
+            p_doc = torch.sigmoid(logits).item() * 100.0
         else:
             outputs = model(**tokens)
             probs = torch.softmax(outputs.logits, dim=-1)
-            ai_prob = probs[0][1].item() * 100.0
+            p_doc = probs[0][1].item() * 100.0
 
-    return round(float(ai_prob), 1)
+    # 2. Scansione sliding window per catturare picchi sintetici e discontinuità
+    chunk_res = predict_sliding_window_chunks(text)
+    worst_chunk = chunk_res.get("worst_chunk_score", p_doc)
+    mean_chunk = chunk_res.get("mean_chunk_score", p_doc)
+
+    if chunk_res.get("chunks"):
+        score_neural = (0.50 * p_doc) + (0.30 * worst_chunk) + (0.20 * mean_chunk)
+    else:
+        score_neural = p_doc
+
+    return round(float(score_neural), 1)
 

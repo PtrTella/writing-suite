@@ -307,4 +307,40 @@ def lint_text(text: str) -> list[dict]:
             "explanation": "Elenco seriale con ogni punto introdotto sistematicamente da un'etichetta in grassetto, layout tipico generato dai modelli linguistici."
         })
 
+    # 3. Rilevamento chiusure participiali posticce sistematiche (WS-RID-005)
+    # Cattura ", <gerundio> ..." a fine frase prima del punto (stile Copyleaks 'Predictable sentence endings')
+    coda_matches = list(re.finditer(r",\s+(?!(?:according|including|during|concerning|regarding|involving)\b)([a-z]+ing)\b([^.!?\n]{12,}[.!?])", text, re.IGNORECASE))
+    if coda_matches:
+        for cm in coda_matches:
+            findings.append({
+                "id": "WS-RID-005",
+                "line": 1,
+                "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+                "severity": "HIGH",
+                "category": "Riders Participiali",
+                "weight": 2.5,
+                "matched_text": cm.group(0).strip(),
+                "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+            })
+
+    # 4. Rilevamento densità patologica di due punti (WS-SYN-010: Elaboration Addiction)
+    # Nei testi umani accademici la frequenza dei due punti è rara (< 0.15 per frase).
+    # Nei modelli AI, i due punti vengono usati compulsivamente come connettore di elaborazione (ratio >= 0.30 con >= 3 colons).
+    raw_sents_count = len(re.split(r"(?<=[.!?])\s+", text.strip()))
+    colon_count = text.count(":")
+    if raw_sents_count >= 5 and colon_count >= 3:
+        colon_ratio = colon_count / raw_sents_count
+        if colon_ratio >= 0.30:
+            colon_weight = min(5.0, 2.0 + (colon_ratio - 0.30) * 10.0)
+            findings.append({
+                "id": "WS-SYN-010",
+                "line": 1,
+                "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+                "severity": "HIGH",
+                "category": "Sintassi da Modello",
+                "weight": round(colon_weight, 1),
+                "matched_text": f"{colon_count} due punti in {raw_sents_count} frasi (densità: {colon_ratio:.2f} per frase)",
+                "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+            })
+
     return findings
