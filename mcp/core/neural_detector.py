@@ -5,6 +5,7 @@ per stimare la probabilità neurale che il testo sia generato da LLM (ChatGPT, C
 Sfrutta nativamente l'accelerazione Apple Silicon Metal (MPS) su Mac M-series (~35ms per inferenza).
 """
 
+import os
 import sys
 import glob
 import logging
@@ -12,9 +13,13 @@ import warnings
 from typing import Optional, List, Dict, Union, Any
 from pathlib import Path
 
-# Silenzia warning innocui di deprecazione JIT e avvisi di download non autenticato da HF Hub
+# Silenzia warning innocui di deprecazione JIT e avvisi di download da HF Hub
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
 warnings.filterwarnings("ignore", category=FutureWarning)
 logging.getLogger("huggingface_hub").setLevel(logging.ERROR)
+logging.getLogger("transformers").setLevel(logging.ERROR)
 
 _MODEL = None
 _TOKENIZER = None
@@ -63,10 +68,16 @@ def load_model(model_name: Optional[str] = None):
         from safetensors.torch import load_file
         
         device = get_device()
-        _TOKENIZER = AutoTokenizer.from_pretrained(_MODEL_NAME)
+        try:
+            _TOKENIZER = AutoTokenizer.from_pretrained(_MODEL_NAME, local_files_only=True)
+        except Exception:
+            _TOKENIZER = AutoTokenizer.from_pretrained(_MODEL_NAME)
         
         if "desklib" in _MODEL_NAME:
-            config = AutoConfig.from_pretrained(_MODEL_NAME)
+            try:
+                config = AutoConfig.from_pretrained(_MODEL_NAME, local_files_only=True)
+            except Exception:
+                config = AutoConfig.from_pretrained(_MODEL_NAME)
             
             class CustomDesklibModel(nn.Module):
                 def __init__(self, cfg):
@@ -86,15 +97,21 @@ def load_model(model_name: Optional[str] = None):
 
             _MODEL = CustomDesklibModel(config)
             
-            # Download/load cached safetensors file
-            safetensors_path = hf_hub_download(repo_id=_MODEL_NAME, filename="model.safetensors")
+            # Carica file safetensors in modalità offline locale
+            try:
+                safetensors_path = hf_hub_download(repo_id=_MODEL_NAME, filename="model.safetensors", local_files_only=True)
+            except Exception:
+                safetensors_path = hf_hub_download(repo_id=_MODEL_NAME, filename="model.safetensors")
             state_dict = load_file(safetensors_path)
             _MODEL.load_state_dict(state_dict)
             _MODEL.to(device)
             _MODEL.eval()
         else:
-            from transformers import AutoModelForSequenceClassification
-            _MODEL = AutoModelForSequenceClassification.from_pretrained(_MODEL_NAME)
+            try:
+                from transformers import AutoModelForSequenceClassification
+                _MODEL = AutoModelForSequenceClassification.from_pretrained(_MODEL_NAME, local_files_only=True)
+            except Exception:
+                _MODEL = AutoModelForSequenceClassification.from_pretrained(_MODEL_NAME)
             _MODEL.to(device)
             _MODEL.eval()
             
