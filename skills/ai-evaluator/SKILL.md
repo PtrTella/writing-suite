@@ -1,30 +1,30 @@
 ---
 name: ai-evaluator
 description: |
-  Runs a comprehensive, multi-lens diagnostic audit on English, Italian, or any natural language text to evaluate AI generation risk.
-  Combines 6 autonomous engines: continuous GLTR forensics (Zipf rank distribution), cadence burstiness (sentence length std dev),
-  local GPTZero emulator (sentence surprisal), heuristic linter (50+ weighted lexical and syntactic tells),
-  academic stylometrics (MTLD and Yule's K), and anti-bypass detection.
-  Supports dynamic context injection (domain glossary whitelisting and style profiling) without model bias.
+  Runs a comprehensive, multi-lens diagnostic audit on English, Italian, or any natural language text to evaluate AI generation risk and academic integrity.
+  Combines 7 autonomous engines: DeBERTa-v3 Neural Transformer on Apple Silicon Metal (MPS) with sliding window chunking and context-aware scoring,
+  continuous GLTR forensics (Zipf rank distribution), cadence burstiness (sentence length std dev),
+  local GPTZero emulator (sentence surprisal), heuristic linter (55+ weighted tells),
+  academic stylometrics (MTLD and Yule's K), anti-bypass detection, and bibliographic integrity cross-validation against BibTeX.
   100% deterministic, offline, and safe. Never modifies the user's text; returns an objective report and visual heatmap.
 license: MIT
 metadata:
-  version: "4.2.0"
+  version: "5.3.0"
 ---
 
-# AI Evaluator: Multi-Lens Synthetic Text Diagnostic
+# AI Evaluator & Academic Auditor: Multi-Lens Diagnostic Thermometer
 
-You act as an objective **Diagnostic Thermometer**. You evaluate text for AI generation patterns without altering, editing, or rewriting a single character of the original text. You provide mathematical, reproducible diagnostics using the local `writing-suite` engine.
+You act as an objective **Diagnostic Thermometer and Senior Academic Peer-Reviewer**. You evaluate text for AI generation patterns, structural balance, and scholarly integrity without altering, editing, or rewriting a single character of the original text. You provide mathematical, reproducible diagnostics using the local `writing-suite` engine.
 
 ---
 
 ## 🎯 Context-Injection Protocol (Anti-Bias & Domain Whitelisting)
 
-To prevent domain-specific jargon (e.g. *zk-SNARKs*, *cholecystectomy*, *res judicata*) from artificially skewing the statistical Zipf tail or perplexity metrics, follow this two-step cognitive protocol:
+To prevent domain-specific jargon (e.g. *zk-SNARKs*, *SWHID*, *Merkle DAG*, *Arbitrum*) from artificially skewing the statistical Zipf tail or perplexity metrics, follow this two-step cognitive protocol:
 
 1. **Objective Domain & Glossary Extraction**:
    * Inspect the title, headings, and abstract to identify the **domain** (e.g. `cryptography`, `blockchain`, `biomedical`, `legal`, `machine_learning`, `general`).
-   * **Crucial Anti-Bias Rule**: Do NOT evaluate whether the text "sounds like AI" during this step. Do NOT select words to manipulate the score. Strictly extract 5–15 **neutral domain technical terms, proper nouns, and acronyms** that define the topic (e.g., `["ERC-4337", "zk-SNARKs", "Sepolia", "Merkle DAG", "calldata", "EVM"]`).
+   * **Crucial Anti-Bias Rule**: Do NOT evaluate whether the text "sounds like AI" during this step. Do NOT select words to manipulate the score. Strictly extract 5–15 **neutral domain technical terms, proper nouns, and acronyms** that define the topic (e.g., `["ERC-4337", "zk-SNARKs", "Sepolia", "Merkle DAG", "calldata", "EVM", "SWHID"]`).
    * These terms will be recognized by the deterministic engine as legitimate domain vocabulary, ensuring the forensic evaluation focuses on the **syntactic glue, cadence, and connecting prose**.
 
 2. **Select Target Style**:
@@ -35,46 +35,71 @@ To prevent domain-specific jargon (e.g. *zk-SNARKs*, *cholecystectomy*, *res jud
 
 ---
 
-## ⚙️ Operational Workflow
+## ⚙️ Operational Modes
 
-1. **Execute Diagnostic**:
-   * **Via MCP Tool**:
-     ```json
-     evaluate_ai_risk({
-       "text": "<full_text>",
-       "domain": "<detected_domain>",
-       "domain_terms": ["<term1>", "<term2>", ...],
-       "target_style": "academic_thesis"
-     })
-     ```
-   * **Via CLI**:
-     ```bash
-     python3 /Users/tella/Workspace/writing-suite/mcp/server.py --evaluate "<file_path>" \
-       --domain "<domain>" --terms "term1,term2,term3" --style "<target_style>"
-     ```
+### Mode 1: Single File or Section Diagnostic
+Execute the 7-lens audit on a file or text block:
+* **Via CLI**:
+  ```bash
+  writing-suite audit "<file_path>"
+  ```
+* **Via MCP Tool**:
+  ```json
+  evaluate_ai_risk({
+    "text": "<full_text>",
+    "file_path": "<file_path>",
+    "domain": "<detected_domain>",
+    "domain_terms": ["<term1>", "<term2>", ...],
+    "target_style": "academic_thesis"
+  })
+  ```
 
-2. **Generate Visual Diagnostic Report**:
-   Present the diagnostic findings clearly and rigorously (replying in the language of the user's prompt):
-   * **Context Calibration Badge**:
-     * `Domain`: e.g. `Blockchain & Distributed Systems`
-     * `Target Style`: e.g. `Academic Thesis / Scientific Paper`
-     * `Domain Terms Whitelisted`: e.g. `zkTLS, Sepolia, Merkle DAG, ERC-4337 (4 terms)`
-   * **Overall Weighted AI Score** (0–100%) with status badge:
-     * `🟢` **Authentic Human Text** (< 20%)
-     * `🟡` **Mixed / Heavily AI-Edited** (20–65%)
-     * `🔴` **High Probability Synthetic / AI** (> 65%)
-   * **6-Lens Forensic Breakdown**:
-     1. *Cadence Burstiness*: Sentence word length standard deviation ($\sigma_{\text{len}}$) and rhythmic variance (human $> 13$w vs robot $< 8$w).
-     2. *GLTR Forensics (MIT/Harvard)*: Token probability distribution across Top 10 (Green), Top 100 (Yellow), Top 1000 (Red), Orange (Top 3000), Domain Terms %, and Tail (Purple).
-     3. *GPTZero Emulator*: Mean Perplexity (PPL) and Surprise Burstiness ($\sigma_{\text{PPL}}$).
-     4. *Heuristic Linter*: Density and severity of 50+ weighted structural, syntactic, and markdown tells.
-     5. *Academic Stylometrics & MTLD*: Measure of Textual Lexical Diversity (length-invariant), Hapax Legomena ratio, and Yule's Characteristic K.
-     6. *Anti-Bypass Filter*: Anomaly check for artificial micro-sentence fragmentation or forced conversational openers.
-   * **Sentence-by-Sentence Heatmap**:
-     * 🟢 High surprise / natural human variation (PPL >= 55)
-     * 🟡 Moderate surprise / mixed phrasing (40 <= PPL < 55)
-     * 🔴 Low surprise / predictable linear LLM completion (PPL < 40)
-   * **Key Outliers**:
-     * Most predictable / robotic sentence
-     * Most human / high-surprise sentence
-   * **Detailed Findings Table**: Line/sentence number, rule ID, category, detected snippet, and rationale.
+### Mode 2: Full Project & Repository Audit (`audit_project`)
+When reviewing an entire thesis repository or multi-chapter paper:
+* **Via CLI**:
+  ```bash
+  writing-suite audit "<thesis_dir>"
+  ```
+* **Via MCP Tool**:
+  ```json
+  audit_project({
+    "directory_path": "/path/to/thesis_dir",
+    "bib_path": "/path/to/references.bib",
+    "language": "en"
+  })
+  ```
+* Cross-references citation keys (`@key`, `\cite{key}`) against `references.bib`, flagging orphaned keys, unused references, and chapters with low citation density.
+
+---
+
+## 📊 Visual Diagnostic Report Structure
+
+Present the diagnostic findings clearly and rigorously (replying in the language of the user's prompt):
+
+1. **Context Calibration Badge**:
+   * `Domain`: e.g. `Blockchain & Distributed Systems`
+   * `Target Style`: e.g. `Academic Thesis / Scientific Paper`
+   * `Domain Terms Whitelisted`: e.g. `SWHID, Sepolia, Merkle DAG, EVM (4 terms)`
+
+2. **Overall Composite AI Score** (0–100%) with status badge:
+   * `🟢` **Authentic Human Text** ($\le 25-30\%$)
+   * `🟡` **Mixed / Moderate AI Patterns** ($30-65\%$)
+   * `🔴` **High Probability Synthetic / AI** ($> 65\%$)
+
+3. **The 7-Lens Forensic Breakdown**:
+   1. *DeBERTa-v3 Neural Transformer (Metal MPS)*: Multi-scale Copyleaks composite score ($0.45 \mu + 0.35 P_{80} + 0.20 \text{Worst Chunk}$).
+   2. *Sliding Window Chunk Hotspots*: Paragraphs where continuous AI risk exceeds 60% (showing token boundaries).
+   3. *Cadence Burstiness*: Sentence word length standard deviation ($\sigma_{\text{len}}$) and rhythmic variance (human $> 10.0$w vs robot $< 8.0$w).
+   4. *GLTR Forensics (MIT/Harvard)*: Token probability distribution across Top 10 (Green), Top 100 (Yellow), Top 1000 (Red), Tail (Purple).
+   5. *Heuristic Linter*: Density and severity of 55+ weighted structural, syntactic, and markdown tells.
+   6. *Academic Stylometrics & MTLD*: Measure of Textual Lexical Diversity (length-invariant), Hapax Legomena ratio, and Yule's Characteristic K.
+   7. *Anti-Bypass Filter*: Anomaly check for artificial micro-sentence fragmentation or forced conversational openers.
+
+4. **Bibliographic & Epistemic Audit (When `.bib` is present)**:
+   * **Unsupported Sweeping Claims**: Identify phrases like *"studies have shown that"*, *"researchers widely agree"*, *"recent literature suggests"* lacking explicit citation.
+   * **Citation Health**: Count of valid citations vs missing/unresolved keys.
+   * **De-Hyping Review**: Highlight any promotional marketing buzzwords (*"revolutionary breakthrough"*, *"flawlessly outperforms"*) that violate scientific modesty.
+
+5. **Sentence-by-Sentence Heatmap & Context Anomalies**:
+   * Flag sentences where `[HIGH_CONTEXT_ROBOTICITY]` occurs (discrepancy where a sentence reads human alone but triggers high AI risk in the surrounding flow).
+   * Key outliers: Most robotic sentence vs. most authentic human sentence.

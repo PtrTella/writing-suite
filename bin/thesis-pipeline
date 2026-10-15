@@ -23,28 +23,31 @@ fi
 DEFAULT_TERMS="EVM,Sepolia,SWHID,IPFS,PyPI,Layer-2,Merkle DAG,in-toto,TUF,Sigstore"
 
 function usage() {
-    echo "Uso: thesis-pipeline <comando> [opzioni]"
+    echo "Uso: writing-suite <comando> [opzioni]"
     echo ""
     echo "Comandi disponibili:"
     echo "  audit <file|cartella>       Esegue l'audit a 7 lenti (Linter, GLTR, GPTZero, MPS Neural, etc.)"
     echo "  suggest <file|testo>        Analizza frase per frase e fornisce suggerimenti di riscrittura azionabili"
     echo "  macro <file>                Analizza la macro-struttura (iper-frammentazione, sezioni corte, fusioni)"
-    echo "  humanize <file|cartella>    Riscrive in anello chiuso via Ollama locale (Qwen2.5 / GoHumanize) con Meaning Lock"
+    echo "  humanize <file|cartella>    Riscrive in anello chiuso con Meaning Lock"
     echo "  check-live <file|testo>     Invia a CleverHumanizer.ai Detector via Chromium headless live"
     echo "  humanize-live <file|testo>  Riscrive tramite CleverHumanizer.ai Humanizer via Chromium headless"
     echo "  compile [main.typ]          Compila la tesi con Typst e controlla gli errori"
     echo ""
     echo "Esempi:"
-    echo "  thesis-pipeline audit chapters/"
-    echo "  thesis-pipeline audit chapters/ch2_background.typ"
-    echo "  thesis-pipeline humanize chapters/ch2_background.typ"
-    echo "  thesis-pipeline check-live chapters/ch1_intro.typ"
-    echo "  thesis-pipeline compile"
-    exit 1
+    echo "  writing-suite audit chapters/"
+    echo "  writing-suite suggest chapters/ch2_background.typ"
+    echo "  writing-suite macro chapters/ch2_background.typ"
+    echo "  writing-suite compile"
+    exit 0
 }
 
 CMD="$1"
 shift || true
+
+if [ -z "$CMD" ] || [ "$CMD" = "--help" ] || [ "$CMD" = "-h" ] || [ "$CMD" = "help" ]; then
+    usage
+fi
 
 case "$CMD" in
     audit|evaluate)

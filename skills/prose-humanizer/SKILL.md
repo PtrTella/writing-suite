@@ -51,19 +51,26 @@ Always select or confirm the tone mode based on the document type:
 
 Whenever invoked on a document or file (`.typ`, `.tex`, `.md`, `.txt`), execute these steps autonomously without asking permission:
 
-### Mandatory Operational Constraints (Zero Hallucination & Zero Hacky Scripts):
+### Mandatory Operational Constraints (Academic Rigor & Meaning Lock):
 1. **Direct In-Place Editing Only**: The agent MUST modify target files directly and natively using standard text-editing tools. **NEVER create temporary scratch Python scripts** (e.g. `optimize_chX.py`, `tune_ch1.py`, `check_sents.py`) to hold text strings in memory. Version control (`git diff`) and real files are your only workspace.
-2. **Fact Grounding Protocol**: Before rewriting any technical or scientific section, cross-reference the project's source code, technical specifications, or domain documentation. Never invent nonexistent APIs, protocol mechanisms, or unverified claims.
-3. **Strict Meaning Lock**: Freeze all mathematical expressions (`$ ... $`), typesetting macros (Typst/LaTeX `#figure`, `\begin{...}`), citation keys (`@key`, `\cite{...}`), cross-reference labels (`<label>`), benchmark values, and empirical metrics.
-4. **No Isolated Mini-Slogans (The Movie-Trailer Fallacy)**: NEVER append artificial 3-5 word dramatic slogans to the end of paragraphs (*"The trade-off was fatal"*, *"Security ended at the perimeter"*, *"Determinism ceased to exist"*, *"Auditing is not prevention"*). Commercial detectors flag this as `Predictable sentence endings`.
-5. **No Generic AI Openers**: Never start chapters or sections with generic templates like *"Modern software engineering relies heavily on..."*. Begin directly with operational engineering realities or physical constraints.
+2. **Fact Grounding & Source Anchoring**: Before writing or rewriting any technical section, cross-reference the project's source documentation (`docs/...`), codebase, specifications, or benchmarks. Never invent nonexistent APIs, mechanisms, or unverified numbers.
+3. **Epistemic Rigor & De-Hyping**: Strip promotional marketing buzzwords (*"groundbreaking paradigm shift"*, *"unprecedented breakthrough"*, *"flawlessly outperforms"*, *"game-changing milestone"*). Replace with sober, empirical statements detailing measured latency, gas costs, error rates, and operational friction.
+4. **Bibliographic Grounding**: Never use sweeping unattributed claims (*"studies have shown that"*, *"researchers widely agree"*, *"recent literature suggests"*, *"è ampiamente dimostrato che"*). Every factual claim must be backed by a specific citation key (`@key`, `\cite{key}`) or empirical dataset.
+5. **Strict Meaning Lock**: Freeze all mathematical expressions (`$ ... $`), typesetting macros (Typst/LaTeX `#figure`, `#table`, `\begin{...}`), citation keys (`@key`), cross-reference labels (`<label>`), benchmark values, and empirical metrics.
+6. **No Isolated Mini-Slogans (The Movie-Trailer Fallacy)**: NEVER append artificial 3-5 word dramatic slogans to the end of paragraphs (*"The trade-off was fatal"*, *"Security ended at the perimeter"*, *"Determinism ceased to exist"*, *"Auditing is not prevention"*). Commercial detectors flag this as `Predictable sentence endings`.
+7. **No Generic AI Openers**: Never start chapters or sections with generic templates like *"Modern software engineering relies heavily on..."*. Begin directly with operational engineering realities, concrete tools, or physical constraints.
 
 ### The 4-Step Pipeline with Automated Retry Loop:
 
 1. **Step 1: Macro-Composition Check (`writing-suite macro <file>`)**:
    Run `writing-suite macro <file>` to inspect the structural balance. If subsections are micro-fragmented (< 90 words), coalesce them into continuous narrative sections before editing.
-2. **Step 2: Sentence-by-Sentence AI Heatmap (`writing-suite suggest <file>`)**:
-   Run `writing-suite suggest <file>` to extract sentence-level DeBERTa-v3 probabilities on Apple Silicon Metal MPS and structural flaws (`[ISOLATED_SHORT_SLOGAN]`, `[CHATGPT_INTRO_OPENER]`, `[LEFT_BRANCHING_SUBORDINATE]`). Identify all sentences flagged with 🔴 AI (> 65%) or 🟡 Mixed.
+2. **Step 2: Sentence & Hotspot Diagnostics (`writing-suite suggest <file>`)**:
+   Run `writing-suite suggest <file>` to extract sentence-level DeBERTa-v3 probabilities on Apple Silicon Metal MPS, sliding window chunk hotspots, and contextual flaws:
+   * **`[SLIDING WINDOW HOTSPOTS]`**: Paragraphs where continuous AI risk exceeds 60%.
+   * **`[HIGH_CONTEXT_ROBOTICITY]`**: Sentences that read fine alone but spike into AI risk (+15% penalty) within the surrounding paragraph flow.
+   * **`[CADENCE_MONOTONY_PAIR]`**: Consecutive sentences of identical length in the 18-24 word danger zone.
+   * **`[REPETITIVE_CONSECUTIVE_OPENER]`**: Consecutive sentences starting with the same 2 words or subject.
+   * **`[ISOLATED_SHORT_SLOGAN]`**: Mini-sentences (<=6 words) appended to paragraph ends.
 3. **Step 3: Surgical In-Place Rewrite with Rules 36–39**:
    Rewrite flagged sentences directly on the document file applying the 4 core pillars:
    * **Rule 36 (Colon Protocol)**: Assertion followed by an explanatory colon (`:`) and real-world friction.
@@ -75,7 +82,7 @@ Whenever invoked on a document or file (`.typ`, `.tex`, `.md`, `.txt`), execute 
    - Run `typst compile main.typ` (or `pdflatex`) to verify 0 syntax errors.
    - **Automated Retry Condition**:
      - If compilation fails: fix Typst syntax immediately and recompile.
-     - If DeBERTa MPS score remains > 25-30% or if `writing-suite suggest` still reports 🔴 sentences: **DO NOT STOP AND DO NOT ASK FOR PERMISSION**. Re-run `writing-suite suggest <file>` and execute a second surgical pass ONLY on the remaining 🔴 sentences until the file is firmly in the **🟢 Safe Zone (DeBERTa $\le 25-30\%$, $\sigma > 10.0$)** and compiles with 0 errors.
+     - If DeBERTa MPS score remains > 25-30% or if `writing-suite suggest` still reports 🔴 sentences/hotspots: **DO NOT STOP AND DO NOT ASK FOR PERMISSION**. Re-run `writing-suite suggest <file>` and execute a second surgical pass ONLY on the remaining flagged items until the file is firmly in the **🟢 Safe Zone (DeBERTa $\le 25-30\%$, $\sigma > 10.0$, 0 hotspots)** and compiles with 0 errors.
 
 ---
 

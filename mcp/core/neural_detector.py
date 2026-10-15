@@ -369,6 +369,7 @@ def predict_text_score(text: str) -> Optional[float]:
                 composite = (0.45 * weighted_prob) + (0.35 * p80_val) + (0.20 * worst_chunk)
                 return round(float(composite), 1)
 
+    import torch
     tokens = tokenizer(
         text,
         return_tensors="pt",
