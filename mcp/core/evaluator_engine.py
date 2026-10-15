@@ -22,6 +22,11 @@ from .metrics import (
     calculate_stylometrics,
     check_anti_bypass,
 )
+from .neural_detector import (
+    is_neural_available,
+    predict_text_score,
+    predict_sentences_batch,
+)
 from .word_freq import calculate_gltr_profile, calculate_mtld
 
 STYLE_PROFILES = {
@@ -141,17 +146,42 @@ def evaluate_document(
     anti_bypass_res = check_anti_bypass(text, sentences)
     score_bypass = anti_bypass_res["risk_score"]
 
-    # Punteggio Ponderato Continuo Complessivo:
-    # 40% Linter Euristico + 30% Cadence Burstiness + 25% Predittività Forense + 5% Stilometria & MTLD
-    # Principio di non-diluizione: se il test GLTR rileva grave tail starvation (fame di coda statistica),
-    # l'acronimia di dominio che alza la PPL non deve dimezzare artificialmente il segnale forense sintetico.
+    # 7. Neural Transformer Detector (se disponibile con PyTorch/MPS)
+    score_neural = None
+    neural_heatmap = None
+    chunk_hotspots = []
+    if is_neural_available():
+        try:
+            from core.neural_detector import predict_sliding_window_chunks
+            chunk_diag = predict_sliding_window_chunks(cleaned_prose)
+            chunk_hotspots = chunk_diag.get("hotspots", [])
+            score_neural = predict_text_score(cleaned_prose)
+            if score_neural is not None:
+                valid_s = [s for s in sentences if len(s.split()) >= 3]
+                neural_heatmap = predict_sentences_batch(valid_s, with_context=True)
+        except Exception:
+            score_neural = None
+
+    # Punteggio Ponderato Continuo Calibrato su Benchmark Commerciali (Copyleaks / CleverHumanizer / RAID):
+    # I rilevatori commerciali moderni si basano primariamente su modelli transformer contestuali (DeBERTa-v3/RoBERTa)
+    # e sull'asimmetria di cadenza (burstiness). Il linter euristico serve come feedback diagnostico ma non deve
+    # mascherare un punteggio neurale elevato.
     predictability_score = max(score_gltr, 0.70 * score_gltr + 0.30 * score_gptzero)
-    base_score = (
-        (0.40 * score_linter)
-        + (0.30 * score_cadence)
-        + (0.25 * predictability_score)
-        + (0.05 * score_stylo)
-    )
+    if score_neural is not None:
+        base_score = (
+            (0.55 * score_neural)
+            + (0.25 * score_cadence)
+            + (0.10 * score_linter)
+            + (0.05 * predictability_score)
+            + (0.05 * score_stylo)
+        )
+    else:
+        base_score = (
+            (0.40 * score_cadence)
+            + (0.35 * score_linter)
+            + (0.20 * predictability_score)
+            + (0.05 * score_stylo)
+        )
 
     # Multi-Lens Evidence Synergy:
     # Quando lenti statisticamente ortogonali (GLTR starvation >= 85% e cadenza monotona o alta densità linter)
@@ -226,6 +256,13 @@ def evaluate_document(
                 "yule_k": stylometrics_res["yule_k"],
                 "mtld": round(mtld_val, 1),
             },
+            "neural_transformer": {
+                "available": score_neural is not None,
+                "risk_score": score_neural if score_neural is not None else 0.0,
+                "device": "mps (Apple Silicon Metal)" if score_neural is not None else "none",
+                "hotspots_count": len(chunk_hotspots),
+                "hotspots": chunk_hotspots,
+            },
             "anti_bypass": {
                 "risk_score": score_bypass,
                 "anomalies": anti_bypass_res["anomalies"],
@@ -239,4 +276,5 @@ def evaluate_document(
             "domain_terms_sample": sorted(list(domain_set))[:10],
         },
         "heatmap": gptzero_res["heatmap"],
+        "neural_heatmap": neural_heatmap,
     }

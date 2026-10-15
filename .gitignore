@@ -5,3 +5,6 @@ __pycache__/
 *.lock
 mcp/data/languages/test.json
 tests/benchmark_corpus/human/test.txt
+.venv/
+*.log
+

@@ -21,6 +21,8 @@ from core.evaluator_engine import evaluate_document
 from core.linter import lint_text
 from core.metrics import calculate_readability
 from core.project_auditor import audit_directory
+from core.suggest import suggest_improvements
+from core.macro_analyzer import analyze_macro_structure
 
 SERVER_NAME = "writing-suite"
 SERVER_VERSION = "1.0.0"
@@ -139,6 +141,84 @@ TOOLS = [
             "required": ["text"],
         },
     },
+    {
+        "name": "check_commercial_detector",
+        "description": "Interroga in tempo reale il rilevatore commerciale headless (CleverHumanizer.ai Detector) tramite Chromium locale, restituendo l'AI probability score reale, il verdetto ('✍️ Human' vs '🤖 AI') e la mappatura cromatica frase per frase.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il blocco di testo da verificare (minimo 80 parole).",
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md).",
+                },
+            },
+            "required": ["text"],
+        },
+    },
+    {
+        "name": "humanize_text",
+        "description": "Riscrive il testo (o file Typst, LaTeX, Markdown) disassemblando la sintassi robotica e iniettando cadenza umana autentica con Meaning Lock crittografico (formule $...$, citazioni @key, tabelle e comandi protetti). Restituisce la versione riscritta 100% verde.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il blocco di testo da umanizzare e riscrivere.",
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md) da leggere.",
+                },
+                "mode": {
+                    "type": "string",
+                    "enum": ["clear_structured", "normal"],
+                    "default": "clear_structured",
+                    "description": "Modalità di trasformazione: 'clear_structured' (default per tesi/paper) o 'normal'.",
+                },
+            },
+            "required": ["text"],
+        },
+    },
+    {
+        "name": "get_writing_advice",
+        "description": "Scansiona il testo frase per frase con DeBERTa-v3 su MPS identificando i costrutti robotici e fornendo prescrizioni azionabili di riscrittura (es. colons esplicativi, frasi-respiro, eliminazione subordinate a sinistra).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il testo da analizzare.",
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md).",
+                },
+            },
+            "required": ["text"],
+        },
+    },
+    {
+        "name": "analyze_macro_structure",
+        "description": "Valuta l'architettura macroscopica del testo (sezioni, capitoli): rileva sezioni iper-frammentate (<90 parole) e suggerisce fusioni o ristrutturazioni narrative per dare coesione all'opera.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Il contenuto del documento da analizzare.",
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "Opzionale. Percorso del file originale (.typ, .tex, .md).",
+                },
+            },
+            "required": ["text"],
+        },
+    },
 ]
 
 # ==============================================================================
@@ -193,6 +273,33 @@ def execute_tool(name: str, arguments: dict) -> str:
     elif name == "audit_citations":
         bib_p = arguments.get("bib_path")
         res = audit_citations(text, bib_path=bib_p)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "check_commercial_detector":
+        import asyncio
+        from core.external_detector import check_cleverhumanizer
+        res = asyncio.run(check_cleverhumanizer(text))
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "humanize_text":
+        import asyncio
+        from core.pipeline import MeaningLockProtector
+        from core.external_detector import humanize_cleverhumanizer
+        mode = arguments.get("mode", "clear_structured")
+        protector = MeaningLockProtector()
+        protected = protector.protect(text)
+        res = asyncio.run(humanize_cleverhumanizer(protected, mode=mode))
+        if "humanized_text" in res:
+            res["humanized_text"] = protector.restore(res["humanized_text"])
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "get_writing_advice":
+        res = suggest_improvements(text)
+        return json.dumps(res, indent=2, ensure_ascii=False)
+
+    elif name == "analyze_macro_structure":
+        fp = arguments.get("file_path")
+        res = analyze_macro_structure(text, file_path=fp)
         return json.dumps(res, indent=2, ensure_ascii=False)
 
     else:
@@ -348,6 +455,24 @@ def main():
     )
     parser.add_argument("--lang", type=str, default="en", help="Lingua ('it' o 'en')")
     parser.add_argument(
+        "--pipeline",
+        type=str,
+        help="Esegue la pipeline unificata di audit o humanizing in anello chiuso su file o directory",
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default="audit",
+        choices=["audit", "humanize"],
+        help="Modalità pipeline: 'audit' (analisi 7 lenti) o 'humanize' (riscrittura in anello chiuso con Ollama)",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="qwen2.5:7b",
+        help="Modello Ollama da utilizzare per la riscrittura (default: qwen2.5:7b)",
+    )
+    parser.add_argument(
         "--json", action="store_true", help="Restituisce output in formato JSON grezzo"
     )
 
@@ -355,6 +480,32 @@ def main():
 
     if args.mcp or (len(sys.argv) == 1 and not sys.stdin.isatty()):
         run_mcp_server()
+        return
+
+    # Modalità Pipeline Unificata
+    if args.pipeline:
+        from core.pipeline import ThesisPipeline
+        p = Path(args.pipeline)
+        domain_terms_list = [t.strip() for t in args.terms.split(",")] if args.terms else []
+        pipe = ThesisPipeline(ollama_model=args.model)
+        if p.is_dir():
+            if args.mode == "audit":
+                typ_files = sorted(list(p.glob("*.typ")) + list(p.glob("*.md")) + list(p.glob("*.tex")))
+                print(f"\n=== Audit Pipeline: {len(typ_files)} file analizzati ===")
+                for f in typ_files:
+                    res = pipe.audit_file(str(f), domain_terms=domain_terms_list)
+                    print(f"[{f.name}]: {res['overall_ai_score']}% {res['verdict_badge']} | Findings: {res['stats']['findings_count']} | Parole: {res['stats']['total_words']}")
+            else:
+                res_list = pipe.process_directory(str(p), domain_terms=domain_terms_list)
+                print("\n=== Risultato Humanize Completo ===")
+                print(json.dumps(res_list, indent=2, ensure_ascii=False))
+        elif p.is_file():
+            if args.mode == "audit":
+                res = pipe.audit_file(str(p), domain_terms=domain_terms_list)
+                print(json.dumps(res, indent=2, ensure_ascii=False))
+            else:
+                res = pipe.process_file(str(p), domain_terms=domain_terms_list)
+                print(json.dumps(res, indent=2, ensure_ascii=False))
         return
 
     # Modalità CLI

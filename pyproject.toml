@@ -1,0 +1,21 @@
+[project]
+name = "writing-suite"
+version = "1.0.0"
+description = "Universal Academic Writing & SOTA Neural AI Detection Suite"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2.0",
+    "transformers>=4.38.0",
+    "safetensors>=0.4.0",
+    "huggingface-hub>=0.20.0",
+]
+
+[project.optional-dependencies]
+live = [
+    "playwright>=1.40.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

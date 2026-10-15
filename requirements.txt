@@ -1,0 +1,8 @@
+# Core dependencies for Writing Suite SOTA Neural Detector & Transformers
+torch>=2.2.0
+transformers>=4.38.0
+safetensors>=0.4.0
+huggingface-hub>=0.20.0
+
+# Optional: Headless live bridge for commercial verification (CleverHumanizer)
+playwright>=1.40.0

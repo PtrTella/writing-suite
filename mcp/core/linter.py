@@ -113,7 +113,7 @@ RULES = [
         "severity": "MEDIUM",
         "weight": 1.5,
         "name": "Em-dash o doppio trattino come connettore universale",
-        "regex": r"(?:[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+[—–][a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+|\s[—–]\s|\s--\s|[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+--[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ]+|[—–]\s)",
+        "regex": r"(?:[a-zA-ZàèéìòùÀÈÉÌÒÙ]+[—–][a-zA-ZàèéìòùÀÈÉÌÒÙ]+|\s[—–]\s|\s--\s|[a-zA-ZàèéìòùÀÈÉÌÒÙ]+--[a-zA-ZàèéìòùÀÈÉÌÒÙ]+|[—–]\s)",
         "explanation": "Uso massiccio del trattino lungo (—, –) o doppio trattino (--) isolato o attaccato alle parole al posto di subordinate, parentesi o punteggiatura standard."
     },
     {
@@ -214,6 +214,51 @@ RULES = [
         "name": "Cliché enfatici o iperbolici di profondità concettuale",
         "regex": r"(?i)\b(?:cattura l'?essenza pura|radicalmente diverso e molto più profondo|in modo inequivocabile|in un mondo sempre più|risposta architetturale a due dei problemi più pressanti)\b",
         "explanation": "Formule enfatiche ricorrenti generate dai modelli per attribuire profondità filosofica o concettuale ad argomenti tecnici."
+    },
+    {
+        "id": "WS-SYN-006",
+        "category": "Incipit Template",
+        "severity": "CRITICAL",
+        "weight": 4.5,
+        "name": "Preamble & Smoothness Trap (Cornice saggistica astratta)",
+        "regex": r"(?i)\b(?:is fundamentally (?:an exercise in|a matter of|shifted toward)|has fundamentally shifted toward|rather than authoring [^,]+, contemporary|rather than relying on [^,]+, developers distributed)\b",
+        "explanation": "Apertura saggistica astratta ad altissima probabilità nei completamenti di LLM ('Modern software engineering is fundamentally an exercise in composition')."
+    },
+    {
+        "id": "WS-SYN-007",
+        "category": "Sintassi da Modello",
+        "severity": "HIGH",
+        "weight": 3.5,
+        "name": "Pivot antitetico artificiale 'While X accelerates A, it introduces B'",
+        "regex": r"(?i)\bwhile this [a-z\s]+ accelerates [^,]+, it introduces an? asymmetric\b",
+        "explanation": "Clausola concessiva simmetrica altamente predicibile usata dai modelli per bilanciare artificialmente vantaggi e rischi."
+    },
+    {
+        "id": "WS-SYN-008",
+        "category": "Lessico di Facciata",
+        "severity": "MEDIUM",
+        "weight": 2.5,
+        "name": "Qualificazione e avverbiazione iperbolica 'fundamentally X'",
+        "regex": r"(?i)\b(?:remains fundamentally (?:centralized|opaque|unresolved|vulnerable)|fundamentally localized|fundamentally reflects?)\b",
+        "explanation": "Avverbi enfatici vuoti inseriti dai modelli per enfatizzare lo stato di una tecnologia anziché descriverne il meccanismo."
+    },
+    {
+        "id": "WS-SYN-009",
+        "category": "Sintassi da Modello",
+        "severity": "HIGH",
+        "weight": 3.0,
+        "name": "Frase di autorità astratta con avversativa a contrasto",
+        "regex": r"(?i)\b(?:recent empirical audits confirm that [^,]+, yet the foundational infrastructure remains|empirical investigations into package registry security[^,]+demonstrate that)\b",
+        "explanation": "Formula stereotipata di citazione di studi empirici senza ancoraggio a metriche specifiche, seguita da contrasto moraleggiante."
+    },
+    {
+        "id": "WS-LEX-005",
+        "category": "Lessico Sovrarappresentato",
+        "severity": "MEDIUM",
+        "weight": 2.0,
+        "name": "Metafore concettuali astratte ('has long mirrored')",
+        "regex": r"(?i)\b(?:has long mirrored the architectural assumptions|serves to facilitate|constitutes the bedrock of)\b",
+        "explanation": "Copula astratta stereotipata per introdurre panoramiche storiche o concettuali senza dinamismo ingegneristico."
     }
 ]
 

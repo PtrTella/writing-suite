@@ -6,6 +6,53 @@ Isola la sola prosa naturale per garantire analisi stilometriche e probabilistic
 
 import re
 
+def strip_balanced_parens(text: str, prefixes: list[str]) -> str:
+    """Rimuove costrutti con parentesi bilanciate (es. #figure(...), table(...), #grid(...))."""
+    for prefix in prefixes:
+        idx = 0
+        while True:
+            pos = text.find(prefix, idx)
+            if pos == -1:
+                break
+            # Posiziona l'inizio della parentesi aperta
+            paren_start = pos + len(prefix)
+            while paren_start < len(text) and text[paren_start] in " \t\n":
+                paren_start += 1
+            if paren_start >= len(text) or text[paren_start] != "(":
+                idx = pos + 1
+                continue
+            depth = 1
+            cur = paren_start + 1
+            in_string = False
+            str_char = ""
+            while cur < len(text) and depth > 0:
+                c = text[cur]
+                if not in_string:
+                    if c in ('"', "'"):
+                        in_string = True
+                        str_char = c
+                    elif c == "(":
+                        depth += 1
+                    elif c == ")":
+                        depth -= 1
+                else:
+                    if c == str_char and text[cur - 1] != "\\":
+                        in_string = False
+                cur += 1
+
+            # Consuma etichette Typst trailing tipo <table-xyz> o <fig-xyz>
+            while cur < len(text) and text[cur] in " \t":
+                cur += 1
+            if cur < len(text) and text[cur] == "<":
+                end_label = text.find(">", cur)
+                if end_label != -1:
+                    cur = end_label + 1
+
+            text = text[:pos] + " " + text[cur:]
+            idx = pos + 1
+    return text
+
+
 def clean_markup(text: str) -> str:
     """Rimuove elementi tecnici, tabelle, LaTeX, Typst markup e blocchi codice per isolare la sola prosa."""
     # 1. Blocchi di codice raw
@@ -18,11 +65,15 @@ def clean_markup(text: str) -> str:
     text = re.sub(r"/\*[\s\S]*?\*/", "", text)
     text = re.sub(r"(?m)^%.*$", "", text)
 
-    # 3. Costrutti Typst (figure, table, image, macro di layout e comandi)
-    text = re.sub(r"#figure\([\s\S]*?\)(?:\s*<[^>]+>)?", "", text)
-    text = re.sub(r"#table\([\s\S]*?\)", "", text)
-    text = re.sub(r"#image\([\s\S]*?\)", "", text)
-    text = re.sub(r"#(?:set|show|let|align|v|h|line|page|rect|block|grid|include|import)\b[^\n;]*", "", text)
+    # 3. Costrutti Typst e LaTeX complessi con parentesi bilanciate (figure, table, grid, image)
+    text = strip_balanced_parens(
+        text, ["#figure", "table", "#table", "#grid", "#image"]
+    )
+    text = re.sub(
+        r"#(?:set|show|let|align|v|h|line|page|rect|block|include|import)\b[^\n;]*",
+        "",
+        text,
+    )
     text = re.sub(r"#text\([^)]*\)\[([^\]]*)\]", r"\1", text)
 
     # 4. Equazioni LaTeX e Typst math ($...$ e $$...$$)

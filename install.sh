@@ -58,6 +58,13 @@ for skill_dir in "$SCRIPT_DIR/skills/"*; do
     fi
 done
 
+# 7. Collegamento CLI globale (~/.local/bin)
+mkdir -p "$HOME/.local/bin"
+chmod +x "$SCRIPT_DIR/bin/thesis-pipeline"
+ln -sf "$SCRIPT_DIR/bin/thesis-pipeline" "$HOME/.local/bin/thesis-pipeline"
+ln -sf "$SCRIPT_DIR/bin/thesis-pipeline" "$HOME/.local/bin/writing-suite"
+echo "✔ CLI collegate: ~/.local/bin/thesis-pipeline e ~/.local/bin/writing-suite"
+
 echo ""
 echo "======================================================================"
 echo "  🎉 Installazione completata con successo!"
