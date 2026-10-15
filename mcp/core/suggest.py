@@ -16,11 +16,11 @@ from core.linter import lint_text
 
 # Pattern strutturali tipici dei modelli LLM
 LEFT_BRANCHING_PREFIXES = [
-    (r"^(?:Instead of|Rather than)\s+([a-z]+ing)\b", "Apertura subordinata gerundiva di contrasto ('Instead of doing X, Y does Z'). Rende il periodo prevedibile."),
-    (r"^(?:While|Although|Whereas)\s+this\b", "Apertura concessiva stereotipata ('While this approach...'). Divide artificialmente il periodo."),
-    (r"^(?:Because|Since|Given that)\s+traditional\b", "Apertura causale impersonale. Gli LLM aprono sistematicamente spiegando la causa prima del soggetto."),
-    (r"^(?:By|Through)\s+([a-z]+ing)\b", "Apertura strumentale con participio/gerundio ('By doing X, Y is achieved')."),
-    (r"^(?:In order to|To)\s+([a-z]+)\b", "Incipit finale programmatico ('To reduce this friction, X did Y')."),
+    (r"^(?:Instead of|Rather than)\s+([a-zA-Z]+ing)\b", "Apertura subordinata gerundiva di contrasto ('Instead of doing X, Y does Z'). Rende il periodo prevedibile."),
+    (r"^(?:While|Although|Whereas)\s+[a-zA-Z]+\b", "Apertura concessiva stereotipata ('While X does Y...'). Divide artificialmente il periodo."),
+    (r"^(?:Because|Since|Given that)\s+[a-zA-Z]+\b", "Apertura causale a sinistra ('Because X does Y, Z occurs'). Gli LLM aprono sistematicamente subordinando prima dell'asserzione principale."),
+    (r"^(?:By|Through)\s+([a-zA-Z]+ing)\b", "Apertura strumentale con participio/gerundio ('By doing X, Y is achieved')."),
+    (r"^(?:In order to|To)\s+([a-zA-Z]+)\b", "Incipit finale programmatico ('To reduce this friction, X did Y')."),
 ]
 
 SYNTHETIC_SLOGANS = [
@@ -127,6 +127,28 @@ def analyze_sentence_flaws(
             "fix": "Sostituisci il trattino con una virgola, un punto e virgola, o con i due punti esplicativi (:)."
         })
 
+    # 7. Picco di Robotismo Neurale (DeBERTa-v3 MPS)
+    p_sing = meta.get("standalone_probability", ai_prob)
+    if ai_prob >= 65.0 or p_sing >= 65.0:
+        flaws.append({
+            "type": "NEURAL_ROBOTICITY_SPIKE",
+            "severity": "CRITICAL",
+            "rule": f"Rischio AI neurale elevato ({max(ai_prob, p_sing):.1f}% rilevato dal modello DeBERTa). La costruzione proposizionale presenta forte prevedibilità distributiva tipica dei modelli LLM.",
+            "fix": "Riformula il periodo alterando l'ordine sintattico: sposta l'azione o il vincolo tecnico in apertura, rimuovi simmetrie o usa asindeto con i due punti (:)."
+        })
+
+    # 8. Transizione generica da saggio AI
+    transitions = [r"^Consequently,", r"^Moreover,", r"^Furthermore,", r"^Additionally,", r"^In addition,", r"^Therefore,", r"^Specifically,", r"^Importantly,"]
+    for pat in transitions:
+        if re.search(pat, trimmed, re.IGNORECASE):
+            flaws.append({
+                "type": "GENERIC_TRANSITION_CRUTCH",
+                "severity": "HIGH",
+                "rule": f"Connettivo transizionale generico in apertura ('{trimmed.split()[0]}'). Tipico intercalare da saggio scolastico LLM.",
+                "fix": "Elimina il connettivo o integralo all'interno della frase dopo il soggetto, oppure usa una giunzione asindetica con i due punti (:)."
+            })
+            break
+
     return flaws
 
 
@@ -193,6 +215,7 @@ def suggest_improvements(text: str, domain_terms: Optional[List[str]] = None) ->
             "standalone_probability": neural_info.get("standalone_probability", prob),
             "context_probability": neural_info.get("context_probability", prob),
             "context_penalty": neural_info.get("context_penalty", 0.0),
+            "context_anomaly": neural_info.get("context_anomaly", False),
             "badge": badge,
             "status": status,
             "flaws": flaws,

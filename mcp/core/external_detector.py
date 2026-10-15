@@ -67,11 +67,14 @@ async def check_cleverhumanizer(text: str) -> Dict[str, Any]:
                 await browser.close()
                 return {"error": "Pulsante 'Check for AI' non trovato o non cliccabile."}
 
-            # Attende che appaia il verdetto
+            # Attende che appaia il verdetto e che l'animazione percentuale si stabilizzi
             verdict_data = None
-            for _ in range(25):
-                await asyncio.sleep(1.0)
-                verdict_data = await page.evaluate("""() => {
+            last_raw_score = None
+            stable_count = 0
+
+            for _ in range(35):
+                await asyncio.sleep(0.8)
+                data = await page.evaluate("""() => {
                     const scoreHead = document.querySelector('.score-head');
                     const verdictReason = document.querySelector('.detector-verdict-reason');
                     const bodyText = document.body.innerText;
@@ -94,31 +97,51 @@ async def check_cleverhumanizer(text: str) -> Dict[str, Any]:
                     
                     const chips = Array.from(document.querySelectorAll('.sig-chip')).map(el => el.innerText.replace('↗', '').trim());
 
-                    if (scoreHead || sentences.length > 0) {
+                    if (scoreHead && verdictReason && sentences.length > 0) {
                         return {
-                            headText: scoreHead ? scoreHead.innerText.trim() : '',
-                            reasonText: verdictReason ? verdictReason.innerText.trim() : '',
+                            headText: scoreHead.innerText.trim(),
+                            reasonText: verdictReason.innerText.trim(),
                             sentences: sentences,
                             chips: Array.from(new Set(chips))
                         };
                     }
                     return null;
                 }""")
-                if verdict_data:
-                    break
+
+                if data:
+                    raw_head = data.get("headText", "")
+                    # Controlla se la percentuale si è stabilizzata (non più in fase di animazione)
+                    if raw_head == last_raw_score and ("%" in raw_head):
+                        stable_count += 1
+                        if stable_count >= 2:
+                            verdict_data = data
+                            break
+                    else:
+                        last_raw_score = raw_head
+                        stable_count = 0
 
             await browser.close()
 
             if not verdict_data:
                 return {"error": "Timeout in attesa del referto da CleverHumanizer."}
 
-            # Estrazione del punteggio numerico
+            # Estrazione del punteggio numerico stabilizzato
             head_text = verdict_data.get("headText", "")
-            is_human_verdict = "Human" in head_text or "✍️" in head_text
-            score_matches = re.findall(r"(\d{1,3})%\s*AI", head_text, re.IGNORECASE)
+            reason_text = verdict_data.get("reasonText", "")
             
-            if score_matches:
-                score = float(score_matches[0])
+            # Distinzione tra verdetto Human vs AI
+            is_human_verdict = head_text.startswith("✍️") or "Human" in head_text.split("\n")[0]
+            
+            # Match della percentuale visualizzata
+            pct_matches = re.findall(r"(\d{1,3})%", head_text)
+            if pct_matches:
+                displayed_pct = float(pct_matches[0])
+                if is_human_verdict:
+                    # In CleverHumanizer, se il badge è 'Human', il numero indica la % umana (es. 99% Human -> 1% AI)
+                    score = round(max(0.0, 100.0 - displayed_pct), 1)
+                else:
+                    # Se il badge è 'AI', il numero indica la % AI (es. 94% AI)
+                    score = displayed_pct
             elif is_human_verdict:
                 score = 0.0
             else:
@@ -128,7 +151,7 @@ async def check_cleverhumanizer(text: str) -> Dict[str, Any]:
                 "engine": "CleverHumanizer.ai (Live Chromium)",
                 "overall_ai_score": score,
                 "is_human": is_human_verdict,
-                "verdict_summary": verdict_data.get("reasonText") or head_text.split("\n")[-1],
+                "verdict_summary": reason_text or head_text.split("\n")[-1],
                 "badge": "🟢" if score < 25.0 else ("🟡" if score < 60.0 else "🔴"),
                 "total_sentences": len(verdict_data.get("sentences", [])),
                 "sentence_signals": verdict_data.get("sentences", []),

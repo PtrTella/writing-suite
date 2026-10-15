@@ -169,9 +169,9 @@ def evaluate_document(
     predictability_score = max(score_gltr, 0.70 * score_gltr + 0.30 * score_gptzero)
     if score_neural is not None:
         base_score = (
-            (0.55 * score_neural)
+            (0.60 * score_neural)
             + (0.25 * score_cadence)
-            + (0.10 * score_linter)
+            + (0.05 * score_linter)
             + (0.05 * predictability_score)
             + (0.05 * score_stylo)
         )
@@ -184,10 +184,21 @@ def evaluate_document(
         )
 
     # Multi-Lens Evidence Synergy:
-    # Quando lenti statisticamente ortogonali (GLTR starvation >= 85% e cadenza monotona o alta densità linter)
-    # convergono indipendentemente, la confidenza statistica complessiva aumenta (+10% synergy boost).
+    # 1. Quando GLTR starvation converge con cadenza monotona o linter
     if score_gltr >= 85.0 and (score_cadence >= 60.0 or score_linter >= 40.0):
         base_score += 10.0
+
+    # 2. Quando il modello neurale DeBERTa e la cadenza monotona convergono
+    # (hallmark dei moderni testi AI accademici: fluidità priva di refusi ma cadenza e modello sintetici)
+    if score_neural is not None and score_neural >= 40.0 and score_cadence >= 60.0:
+        base_score += 10.0
+
+    # 3. Peak AI Floor: se il detector neurale ha individuato una frase con probabilità AI >= 75%
+    # il documento non può essere classificato come 100% verde (floor a 35% minimo)
+    if neural_heatmap:
+        max_sent_p = max((s.get("ai_probability", 0.0) for s in neural_heatmap), default=0.0)
+        if max_sent_p >= 75.0 and base_score < 35.0:
+            base_score = 35.0
 
     if score_bypass > 0:
         base_score = min(100.0, base_score + 0.25 * score_bypass)

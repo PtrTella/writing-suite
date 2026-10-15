@@ -115,13 +115,16 @@ if res.get('hotspots'):
     for h in res['hotspots']:
         print(f'  {h[\"badge\"]} ({h[\"ai_probability\"]}%) [Token {h[\"start_token\"]}-{h[\"end_token\"]}]: {h[\"snippet\"]}')
 for s in res['sentences']:
-    print(f'\n[Frase {s[\"index\"]}] {s[\"badge\"]} ({s[\"ai_probability\"]}%) [{s[\"word_count\"]} parole]')
-    print(f'  Testo: {s[\"text\"][:100]}...')
-    if s.get('context_anomaly'):
-        print(f'  ⚠️ [DISCREPANZA CONTESTUALE]: Singola={s.get(\"standalone_probability\")}% | Nel flusso={s.get(\"context_probability\")}% (+{s.get(\"context_penalty\")}%)')
-    for f in s['flaws']:
-        print(f'  --> [{f[\"type\"]}] {f[\"rule\"]}')
-        print(f'      SUGGERIMENTO: {f[\"fix\"]}')
+    if s['needs_rewrite'] or s['ai_probability'] >= 35.0 or len(s['flaws']) > 0:
+        print(f'\n[Frase {s[\"index\"]}] {s[\"badge\"]} ({s[\"ai_probability\"]}%) [Isolata: {s.get(\"standalone_probability\")}%, Flusso: {s.get(\"context_probability\")}%] [{s[\"word_count\"]} parole]')
+        print(f'  Testo Integrale: \"{s[\"text\"]}\"')
+        if s.get('context_anomaly'):
+            print(f'  ⚠️ [DISCREPANZA CONTESTUALE]: Rischio schizzato di +{s.get(\"context_penalty\")}% nel flusso dei periodi adiacenti.')
+        for f in s['flaws']:
+            print(f'  --> [{f[\"type\"]}] ({f.get(\"severity\", \"HIGH\")}): {f[\"rule\"]}')
+            print(f'      FIX AZIONABILE: {f[\"fix\"]}')
+    else:
+        print(f'[Frase {s[\"index\"]}] 🟢 ({s[\"ai_probability\"]}%) [{s[\"word_count\"]}w] OK: \"{s[\"text\"][:65]}...\"')
 print('\n=== PIANO D\'AZIONE RACCOMANDATO ===')
 for a in res['action_plan']:
     print(f'  {a}')

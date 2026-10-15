@@ -313,8 +313,10 @@ def predict_sentences_batch(
     for j, orig_idx in enumerate(valid_indices):
         p_sing = round(float(single_probs[j]), 1)
         p_ctx = round(float(context_probs[j]), 1)
-        # Blend bilanciato: 40% isolata, 60% nel contesto discorsivo del paragrafo
-        p_final = round(0.40 * p_sing + 0.60 * p_ctx, 1)
+        # Severity-preserving envelope (stile Copyleaks/CleverHumanizer):
+        # Una frase robotica isolata non deve MAI essere diluita o perdonata dal contesto,
+        # e al contempo un incremento di robotismo nel flusso contestuale deve essere catturato.
+        p_final = round(max(p_sing, p_ctx), 1)
         penalty = round(max(0.0, p_ctx - p_sing), 1)
         prob_map[orig_idx] = {
             "ai_probability": p_final,
@@ -378,12 +380,14 @@ def predict_text_score(text: str) -> Optional[float]:
                 all_probs = sorted([s["ai_probability"] for s in sent_scores])
                 p80_idx = int(len(all_probs) * 0.80)
                 p80_val = all_probs[min(p80_idx, len(all_probs) - 1)]
+                max_prob = all_probs[-1]
 
                 chunk_res = predict_sliding_window_chunks(text)
                 worst_chunk = chunk_res.get("worst_chunk_score", weighted_prob)
+                effective_worst = max(worst_chunk, max_prob) if max_prob >= 60.0 else worst_chunk
 
-                # Composite score multi-scala Copyleaks
-                composite = (0.45 * weighted_prob) + (0.35 * p80_val) + (0.20 * worst_chunk)
+                # Composite score multi-scala Copyleaks con preservazione dei picchi sintetici
+                composite = (0.40 * weighted_prob) + (0.35 * p80_val) + (0.25 * effective_worst)
                 return round(float(composite), 1)
 
     import torch
