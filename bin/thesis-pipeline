@@ -121,8 +121,7 @@ for s in res['sentences']:
         if s.get('context_anomaly'):
             print(f'  ⚠️ [DISCREPANZA CONTESTUALE]: Rischio schizzato di +{s.get(\"context_penalty\")}% nel flusso dei periodi adiacenti.')
         for f in s['flaws']:
-            print(f'  --> [{f[\"type\"]}] ({f.get(\"severity\", \"HIGH\")}): {f[\"rule\"]}')
-            print(f'      FIX AZIONABILE: {f[\"fix\"]}')
+            print(f'  --> [{f[\"type\"]}] ({f.get(\"severity\", \"HIGH\")}): {f.get(\"diagnostic\", f.get(\"rule\", \"\"))}')
     else:
         print(f'[Frase {s[\"index\"]}] 🟢 ({s[\"ai_probability\"]}%) [{s[\"word_count\"]}w] OK: \"{s[\"text\"][:65]}...\"')
 print('\n=== PIANO D\'AZIONE RACCOMANDATO ===')

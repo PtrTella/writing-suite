@@ -50,8 +50,7 @@ def analyze_sentence_flaws(
         flaws.append({
             "type": "CHATGPT_INTRO_OPENER",
             "severity": "CRITICAL",
-            "rule": "Incipit stereotipato generico ('Modern software engineering relies heavily on...'). Cliché assoluto dei modelli generativi.",
-            "fix": "Inizia direttamente con un caso pratico, un vincolo operativo o un soggetto concreto (es. 'Production software systems today are rarely built in isolation: engineering teams assemble...')."
+            "diagnostic": "Incipit stereotipato generico ('Modern software engineering relies heavily on...'). Cliché assoluto dei modelli generativi."
         })
 
     # 1. Rilevamento della Slogan Trap (3-6 parole isolate ad effetto drammatico)
@@ -59,8 +58,7 @@ def analyze_sentence_flaws(
         flaws.append({
             "type": "ISOLATED_SHORT_SLOGAN",
             "severity": "HIGH",
-            "rule": f"Mini-frase isolata da sole {word_count} parole ('{trimmed}'). Usata a fine paragrafo genera pattern ripetitivi artificiali ('predictable sentence endings').",
-            "fix": "Unisci questo concetto alla frase precedente con due punti (:) spiegando la conseguenza ingegneristica, oppure espandila a 12-16 parole."
+            "diagnostic": f"Mini-frase isolata da sole {word_count} parole ('{trimmed}'). Genera pattern di chiusura prevedibile ('predictable sentence endings')."
         })
 
     for pat in SYNTHETIC_SLOGANS:
@@ -68,8 +66,7 @@ def analyze_sentence_flaws(
             flaws.append({
                 "type": "SLOGAN_TRAP",
                 "severity": "CRITICAL",
-                "rule": "Eradicare gli aforismi sintetici da 3-4 parole.",
-                "fix": "Unisci questa conclusione alla frase precedente usando una spiegazione causale continua o due punti esplicativi (:)."
+                "diagnostic": "Aforisma sintetico lapidario da 3-4 parole."
             })
 
     # 2. Rilevamento Aperture Subordinate a Sinistra (Left-Branching)
@@ -78,8 +75,7 @@ def analyze_sentence_flaws(
             flaws.append({
                 "type": "LEFT_BRANCHING_SUBORDINATE",
                 "severity": "HIGH",
-                "rule": desc,
-                "fix": "Inverti l'ordine: inizia con l'asserzione diretta o il soggetto principale, poi usa i due punti (:) per articolare la dinamica tecnica."
+                "diagnostic": desc
             })
             break
 
@@ -91,8 +87,7 @@ def analyze_sentence_flaws(
                 flaws.append({
                     "type": "REPETITIVE_CONSECUTIVE_OPENER",
                     "severity": "HIGH",
-                    "rule": f"Apertura consecutiva identica ('{' '.join(words[:2])}...'). L'AI ripete la medesima struttura iniziale su periodi adiacenti.",
-                    "fix": "Inverti la seconda frase o apri con una proposizione avverbiale o l'azione verbale diretta."
+                    "diagnostic": f"Apertura consecutiva identica con la frase precedente ('{' '.join(words[:2])}...')."
                 })
 
     # 4. Monotonia di Cadenza a Coppie (Metronomo consecutivo)
@@ -102,8 +97,7 @@ def analyze_sentence_flaws(
             flaws.append({
                 "type": "CADENCE_MONOTONY_PAIR",
                 "severity": "MEDIUM",
-                "rule": f"Due periodi consecutivi di identica lunghezza ({prev_len} e {word_count} parole). Genera cadenza metronomica.",
-                "fix": "Espandi uno dei due periodi a 30+ parole o contrai l'altro a 8-12 parole inserendo una breather sentence."
+                "diagnostic": f"Due periodi consecutivi di identica lunghezza ({prev_len} e {word_count} parole). Genera cadenza metronomica."
             })
 
     # 5. Anomalia Contestuale Neurale (Context Penalty)
@@ -114,8 +108,7 @@ def analyze_sentence_flaws(
         flaws.append({
             "type": "HIGH_CONTEXT_ROBOTICITY",
             "severity": "HIGH",
-            "rule": f"Discrepanza contestuale (+{penalty}% di rischio AI nel flusso): la frase è neutrale da sola ({p_sing}%), ma nel contesto dei periodi adiacenti raggiunge il {p_ctx}%.",
-            "fix": "Rompi la transizione stereotipata: disloca il soggetto, usa un connettore asindetico o anticipa il vincolo concreto."
+            "diagnostic": f"Discrepanza contestuale (+{penalty}% nel flusso): la frase è neutrale da sola ({p_sing}%), ma in sequenza raggiunge il {p_ctx}%."
         })
 
     # 6. Trattini em multipli
@@ -123,8 +116,7 @@ def analyze_sentence_flaws(
         flaws.append({
             "type": "EM_DASH_CRUTCH",
             "severity": "HIGH",
-            "rule": "Uso del trattino em come scorciatoia sintattica.",
-            "fix": "Sostituisci il trattino con una virgola, un punto e virgola, o con i due punti esplicativi (:)."
+            "diagnostic": "Uso del trattino em come scorciatoia sintattica."
         })
 
     # 7. Picco di Robotismo Neurale (DeBERTa-v3 MPS)
@@ -133,8 +125,7 @@ def analyze_sentence_flaws(
         flaws.append({
             "type": "NEURAL_ROBOTICITY_SPIKE",
             "severity": "CRITICAL",
-            "rule": f"Rischio AI neurale elevato ({max(ai_prob, p_sing):.1f}% rilevato dal modello DeBERTa). La costruzione proposizionale presenta forte prevedibilità distributiva tipica dei modelli LLM.",
-            "fix": "Riformula il periodo alterando l'ordine sintattico: sposta l'azione o il vincolo tecnico in apertura, rimuovi simmetrie o usa asindeto con i due punti (:)."
+            "diagnostic": f"Rischio AI neurale elevato ({max(ai_prob, p_sing):.1f}% rilevato da DeBERTa). Struttura proposizionale con forte prevedibilità statistica."
         })
 
     # 8. Transizione generica da saggio AI
@@ -144,8 +135,7 @@ def analyze_sentence_flaws(
             flaws.append({
                 "type": "GENERIC_TRANSITION_CRUTCH",
                 "severity": "HIGH",
-                "rule": f"Connettivo transizionale generico in apertura ('{trimmed.split()[0]}'). Tipico intercalare da saggio scolastico LLM.",
-                "fix": "Elimina il connettivo o integralo all'interno della frase dopo il soggetto, oppure usa una giunzione asindetica con i due punti (:)."
+                "diagnostic": f"Connettivo transizionale generico in apertura ('{trimmed.split()[0]}'). Tipico intercalare da saggio scolastico LLM."
             })
             break
 
