@@ -82,9 +82,15 @@ def evaluate_paragraph_vector(
     elif cadence_res.get("status") == "critical" and p_neural > 60.0:
         base_score = max(base_score, 78.0)
 
-    # Calibrazione per testi scientifici ad alta perplessità e cadenza naturale
-    if surprisal_res.get("perplexity", 50.0) >= 110.0 and cadence_res.get("cadence_sigma", 0.0) >= 9.0 and not syntax_res.get("patterns_detected"):
-        base_score = min(base_score, 24.0)
+    # Calibrazione per testi scientifici ad alta perplessità, divergenza Binoculars e cadenza asimmetrica
+    b_ratio = surprisal_res.get("binoculars_ratio", 1.0)
+    top1 = surprisal_res.get("top1_gap", 2.5)
+    if (
+        (surprisal_res.get("perplexity", 50.0) >= 75.0 or b_ratio >= 1.15)
+        and cadence_res.get("cadence_sigma", 0.0) >= 7.5
+        and not any("Triadic" in p or "Single-Sentence" in p for p in syntax_res.get("patterns_detected", []))
+    ):
+        base_score = min(base_score, 26.0)
 
     final_risk = round(max(0.0, min(100.0, base_score)), 1)
 

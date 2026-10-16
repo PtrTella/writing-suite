@@ -76,6 +76,39 @@ def calculate_yule_k(words: List[str]) -> float:
     return 10000.0 * (m2 - m1) / (m1 * m1)
 
 
+def calculate_hapax_ratio(words: List[str]) -> float:
+    """Rapporto di Hapax Legomena (V1 / N): parole che ricorrono una sola volta rispetto al totale."""
+    if not words:
+        return 0.0
+    counts = Counter(words)
+    v1 = sum(1 for c in counts.values() if c == 1)
+    return float(v1 / len(words))
+
+
+def calculate_dis_legomena_ratio(words: List[str]) -> float:
+    """Rapporto di Dis Legomena (V2 / N): parole che ricorrono esattamente due volte."""
+    if not words:
+        return 0.0
+    counts = Counter(words)
+    v2 = sum(1 for c in counts.values() if c == 2)
+    return float(v2 / len(words))
+
+
+def calculate_punctuation_entropy(text: str) -> float:
+    """
+    Entropia di Shannon dei simboli di punteggiatura H_punct = -sum(p * log2(p)).
+    Testo AI: quasi esclusivamente virgole e punti simmetrici (H < 1.4 bit).
+    Testo Umano maturo: impiego di punto e virgola, em-dash, parentesi, coloni (H >= 1.6 - 2.2 bit).
+    """
+    puncts = re.findall(r"[,.;:!?'\"\(\)\-\—]", text)
+    if not puncts or len(puncts) < 2:
+        return 0.0
+    counts = Counter(puncts)
+    total = len(puncts)
+    h_punct = -sum((c / total) * math.log2(c / total) for c in counts.values())
+    return round(float(h_punct), 2)
+
+
 def analyze_token_fragmentation_and_zipf(text: str) -> Dict[str, float]:
     """
     Analisi probabilistica basata su Tokenizer e Legge di Zipf.
@@ -161,12 +194,15 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
     # 3. Profilazione Zipfiana e Dinamica dei Token
     zipf_stats = analyze_token_fragmentation_and_zipf(text)
 
-    # 4. Punteggiatura Strutturale
+    # 4. Punteggiatura Strutturale ed Entropia di Shannon
     punc_chars = [c for c in text if c in ",;:—()-"]
     punc_density = len(punc_chars) / max(1, word_count)
     em_dashes = text.count("—") + text.count(" -- ")
+    punc_entropy = calculate_punctuation_entropy(text)
+    hapax_ratio_n = calculate_hapax_ratio(words)
+    dis_legomena_n = calculate_dis_legomena_ratio(words)
 
-    # 5. Vettore Feature Matematico Continuo (12 feature)
+    # 5. Vettore Feature Matematico Continuo (14 feature)
     feature_vector = [
         round(mean_len, 2),
         round(sigma_len, 2),
@@ -176,10 +212,12 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
         round(mtld, 2),
         round(yule_k, 2),
         round(zipf_stats["zipf_slope"], 3),
-        round(zipf_stats["hapax_ratio"], 3),
+        round(hapax_ratio_n, 3),
         round(punc_density, 3),
+        round(punc_entropy, 2),
         round(em_dashes / max(1, sent_count), 3),
-        round(zipf_stats["type_token_ratio"], 3)
+        round(zipf_stats["type_token_ratio"], 3),
+        round(dis_legomena_n, 3)
     ]
 
     # 6. Rischio di Artificialità basato su Varianza e Parametri Matematici:
@@ -187,7 +225,8 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
     # - Bassa varianza di cadenza (sigma_len < 7.0)
     # - Bassa diversità lessicale (MTLD < 50)
     # - Eccesso di coppie metronomiche
-    # - Slancio Zipfiano anomalo o troncato
+    # - Punteggiatura piatta (punc_entropy < 1.4)
+    # - Coda di Zipf compressa (hapax_ratio_n < 0.85)
     risk_points = 0.0
 
     if sigma_len < 6.0:
@@ -210,6 +249,20 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
     elif mtld > 75.0:
         risk_points -= 10.0
 
+    # Modulazione Entropia Punteggiatura
+    if sent_count >= 3:
+        if punc_entropy < 1.30:
+            risk_points += 15.0
+        elif punc_entropy >= 1.70:
+            risk_points -= 10.0
+
+    # Modulazione Hapax Legomena
+    if word_count >= 35:
+        if hapax_ratio_n < 0.82:
+            risk_points += 15.0
+        elif hapax_ratio_n >= 0.94:
+            risk_points -= 10.0
+
     if em_dashes >= 3:
         risk_points += min(15.0, em_dashes * 4.0)
 
@@ -223,8 +276,12 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
         "mtld": round(mtld, 1),
         "yule_k": round(yule_k, 1),
         "zipf_slope": zipf_stats["zipf_slope"],
+        "hapax_ratio": round(hapax_ratio_n, 3),
+        "dis_legomena_ratio": round(dis_legomena_n, 3),
+        "punctuation_entropy": round(punc_entropy, 2),
         "metronome_pairs_count": metronome_pairs,
         "short_sentence_ratio": round(ratio_short, 2),
         "long_sentence_ratio": round(ratio_long, 2),
         "feature_vector": feature_vector
     }
+

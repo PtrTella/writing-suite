@@ -9,16 +9,20 @@ set -e
 export HF_HUB_DISABLE_PROGRESS_BARS=1
 export TRANSFORMERS_VERBOSITY=error
 export TOKENIZERS_PARALLELISM=false
+export PYTHONWARNINGS="ignore::FutureWarning"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Rilevamento venv o fallback
-if [ -d "$WS_DIR/.venv/bin" ]; then
-    VENV_PY="$WS_DIR/.venv/bin/python"
+# Rilevamento uv prioritario (come da direttiva utente) o fallback su venv
+if command -v uv >/dev/null 2>&1 && [ -f "$WS_DIR/pyproject.toml" ]; then
+    RUN_CMD="uv run --directory $WS_DIR python"
+elif [ -d "$WS_DIR/.venv/bin" ]; then
+    RUN_CMD="$WS_DIR/.venv/bin/python"
 else
-    VENV_PY="python3"
+    RUN_CMD="python3"
 fi
+
 
 function usage() {
     echo "Writing Suite v2.0 - Modern Academic & Neural Forensic CLI"
@@ -54,7 +58,7 @@ case "$CMD" in
             CROSS_VAL="True"
             if [ "$1" = "--cross-validate" ]; then TARGET="."; fi
         fi
-        "$VENV_PY" -c "
+        $RUN_CMD -c "
 import sys, os
 sys.path.insert(0, '$WS_DIR/mcp')
 from core.modern_evaluator import evaluate_document_modern, render_heatmap_cli
@@ -86,7 +90,7 @@ else:
             echo "Uso: writing-suite citations <file.typ> [references.bib]"
             exit 1
         fi
-        "$VENV_PY" -c "
+        $RUN_CMD -c "
 import sys
 sys.path.insert(0, '$WS_DIR/mcp')
 from core.citations import audit_citations
@@ -120,9 +124,9 @@ else:
             exit 1
         fi
         if [ -f "$TARGET" ]; then
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action multi
+            $RUN_CMD "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action multi
         else
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action multi
+            $RUN_CMD "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action multi
         fi
         ;;
 

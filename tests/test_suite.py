@@ -11,6 +11,10 @@ Unit test e test di regressione sull'architettura a 4 pilastri:
 
 import sys
 import unittest
+import warnings
+warnings.simplefilter("ignore", FutureWarning)
+warnings.filterwarnings("ignore", message=".*torch.jit.script.*")
+warnings.filterwarnings("ignore", category=UserWarning)
 from pathlib import Path
 
 # Setup path
@@ -98,8 +102,45 @@ class TestWritingSuiteModern(unittest.TestCase):
         self.assertIn("prescriptions", res)
         # Verifica rilevamento triade
         syntax_res = res["vector"]["syntax"]
-        self.assertTrue(any("Triadic" in p for p in syntax_res.get("patterns_detected", [])))
+        self.assertTrue(any("Triadic" in p or "POS Parallelism" in p for p in syntax_res.get("patterns_detected", [])))
+
+    def test_sota_stylometrics_hapax_and_punctuation_entropy(self):
+        from core.stylome import (
+            calculate_hapax_ratio,
+            calculate_dis_legomena_ratio,
+            calculate_punctuation_entropy,
+            extract_stylometric_features
+        )
+        sample = (
+            "We measure a commit latency of 42.1 ms under 1,000 tx/sec. "
+            "Raft maintains quorum; Byzantine nodes drop off without halting state replication. "
+            "In our testbed (a 64-node cluster), RocksDB serializes Merkle nodes directly to NVMe storage."
+        )
+
+        words = extract_words(sample)
+        hapax = calculate_hapax_ratio(words)
+        self.assertGreater(hapax, 0.85, "Il testo umano denso deve avere un Hapax Legomena ratio elevato (> 0.85)")
+
+        h_punct = calculate_punctuation_entropy(sample)
+        self.assertGreater(h_punct, 1.4, "Il testo con punteggiatura asimmetrica (punto e virgola, virgole, punti) deve avere H_punct >= 1.4")
+
+        sty = extract_stylometric_features(sample)
+        self.assertIn("hapax_ratio", sty)
+        self.assertIn("punctuation_entropy", sty)
+        self.assertIn("dis_legomena_ratio", sty)
+
+    def test_surprisal_binoculars_and_top1_curvature(self):
+        from core.surprisal import calculate_token_surprisal
+        sample = "We benchmark 10,000 cryptographic SWHID tree nodes on NVMe storage."
+        res = calculate_token_surprisal(sample)
+        self.assertIn("perplexity", res)
+        self.assertIn("binoculars_ratio", res)
+        self.assertIn("top1_gap", res)
+        self.assertIn("mean_entropy_nats", res)
+        self.assertGreater(res["binoculars_ratio"], 0.5, "Il rapporto Binoculars deve essere un valore positivo valido")
+        self.assertGreater(res["top1_gap"], 0.0, "Il Top-1 gap deve essere non nullo")
 
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -21,16 +21,38 @@ from .engines import evaluate_paragraph_vector, analyze_external
 
 
 def split_into_paragraphs(text: str) -> List[str]:
-    """Suddivide il testo in paragrafi coerenti escludendo tabelle e macro Typst isolate."""
+    """
+    Suddivide il testo in paragrafi coerenti escludendo tabelle e macro Typst isolate.
+    Raggruppa elenchi puntati consecutivi in un unico blocco logico integrato.
+    """
     raw_paras = re.split(r"\n\s*\n+", text)
-    cleaned_paras = []
+    merged_paras = []
+    current_list_block = []
+
     for p in raw_paras:
+        p_strip = p.strip()
+        # Se il blocco inizia con un marcatore di elenco puntato o numerato
+        if re.match(r"^[-*+•]|\b\d+\.\s+", p_strip):
+            current_list_block.append(p_strip)
+        else:
+            if current_list_block:
+                merged_paras.append("\n".join(current_list_block))
+                current_list_block = []
+            if p_strip:
+                merged_paras.append(p_strip)
+
+    if current_list_block:
+        merged_paras.append("\n".join(current_list_block))
+
+    cleaned_paras = []
+    for p in merged_paras:
         p_clean = clean_markup(p.strip())
         words = extract_words(p_clean)
         # Ignora blocchi minuscoli (titoli di una riga, didascalie isolate)
         if len(words) >= 15:
             cleaned_paras.append(p_clean)
     return cleaned_paras
+
 
 
 def evaluate_paragraph(
@@ -56,8 +78,12 @@ def evaluate_paragraph(
         "risk_score": vec_res["risk_score"],
         "perplexity": surprisal.get("perplexity", 50.0),
         "burstiness": surprisal.get("burstiness", 3.5),
+        "binoculars_ratio": surprisal.get("binoculars_ratio", 1.0),
+        "top1_gap": surprisal.get("top1_gap", 2.5),
         "cadence_sigma": cadence.get("cadence_sigma", 0.0),
+        "punctuation_entropy": cadence.get("punctuation_entropy", 1.5),
         "mtld": lexical.get("mtld", 50.0),
+        "hapax_ratio": lexical.get("hapax_ratio", 0.90),
         "deberta_score": neural.get("score"),
         "top_drivers": syntax.get("patterns_detected", []) + cadence.get("signals", []),
         "critical_sentence": vec_res.get("critical_sentence"),
@@ -89,8 +115,12 @@ def evaluate_document_modern(
         mean_risk = sum(p["risk_score"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_ppl = sum(p["perplexity"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_burstiness = sum(p["burstiness"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+        avg_binoculars = sum(p["binoculars_ratio"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+        avg_top1_gap = sum(p["top1_gap"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_sigma = sum(p["cadence_sigma"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+        avg_punc_entropy = sum(p["punctuation_entropy"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_mtld = sum(p["mtld"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+        avg_hapax = sum(p["hapax_ratio"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
 
         # Aggregazione Multi-Scala
         sorted_risks = sorted([p["risk_score"] for p in paragraphs_eval])
@@ -106,8 +136,12 @@ def evaluate_document_modern(
         overall_risk = 20.0
         avg_ppl = 80.0
         avg_burstiness = 4.0
+        avg_binoculars = 1.20
+        avg_top1_gap = 2.80
         avg_sigma = 12.0
+        avg_punc_entropy = 1.80
         avg_mtld = 75.0
+        avg_hapax = 0.95
 
     overall_risk = round(overall_risk, 1)
 
@@ -140,13 +174,18 @@ def evaluate_document_modern(
         "overall_ai_risk": overall_risk,
         "avg_perplexity": round(avg_ppl, 1),
         "avg_burstiness": round(avg_burstiness, 2),
+        "avg_binoculars_ratio": round(avg_binoculars, 2),
+        "avg_top1_gap": round(avg_top1_gap, 2),
         "avg_cadence_sigma": round(avg_sigma, 1),
+        "avg_punctuation_entropy": round(avg_punc_entropy, 2),
         "avg_mtld": round(avg_mtld, 1),
+        "avg_hapax_ratio": round(avg_hapax, 3),
         "paragraphs": paragraphs_eval,
         "hotspots_count": len(hotspots),
         "hotspots": hotspots,
         "cross_validation_samples": cross_val_samples
     }
+
 
 
 def _get_badge(status: str) -> str:
@@ -177,13 +216,18 @@ def render_heatmap_cli(report: Dict[str, Any]) -> str:
     lines.append(f"Parole Totali: {report['total_words']} | Paragrafi Analizzati: {report['total_paragraphs']}")
     lines.append(f"Verdetto Globale Stimato: {badge} ({risk}% Rischio AI)")
     lines.append("-" * 86)
-    lines.append("METRICHE FONDAMENTALI DEL CORPUS:")
+    lines.append("METRICHE FONDAMENTALI DEL CORPUS (SOTA Multi-Engine):")
     lines.append(f"  • Causal Perplexity media (PPL) : {report['avg_perplexity']} (PPL > 75 = alta naturalezza)")
     lines.append(f"  • Token Surprisal Burstiness   : {report['avg_burstiness']} (σ sorpresa token)")
+    lines.append(f"  • Ratio Binoculars (PPL/Entr.) : {report.get('avg_binoculars_ratio', 1.0):.2f} (B > 1.05 = asimmetria umana naturale)")
+    lines.append(f"  • Curvatura Top-1 Gap (Detect) : {report.get('avg_top1_gap', 2.5):.2f} (Gap > 2.5 = divergenza da greedy path)")
     lines.append(f"  • Cadenza Asimmetrica (σ_len)   : {report['avg_cadence_sigma']} parole (target σ ≥ 10.0)")
+    lines.append(f"  • Entropia Punteggiatura (H_p) : {report.get('avg_punctuation_entropy', 1.8):.2f} bit (H ≥ 1.6 = respiro articolato)")
     lines.append(f"  • Diversità Lessicale (MTLD)   : {report['avg_mtld']} (invariante per lunghezza)")
+    lines.append(f"  • Hapax Legomena (Coda Zipf)   : {report.get('avg_hapax_ratio', 0.90):.1%} (V1/N > 90% = vocabolario ricco non troncato)")
     lines.append("-" * 86)
     lines.append("MATRICE DIAGNOSTICA DISAGGREGATA PER PARAGRAFO:")
+
     lines.append(f"{'§':<4} | {'Parole':<6} | {'Cadenza':<7} | {'Surprisal':<9} | {'Sintassi':<8} | {'DeBERTa':<8} | {'Status':<10} | {'Snippet'}")
     lines.append("-" * 86)
 

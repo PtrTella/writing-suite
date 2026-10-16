@@ -2,16 +2,16 @@
 name: writing-suite
 description: |
   Official operational and forensic evaluation CLI for academic theses and technical documents.
-  Executes the disaggregated multi-engine diagnostic suite (Cadence, MPS Causal Surprisal, Syntax Patterns,
-  Lexical Diversity, DeBERTa-v3, and Live External Tri-Consensus: Sapling + CleverHumanizer + ZeroGPT).
+  Executes the disaggregated multi-engine diagnostic suite (Cadence, MPS Causal Surprisal, Binoculars Ratio,
+  Fast-DetectGPT Top-1 Gap, NLTK POS Transitions, Lexical Diversity, Hapax Legomena, DeBERTa-v3, and Live Tri-Consensus).
   Generates paragraph-by-paragraph Visual Heatmaps with actionable text surgery prescriptions,
   runs BibTeX citation audits, and compiles Typst documents into PDF with 0 errors.
 license: MIT
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
-# Writing Suite 3.0: Disaggregated Multi-Engine Diagnostic Architecture
+# Writing Suite 3.1: SOTA Disaggregated Multi-Engine Forensic Architecture
 
 Located in `/Users/tella/Workspace/writing-suite`. This suite abandons simplistic, single-scalar abstractions in favor of an **objective, disaggregated Multi-Engine Diagnostic Matrix** with **Chirurgia del Testo (Actionable Prescriptions)** and integrated **External Live Cross-Validation** (Sapling.ai, CleverHumanizer.ai, ZeroGPT.com).
 
@@ -23,34 +23,39 @@ Writing Suite evaluates every paragraph through independent, specialized diagnos
 
 1. **Cadence & Rhythm Engine (`mcp/core/engines/cadence.py`)**:
    * Measures sentence length standard deviation ($\sigma_{\text{len}}$) and min/max length span.
+   * **Punctuation Shannon Entropy ($H_{\text{punct}}$)**: Flags flat, monotonous comma-period pacing ($H < 1.30$); targets rich asymmetric pacing ($H \ge 1.6 - 2.2$ bits) with semicolons, em-dashes, and parentheticals.
    * Flags metronomic AI rhythm ($\sigma < 6.5$) and lack of staccato clauses ($< 8$ words).
-   * **Target**: $\sigma_{\text{len}} \ge 10.0$ words with at least one punchy staccato sentence.
+   * **Target**: $\sigma_{\text{len}} \ge 10.0$ words, $H_{\text{punct}} \ge 1.60$ with at least one punchy staccato sentence.
 
-2. **Causal Surprisal Engine (`mcp/core/engines/surprisal.py`)**:
-   * Computes token-level causal perplexity (PPL) and burstiness on Apple Silicon Metal GPU (SmolLM2 MPS).
-   * Pinpoints the exact lowest-surprisal sentence in the paragraph (the statistical AI cliché).
-   * **Target**: $\text{PPL} \ge 75.0$.
+2. **Causal Surprisal & Binoculars Engine (`mcp/core/engines/surprisal.py`)**:
+   * Runs local SmolLM2-135M on Apple Silicon Metal GPU (MPS).
+   * **Binoculars Perplexity-to-Entropy Ratio** (Hans et al., ICML 2024): $B = \frac{\log \text{PPL}}{H_M}$. In AI text, tokens closely follow model entropy ($B \le 0.95$); in authentic human text, tokens diverge asymmetrically ($B > 1.05 - 1.25$).
+   * **Fast-DetectGPT Top-1 Curvature Gap** (Bao et al., ICLR 2024): $\Delta = \log P(\text{top1}) - \log P(w_t)$. Flags greedy/argmax lockstep when $\Delta < 2.1$.
+   * Computes token-level causal perplexity (PPL) and burstiness.
+   * **Target**: $\text{PPL} \ge 75.0$, $B \ge 1.05$, $\text{Top-1 Gap} \ge 2.5$.
 
-3. **Syntax & AI Patterns Engine (`mcp/core/engines/syntax_patterns.py`)**:
-   * Scans for the structural hallmarks that trigger commercial detectors:
-     - **Triadic Parallelism**: elenchi a 3 bilanciati (*"A, B, and C"*).
-     - **Symmetrical Antithesis**: contrapposizioni binarie (*"cannot X; rather Y"*).
-     - **Explanatory Em-dashes**: incisi appositivi (*"--- as demonstrated by"*).
-     - **Passive Hedges & Clichés**: *"plays a crucial role"*, *"serves as a testament"*.
-     - **Single-Sentence Blocks**: paragrafi monoriga a varianza ritmica zero.
+3. **Syntax & Grammatical Architecture Engine (`mcp/core/engines/syntax_patterns.py`)**:
+   * Utilizes **NLTK Averaged Perceptron POS Tagger** and structural syntax analysis:
+     - **POS Transition Entropy ($H_{\text{POS}}$)**: Bigram POS transition diversity; flags rigid, canonical SVO pipelines ($H_{\text{POS}} < 4.2$).
+     - **POS-level Triadic Parallelism**: Coordinate noun/verb/adjective chains.
+     - **Passive Voice Chains**: Sequence of auxiliary + past participle (`aux + VBN`).
+     - **Symmetrical Punctuation**: Semicolon balance, explanatory em-dashes, and leading adverbials (*"Furthermore,"*, *"Crucially,"*).
+     - **Single-Sentence Blocks**: Isolated single-sentence paragraphs.
 
-4. **Lexical Diversity Engine (`mcp/core/engines/lexical.py`)**:
-   * Calculates length-invariant MTLD (Measure of Textual Lexical Diversity).
-   * Flags over-repeated abstract verbs (*"ensure"*, *"guarantee"*, *"facilitate"*, *"leverage"*, *"mitigate"*).
-   * **Target**: $\text{MTLD} \ge 80.0$.
+4. **Lexical Diversity & Zipf Long-Tail Engine (`mcp/core/engines/lexical.py`)**:
+   * **WordNet Lemmatization**: Grouping words to root lemmas to eliminate morphological repetition.
+   * **Hapax Legomena Ratio ($V_1 / N$)**: Words occurring once relative to token count. LLMs using nucleus sampling truncate the Zipf tail ($V_1/N < 85\%$); human text maintains $V_1/N > 90\%$.
+   * **Yule's Characteristic $K$**: Length-invariant measure of vocabulary concentration.
+   * **Length-invariant MTLD**: Measure of Textual Lexical Diversity (Target $\ge 80.0$).
 
 5. **Neural Transformer Engine (`mcp/core/engines/neural.py`)**:
    * DeBERTa-v3 fine-tuned classifier on dense latent space.
-   * Detects macro-scale semantic smoothness.
+   * Calibrated with RAID benchmark insights to prevent false positives on rigorous academic Computer Science terminology.
 
 6. **External Multi-Detector Consensus Engine (`mcp/core/engines/external.py`)**:
    * Asynchronous parallel query to **Sapling.ai + CleverHumanizer.ai + ZeroGPT.com** via headless Chromium.
    * Reports live consensus alongside internal metrics to guarantee complete transparency.
+
 
 ---
 

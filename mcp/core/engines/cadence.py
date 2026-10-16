@@ -7,21 +7,25 @@ la varianza ritmica naturale umana (target σ_len >= 10.0, presenza di clausole 
 
 import math
 from typing import Dict, Any, List
+from ..stylome import calculate_punctuation_entropy
 
 
 def analyze_cadence(text: str, sentences: List[str] = None) -> Dict[str, Any]:
-    """Analizza il ritmo e la cadenza asimmetrica del testo."""
+    """Analizza il ritmo, la cadenza asimmetrica e l'entropia della punteggiatura del testo."""
     if sentences is None:
         from ..cleaner import extract_sentences
         sentences = extract_sentences(text)
 
     from ..cleaner import extract_words
 
+    punc_entropy = calculate_punctuation_entropy(text)
+
     if not sentences:
         return {
             "status": "warning",
             "score": 50.0,
             "cadence_sigma": 0.0,
+            "punctuation_entropy": punc_entropy,
             "mean_length": 0.0,
             "min_length": 0,
             "max_length": 0,
@@ -38,6 +42,7 @@ def analyze_cadence(text: str, sentences: List[str] = None) -> Dict[str, Any]:
             "status": "critical" if single_len >= 15 else "warning",
             "score": 85.0 if single_len >= 15 else 50.0,
             "cadence_sigma": 0.0,
+            "punctuation_entropy": punc_entropy,
             "mean_length": float(single_len),
             "min_length": single_len,
             "max_length": single_len,
@@ -87,10 +92,19 @@ def analyze_cadence(text: str, sentences: List[str] = None) -> Dict[str, Any]:
         signals.append("Assenza totale di clausole staccate (tutte le frasi superano 14 parole).")
         prescriptions.append("Mancanza di clausole brevi: inserisci una frase d'impatto di meno di 8 parole per dare respiro al lettore.")
 
+    # Valutazione Entropia della Punteggiatura
+    if len(sentences) >= 3:
+        if punc_entropy < 1.30:
+            signals.append(f"Entropia di punteggiatura piatta (H_punct = {punc_entropy:.2f} bit, atteso ≥ 1.6): ritmo piatto con sole virgole e punti.")
+            prescriptions.append("Rompi la simmetria di punteggiatura: introduci un punto e virgola asimmetrico o un inciso per variare il respiro.")
+        elif punc_entropy >= 1.70:
+            signals.append(f"Punteggiatura asimmetrica articolata (H_punct = {punc_entropy:.2f} bit).")
+
     return {
         "status": status,
         "score": score,
         "cadence_sigma": round(sigma, 1),
+        "punctuation_entropy": punc_entropy,
         "mean_length": round(mean_len, 1),
         "min_length": min_l,
         "max_length": max_l,
@@ -100,3 +114,4 @@ def analyze_cadence(text: str, sentences: List[str] = None) -> Dict[str, Any]:
         "signals": signals,
         "prescriptions": prescriptions
     }
+
