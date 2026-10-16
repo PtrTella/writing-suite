@@ -6,8 +6,13 @@ Basato sui principi scientifici di Binoculars, Fast-DetectGPT e GLTR.
 """
 
 import math
+import os
 import time
 from typing import Dict, Any, List, Optional, Tuple
+
+os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+
 import torch
 
 _CAUSAL_MODEL = None
