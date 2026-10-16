@@ -47,21 +47,29 @@ Commercial neural detectors (CleverHumanizer, Copyleaks, Turnitin) trigger at 95
 * **Bad (Cosmic Preamble)**: *Modern software engineering is fundamentally an exercise in composition. In today's digital landscape...*
 * **Good (Concrete Runway)**: *Package registries distribute unvetted code directly to millions of workstations. Running a single `pip install` command unpacks pre-compiled binary wheels with ambient user privileges.*
 
-### Invariant 3: Cadence Asymmetry & Period Burstiness ($\sigma_{\text{len}} \ge 11.0$)
-Human writers naturally vary period lengths according to the cognitive weight of the argument:
+### Invariant 3: Cadence Asymmetry, Period Burstiness ($\sigma_{\text{len}} \ge 10.0$) & Punctuation Entropy ($H_{\text{punct}} \ge 1.60$)
+Human writers naturally vary period lengths and punctuation marks according to the cognitive weight of the argument:
 * **Punchy Assertions (6–12 words)**: State key empirical facts, transitions, or outcomes cleanly.
   > *The reaction was immediate.* (4 words)
   > *Mathematical immutability simply does not exist on centralized servers.* (8 words)
 * **Compound Articulated Periods (25–38 words)**: Explain multi-faceted technical causality, protocol interactions, or operational constraints.
   > *Within minutes, automated build clusters and continuous delivery pipelines across thousands of enterprise networks crashed simultaneously when resolvers encountered unexpected 404 missing package errors.* (25 words)
-* **Target Variance**: Ensure the standard deviation of sentence lengths across every paragraph satisfies $\sigma_{\text{len}} \ge 10.0$ words.
+* **Punctuation Shannon Entropy ($H_{\text{punct}} \ge 1.60$)**: Never settle for repetitive comma-period pacing. Use asymmetric semicolons, em-dashes, and parenthetical clarifications to create human breathing room.
+* **Target Variance**: Ensure $\sigma_{\text{len}} \ge 10.0$ words with at least one staccato sentence ($\le 8$ words).
 
-### Invariant 4: Causal Surprisal & Real Physical Friction
+### Invariant 4: Causal Surprisal, Binoculars Divergence ($B \ge 1.05$) & Top-1 Gap ($\Delta \ge 2.5$)
 Avoid vague Latinate filler (*"serves to facilitate"*, *"stands as a testament"*, *"fosters optimal synergy"*). Ground technical claims in physical constraints:
+* **The Binoculars Paradigm** ($B = \frac{\log \text{PPL}}{H_M}$): AI text tracks the predictive entropy plateau ($B \le 0.95$). Human technical prose diverges intentionally ($B \ge 1.05 - 1.25$) by coupling specialized domain terms with crisp declarative syntax.
+* **Top-1 Gap** ($\Delta = \log P(\text{top1}) - \log P(w_t) \ge 2.5$): Break the greedy/argmax path by choosing exact software components (*"RocksDB"*, *"Merkle directed acyclic graph"*, *"160-bit SHA-1 digest"*) instead of abstract generic nouns (*"the platform"*, *"the system"*).
 * What specific failure mode is being prevented? (e.g. *Tar-Slip directory traversal*, *hash collision*, *race condition*).
 * What is the physical cost of the design choice? (e.g. *state bloat*, *EVM gas expenditure*, *network round-trips*, *cache invalidation*).
 
-### Invariant 5: Strict Meaning Lock Protocol
+### Invariant 5: Lexical Richness & The Zipf Long-Tail ($V_1 / N \ge 90\%$)
+Nucleus sampling truncates the long tail of vocabulary. An authentic academic researcher maintains a dense, non-repetitive vocabulary:
+* **Hapax Legomena Ratio ($V_1 / N \ge 90\%$)**: In any given paragraph, over 90% of content words should appear only once. Avoid looping the same noun or verb multiple times.
+* **Length-Invariant MTLD**: Maintain $\text{MTLD} \ge 80.0$ using WordNet lemmatized dispersion.
+
+### Invariant 6: Strict Meaning Lock Protocol
 Never alter or simplify:
 * **Formulas**: Inline `$ ... $` and block `$$ ... $$` math syntax.
 * **Bibliographic Citations**: Exact BibTeX keys `@key` (e.g. `@ladisa2023taxonomy`, `@benet2014ipfs`).
@@ -69,6 +77,7 @@ Never alter or simplify:
 * **Empirical Data**: Benchmark constants, gas metrics, latency numbers, and hardware specs.
 
 ---
+
 
 ## 3. The 26 Tells: Complete Bilingual Catalogue (EN & IT)
 
