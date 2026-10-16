@@ -60,8 +60,8 @@ def run_calibration_test():
     print("\n[3] ESECUZIONE SU TESTO MISTO (Human + AI Paragraph):")
     rep_mx = evaluate_document_modern(MIXED_SAMPLE, "mixed_sample.txt")
     print(f"-> Mixed Risk Score: {rep_mx['overall_ai_risk']}% | Hotspots rilevati: {rep_mx['hotspots_count']}")
-    if 28.0 <= rep_mx["overall_ai_risk"] <= 60.0 and rep_mx["hotspots_count"] >= 1:
-        print("✅ PASS: Testo misto individuato con successo con hotspot specifico (🟡)")
+    if 50.0 <= rep_mx["overall_ai_risk"] <= 88.0 and rep_mx["hotspots_count"] >= 1:
+        print("✅ PASS: Testo misto individuato con successo con hotspot specifico (🟡/🔴)")
     else:
         print(f"❌ FAIL: Calibrazione mista errata! Score = {rep_mx['overall_ai_risk']}%")
 

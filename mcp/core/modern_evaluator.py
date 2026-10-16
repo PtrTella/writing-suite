@@ -85,14 +85,14 @@ def evaluate_paragraph(paragraph: str, para_index: int = 1) -> Dict[str, Any]:
     if p4_risk is not None and p4_risk >= 75.0 and sigma_len < 5.0:
         composite = max(composite, 0.80 * p4_risk + 0.20 * p2_risk)
 
-    # 2. Se Perplessità è bassa (PPL < 30 -> p1_risk > 65%) e DeBERTa > 60%:
-    if p1_risk >= 65.0 and p4_risk is not None and p4_risk >= 60.0:
+    # 2. Se Perplessità è bassa (PPL < 30 -> p1_risk > 65%) e DeBERTa > 60% e ritmo piatto (sigma < 8.0):
+    if p1_risk >= 65.0 and p4_risk is not None and p4_risk >= 60.0 and sigma_len < 8.0:
         composite = max(composite, 82.0)
 
-    # 3. Disinnesco dei Falsi Positivi OOD (stile Di Cosmo):
+    # 3. Disinnesco dei Falsi Positivi OOD (stile Di Cosmo / prose accademica autentica):
     # Se il testo ha cadenza fortemente asimmetrica (sigma_len >= 9.5), diversità lessicale ricca (MTLD >= 70)
-    # e perplessità naturale (PPL >= 45), allora un picco di DeBERTa isolato dovuto a gergo tecnico è un falso allarme
-    if sigma_len >= 9.5 and mtld >= 70.0 and ppl >= 45.0:
+    # e perplessità plausibile (PPL >= 25), allora un picco di DeBERTa isolato dovuto a gergo o stile saggistico è disinnescato
+    if sigma_len >= 9.5 and mtld >= 70.0 and ppl >= 25.0:
         if p4_risk is not None and p4_risk > 65.0:
             composite = min(composite, 25.0)
 
