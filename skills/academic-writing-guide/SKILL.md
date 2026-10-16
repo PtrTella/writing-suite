@@ -239,12 +239,13 @@ Never alter or simplify:
 
 ---
 
-## 5. Operational Check-in with Writing Suite
+## 5. Clean Division of Responsibilities (Workflow Contract)
 
-When drafting or editing:
-1. Run `uv run --directory /Users/tella/Workspace/writing-suite bin/writing-suite evaluate <file.typ>` to inspect the paragraph-level Visual Heatmap.
-2. If any paragraph is flagged 🔴 or 🟡, review the diagnostic metrics:
-   * **Low PPL (< 35)**: Add physical friction, failure modes, and concrete technical entities.
-   * **Low $\sigma$ (< 8.0)**: Break up uniform sentence lengths with short punchy assertions and compound periods.
-   * **High DeBERTa (> 40%)**: Eliminate Latinate filler, passive constructs, and generic opening patterns.
-3. Verify that the overall risk drops into the **🟢 Safe Zone (< 20%)** and confirm 0 errors with `compile`.
+To ensure zero ambiguity across agent conversations:
+* **`academic-writing-guide` (This Skill)**: Governs *how to write, compose, and rewrite*. It is the cognitive stylistic handbook (impersonal register, concrete systems runway, cadence asymmetry, Rules 31–39, 26 tells).
+* **`writing-suite` (Tooling Skill)**: Governs *how to audit and test*. It executes the forensic engine (`evaluate`), citation verification (`citations`), live external detector validation (`check-live`), and document compilation (`compile`).
+
+**The Closed-Loop Writing Workflow**:
+1. Use `writing-suite` to audit the document and identify paragraphs flagged 🔴 or 🟡.
+2. Apply `academic-writing-guide` to surgically rewrite flagged paragraphs in-place.
+3. Re-audit with `writing-suite` until the document is certified in the **🟢 Safe Zone (< 20% AI risk)** with zero compilation errors.
