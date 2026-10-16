@@ -123,13 +123,13 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
     word_count = len(words)
     sent_count = len(sentences)
 
-    if word_count < 25 or sent_count < 2:
+    if word_count < 10 or sent_count < 1:
         return {
             "risk_score": 20.0,
-            "cadence_sigma": 12.0,
-            "mean_sentence_length": 18.0,
-            "mtld": 75.0,
-            "yule_k": 110.0,
+            "cadence_sigma": 0.0,
+            "mean_sentence_length": float(word_count),
+            "mtld": 0.0,
+            "yule_k": 100.0,
             "zipf_slope": 1.0,
             "metronome_pairs_count": 0,
             "feature_vector": [0.0] * 12,
@@ -139,8 +139,11 @@ def extract_stylometric_features(text: str) -> Dict[str, Any]:
     # 1. Analisi di Cadenza e Varianza Ritmica dei Periodi
     lengths = [len(extract_words(s)) for s in sentences]
     mean_len = sum(lengths) / sent_count
-    var_len = sum((l - mean_len) ** 2 for l in lengths) / max(1, sent_count - 1)
-    sigma_len = math.sqrt(var_len)
+    if sent_count >= 2:
+        var_len = sum((l - mean_len) ** 2 for l in lengths) / (sent_count - 1)
+        sigma_len = math.sqrt(var_len)
+    else:
+        sigma_len = 0.0
 
     # Rilevamento coppie di frasi a metronomo (lunghezza identica nella fascia critica 18-24 parole)
     metronome_pairs = 0
