@@ -20,7 +20,7 @@ if str(current_dir) not in sys.path:
 
 from core.citations import audit_citations
 from core.modern_evaluator import evaluate_document_modern, render_heatmap_cli
-from core.external_detector import check_cleverhumanizer
+from core.external_detector import check_cleverhumanizer, check_zerogpt, check_multi_detector
 
 SERVER_NAME = "writing-suite"
 SERVER_VERSION = "2.0.0"
@@ -185,7 +185,7 @@ def execute_tool(name: str, arguments: dict) -> str:
 
     elif name == "check_commercial_detector":
         import asyncio
-        res = asyncio.run(check_cleverhumanizer(text))
+        res = asyncio.run(check_multi_detector(text))
         return json.dumps(res, indent=2, ensure_ascii=False)
 
     return json.dumps({"error": f"Tool non supportato: {name}"}, indent=2)

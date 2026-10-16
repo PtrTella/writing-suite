@@ -7,7 +7,7 @@ description: |
   causal surprisal, Meaning Lock, and the complete 26 AI writing tells with bilingual EN/IT before-after catalogue and rules 31-39.
 license: MIT
 metadata:
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Academic Writing Guide: Conscious Human Technical Composition
@@ -236,6 +236,26 @@ Never alter or simplify:
 * Articulate the real price paid for convenience.
 * **EN Before**: *Centralized package registries improve developer productivity but create single points of failure.*
 * **EN After**: *Despite the enormous productivity gains enabled by this modular approach, it comes at a steep price: the system under development becomes highly dependent on the quality and intent of unrelated third-party contributors.*
+
+#### Rule 40: Shannon-Lamport Dialectical Problematization (The Abstract False-Positive Defense)
+* **The Empirical Discovery**: Standard formulaic academic openings (*"X is a critical component of modern computing..."*, *"Unfortunately, existing systems are vulnerable to a wide array of attacks..."*, *"In this paper, we present..."*) trigger 95%+ false positives even on real human papers written in 2008 (e.g. Justin Cappos, TUF). Why? LLMs were trained on millions of formulaic CS abstracts.
+* **The Shannon/Lamport Benchmark**: Claude Shannon (1948) scored **0% AI on ZeroGPT, 0.03% on Sapling, 1.0% on CleverHumanizer**. Why? Shannon began by dismantling the naive assumption: *"The fundamental problem of communication is that of reproducing at one point either exactly or approximately a message selected at another point... These semantic aspects of communication are irrelevant to the engineering problem."*
+* **The Rule**: Never start a section with high-altitude survey filler or textbook definitions. Open by attacking an unstated assumption, identifying a physical contradiction, or defining the exact operational boundary.
+* **EN Before**: *Package managers are an essential component of modern software development ecosystems. However, supply chain security has become an urgent concern.*
+* **EN After**: *Modern package managers treat transport encryption as if it were artifact provenance. A TLS handshake proves only that bytes travelled from an upstream domain without tampering in transit; it tells the developer nothing about who compiled the package.*
+
+#### Rule 41: Asymmetric Semicolon Coupling (Kill the Participial Gerund)
+* **Problem**: LLMs terminate complex periods with trailing participial gerunds (*", thereby ensuring optimal security"*, *", facilitating seamless deployment"*, *", demonstrating the robustness of our approach"*). These are major red flags across all commercial detectors.
+* **Rule**: Replace participial gerund tails with asymmetric semicolon-coordinated clauses (*"; that is, they confuse the channel with the origin."*, *"; in practice, this guarantees that..."*).
+* **EN Before**: *The contract stores the cryptographic multihash of the release, thereby ensuring that client machines can verify integrity.*
+* **EN After**: *The contract records only the cryptographic multihash of the release; client machines independently recompute the digest from local disk before unpacking.*
+
+#### Rule 42: Tri-Consensus External Validation Protocol
+* To avoid overfitting to a single commercial detector's idiosyncrasies, evaluate prose against the **Tri-Detector Consensus** in `writing-suite check-live`:
+  1. **Sapling.ai** (Stanford/Berkeley deep token NLP): Tests token-by-token conditional probabilities.
+  2. **ZeroGPT.com**: Tests document perplexity and sentence burstiness.
+  3. **CleverHumanizer.ai**: Flags structural tells (uniform rhythms, generic transitions, passive voice).
+* A piece of technical prose is considered robustly humanized when the consensus score satisfies **$\le 25\%$ AI Risk** across all three engines simultaneously.
 
 ---
 

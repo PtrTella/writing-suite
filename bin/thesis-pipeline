@@ -49,24 +49,30 @@ fi
 case "$CMD" in
     evaluate|heatmap|audit|suggest)
         TARGET="${1:-.}"
+        CROSS_VAL="False"
+        if [ "$2" = "--cross-validate" ] || [ "$2" = "--live" ] || [ "$1" = "--cross-validate" ]; then
+            CROSS_VAL="True"
+            if [ "$1" = "--cross-validate" ]; then TARGET="."; fi
+        fi
         "$VENV_PY" -c "
 import sys, os
 sys.path.insert(0, '$WS_DIR/mcp')
 from core.modern_evaluator import evaluate_document_modern, render_heatmap_cli
 
 target = '$TARGET'
+cross_val = ($CROSS_VAL == True)
 if os.path.isdir(target):
     files = sorted([os.path.join(target, f) for f in os.listdir(target) if f.endswith(('.typ', '.tex', '.md'))])
     for f_path in files:
         with open(f_path) as f:
             text = f.read()
-        rep = evaluate_document_modern(text, f_path)
+        rep = evaluate_document_modern(text, f_path, cross_validate=cross_val)
         print(render_heatmap_cli(rep))
         print('\n')
 elif os.path.isfile(target):
     with open(target) as f:
         text = f.read()
-    rep = evaluate_document_modern(text, target)
+    rep = evaluate_document_modern(text, target, cross_validate=cross_val)
     print(render_heatmap_cli(rep))
 else:
     print(f'File o cartella non trovata: {target}')
@@ -110,13 +116,13 @@ else:
     check-live)
         TARGET="$1"
         if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file o il testo da verificare con CleverHumanizer."
+            echo "Errore: specificare il file o il testo da verificare con i detector commerciali."
             exit 1
         fi
         if [ -f "$TARGET" ]; then
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action check
+            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action multi
         else
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action check
+            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action multi
         fi
         ;;
 

@@ -1,11 +1,13 @@
 """
-Writing Suite - Unified 4-Pillar Modern Evaluator & Visual Heatmap Engine
-Combina:
-1. Causal Surprisal & Perplexity (SmolLM2 MPS)
-2. Pure Mathematical & Zipfian Stylometry (Zero hardcoded word lists)
-3. Dense Semantic Embeddings & Latent Space Geometry
-4. Macro Multi-Scale DeBERTa-v3 Transformer
-Genera una heatmap visiva per paragrafo con diagnosi mirata e zero linter regex.
+Writing Suite - Modular Multi-Engine Modern Evaluator & Prescriptive Heatmap
+Orchestra i motori diagnostici indipendenti:
+1. Cadence & Rhythm Engine (σ_len, staccato, pause)
+2. Causal Surprisal Engine (SmolLM2 MPS Token Perplexity & Burstiness)
+3. Syntax & AI Patterns Engine (Triadi, antitesi simmetriche, em-dash, cliché)
+4. Lexical Diversity Engine (MTLD, verbi astratti ridondanti)
+5. Neural Macro Transformer (DeBERTa-v3)
+6. External Multi-Detector Consensus (Sapling + CleverHumanizer + ZeroGPT)
+Genera una matrice disaggregata, prescrizioni chirurgiche e cross-validazione live.
 """
 
 import math
@@ -15,10 +17,7 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 
 from .cleaner import clean_markup, extract_sentences, extract_words
-from .surprisal import calculate_token_surprisal, analyze_sentences_surprisal, is_causal_available
-from .stylome import extract_stylometric_features
-from .embedding_classifier import evaluate_embedding_and_stylome
-from .neural_detector import predict_text_score, is_neural_available
+from .engines import evaluate_paragraph_vector, analyze_external
 
 
 def split_into_paragraphs(text: str) -> List[str]:
@@ -34,110 +33,46 @@ def split_into_paragraphs(text: str) -> List[str]:
     return cleaned_paras
 
 
-def evaluate_paragraph(paragraph: str, para_index: int = 1) -> Dict[str, Any]:
-    """Esegue l'audit completo a 4 pilastri su un singolo paragrafo."""
-    words = extract_words(paragraph)
-    sentences = extract_sentences(paragraph)
-    word_count = len(words)
+def evaluate_paragraph(
+    paragraph: str,
+    para_index: int = 1,
+    run_external: bool = False
+) -> Dict[str, Any]:
+    """Esegue l'audit diagnostico completo su un singolo paragrafo."""
+    vec_res = evaluate_paragraph_vector(paragraph, para_index, run_external=run_external)
+    vec = vec_res["vector"]
 
-    # 1. Pilastro 1: Causal Surprisal & Perplexity (SmolLM2)
-    surprisal_res = calculate_token_surprisal(paragraph)
-    ppl = surprisal_res.get("perplexity", 50.0)
-    burstiness = surprisal_res.get("burstiness", 3.5)
-    p1_risk = surprisal_res.get("risk_score", 30.0)
-
-    # 2. Pilastro 2: Pure Mathematical Stylometry
-    stylome_res = extract_stylometric_features(paragraph)
-    sigma_len = stylome_res.get("cadence_sigma", 10.0)
-    mtld = stylome_res.get("mtld", 70.0)
-    p2_risk = stylome_res.get("risk_score", 30.0)
-
-    # 3. Pilastro 3: Dense Latent Embedding & Geometric Dispersion
-    emb_res = evaluate_embedding_and_stylome(paragraph)
-    p3_risk = emb_res.get("risk_score", 30.0)
-    top_drivers = emb_res.get("top_drivers", [])
-
-    # 4. Pilastro 4: DeBERTa-v3 Macro Transformer (se disponibile)
-    p4_risk = None
-    if is_neural_available():
-        try:
-            p4_risk = predict_text_score(paragraph)
-        except Exception:
-            p4_risk = None
-
-    # Calcolo Composite Score ponderato continuo
-    if p4_risk is not None:
-        composite = (
-            (0.35 * p1_risk) +
-            (0.35 * p4_risk) +
-            (0.15 * p2_risk) +
-            (0.15 * p3_risk)
-        )
-    else:
-        composite = (
-            (0.45 * p1_risk) +
-            (0.35 * p2_risk) +
-            (0.20 * p3_risk)
-        )
-
-    # Multi-Lens Forensic Synergy (non permettere che un picco di robotismo venga diluito):
-    # 1. Se DeBERTa rileva forte artificialità (> 75%) e la cadenza è piatta (sigma_len < 5.0):
-    if p4_risk is not None and p4_risk >= 75.0 and sigma_len < 5.0:
-        composite = max(composite, 0.80 * p4_risk + 0.20 * p2_risk)
-
-    # 2. Se Perplessità è bassa (PPL < 30 -> p1_risk > 65%) e DeBERTa > 60% e ritmo piatto (sigma < 8.0):
-    if p1_risk >= 65.0 and p4_risk is not None and p4_risk >= 60.0 and sigma_len < 8.0:
-        composite = max(composite, 82.0)
-
-    # 3. Disinnesco dei Falsi Positivi OOD (stile Di Cosmo / prose accademica autentica):
-    # Se il testo ha cadenza fortemente asimmetrica (sigma_len >= 9.5), diversità lessicale ricca (MTLD >= 70)
-    # e perplessità plausibile (PPL >= 25), allora un picco di DeBERTa isolato dovuto a gergo o stile saggistico è disinnescato
-    if sigma_len >= 9.5 and mtld >= 70.0 and ppl >= 25.0:
-        if p4_risk is not None and p4_risk > 65.0:
-            composite = min(composite, 25.0)
-
-    # Correzione congiunta su perplessità estrema
-    if ppl >= 110.0 and sigma_len >= 8.0:
-        composite = max(5.0, composite - 12.0)
-    elif ppl <= 22.0:
-        composite = min(98.0, composite + 15.0)
-
-    final_risk = round(max(0.0, min(100.0, composite)), 1)
-
-    # Identificazione della frase più critica (più prevedibile / più basso surprisal)
-    critical_sentence = None
-    if len(sentences) > 0 and final_risk >= 30.0:
-        s_evals = analyze_sentences_surprisal(sentences)
-        if s_evals:
-            # Ordina per perplessità crescente (la più prevedibile ha PPL più bassa)
-            s_evals.sort(key=lambda s: s["perplexity"])
-            worst = s_evals[0]
-            if worst["perplexity"] < 45.0:
-                critical_sentence = {
-                    "text": worst["sentence"],
-                    "perplexity": worst["perplexity"],
-                    "burstiness": worst["burstiness"],
-                    "risk": worst["risk_score"]
-                }
+    cadence = vec.get("cadence", {})
+    surprisal = vec.get("surprisal", {})
+    syntax = vec.get("syntax", {})
+    lexical = vec.get("lexical", {})
+    neural = vec.get("neural", {})
+    external = vec.get("external", {})
 
     return {
         "index": para_index,
-        "word_count": word_count,
-        "sentence_count": len(sentences),
-        "risk_score": final_risk,
-        "perplexity": ppl,
-        "burstiness": burstiness,
-        "cadence_sigma": sigma_len,
-        "mtld": mtld,
-        "deberta_score": round(p4_risk, 1) if p4_risk is not None else None,
-        "top_drivers": top_drivers,
-        "critical_sentence": critical_sentence,
-        "snippet": paragraph[:80] + ("..." if len(paragraph) > 80 else "")
+        "word_count": vec_res["word_count"],
+        "sentence_count": vec_res["sentence_count"],
+        "risk_score": vec_res["risk_score"],
+        "perplexity": surprisal.get("perplexity", 50.0),
+        "burstiness": surprisal.get("burstiness", 3.5),
+        "cadence_sigma": cadence.get("cadence_sigma", 0.0),
+        "mtld": lexical.get("mtld", 50.0),
+        "deberta_score": neural.get("score"),
+        "top_drivers": syntax.get("patterns_detected", []) + cadence.get("signals", []),
+        "critical_sentence": vec_res.get("critical_sentence"),
+        "snippet": vec_res["snippet"],
+        "vector": vec,
+        "prescriptions": vec_res.get("prescriptions", [])
     }
 
 
-def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict[str, Any]:
-    """Esegue l'audit moderno a 4 pilastri sull'intero documento."""
+def evaluate_document_modern(
+    text: str,
+    file_path: Optional[str] = None,
+    cross_validate: bool = False
+) -> Dict[str, Any]:
+    """Esegue l'audit diagnostico modulare sull'intero documento."""
     cleaned = clean_markup(text)
     paragraphs = split_into_paragraphs(cleaned)
     total_words = len(extract_words(cleaned))
@@ -157,8 +92,7 @@ def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict
         avg_sigma = sum(p["cadence_sigma"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_mtld = sum(p["mtld"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
 
-        # Aggregazione Multi-Scala (stile Copyleaks / RAID):
-        # Impedisce che paragrafi verdi nascondano hotspot ad alto rischio
+        # Aggregazione Multi-Scala
         sorted_risks = sorted([p["risk_score"] for p in paragraphs_eval])
         p80_idx = min(len(sorted_risks) - 1, int(len(sorted_risks) * 0.80))
         p80_risk = sorted_risks[p80_idx]
@@ -177,8 +111,27 @@ def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict
 
     overall_risk = round(overall_risk, 1)
 
-    # Rilevamento hotspot (paragrafi con rischio >= 40%)
-    hotspots = [p for p in paragraphs_eval if p["risk_score"] >= 35.0]
+    # Rilevamento hotspot (paragrafi che richiedono attenzione)
+    hotspots = [p for p in paragraphs_eval if p["risk_score"] >= 35.0 or len(p["prescriptions"]) >= 2]
+
+    # Campionamento mirato di Cross-Validazione Esterna (se richiesto)
+    cross_val_samples = []
+    if cross_validate and paragraphs:
+        # Seleziona i 2 paragrafi più critici o controversi
+        sorted_candidates = sorted(paragraphs_eval, key=lambda x: (len(x["prescriptions"]), x["risk_score"]), reverse=True)
+        top_candidates = sorted_candidates[:2]
+        for cand in top_candidates:
+            idx = cand["index"] - 1
+            if 0 <= idx < len(paragraphs):
+                p_text = paragraphs[idx]
+                ext_res = analyze_external(p_text)
+                cross_val_samples.append({
+                    "index": cand["index"],
+                    "snippet": cand["snippet"],
+                    "internal_risk": cand["risk_score"],
+                    "vector": cand["vector"],
+                    "external_res": ext_res
+                })
 
     return {
         "file_path": file_path,
@@ -191,59 +144,103 @@ def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict
         "avg_mtld": round(avg_mtld, 1),
         "paragraphs": paragraphs_eval,
         "hotspots_count": len(hotspots),
-        "hotspots": hotspots
+        "hotspots": hotspots,
+        "cross_validation_samples": cross_val_samples
     }
 
 
+def _get_badge(status: str) -> str:
+    if status == "safe":
+        return "\033[92m🟢\033[0m"
+    elif status == "warning":
+        return "\033[93m🟡\033[0m"
+    else:
+        return "\033[91m🔴\033[0m"
+
+
 def render_heatmap_cli(report: Dict[str, Any]) -> str:
-    """Formatta un report visivo a tabella colorata per il terminale."""
+    """Formatta un report visivo multidimensionale a motori disaggregati per il terminale."""
     risk = report["overall_ai_risk"]
     if risk < 25.0:
         badge = "\033[92m🟢 SICURO / UMANO AUTENTICO\033[0m"
-    elif risk < 55.0:
+    elif risk < 50.0:
         badge = "\033[93m🟡 MISTO / PATTERN PREVEDIBILI\033[0m"
     else:
         badge = "\033[91m🔴 ELEVATO RISCHIO AI\033[0m"
 
     lines = []
-    lines.append("=" * 80)
-    lines.append(f"          \033[1mWRITING SUITE - MODERN 4-PILLAR NEURAL & SURPRISAL AUDIT\033[0m")
-    lines.append("=" * 80)
+    lines.append("=" * 86)
+    lines.append(f"          \033[1mWRITING SUITE - DISAGGREGATED MULTI-ENGINE DIAGNOSTIC AUDIT\033[0m")
+    lines.append("=" * 86)
     if report.get("file_path"):
         lines.append(f"File: \033[1m{report['file_path']}\033[0m")
     lines.append(f"Parole Totali: {report['total_words']} | Paragrafi Analizzati: {report['total_paragraphs']}")
-    lines.append(f"Verdetto Globale: {badge} ({risk}% Rischio AI)")
-    lines.append("-" * 80)
+    lines.append(f"Verdetto Globale Stimato: {badge} ({risk}% Rischio AI)")
+    lines.append("-" * 86)
     lines.append("METRICHE FONDAMENTALI DEL CORPUS:")
     lines.append(f"  • Causal Perplexity media (PPL) : {report['avg_perplexity']} (PPL > 75 = alta naturalezza)")
     lines.append(f"  • Token Surprisal Burstiness   : {report['avg_burstiness']} (σ sorpresa token)")
     lines.append(f"  • Cadenza Asimmetrica (σ_len)   : {report['avg_cadence_sigma']} parole (target σ ≥ 10.0)")
     lines.append(f"  • Diversità Lessicale (MTLD)   : {report['avg_mtld']} (invariante per lunghezza)")
-    lines.append("-" * 80)
-    lines.append("MAPPA DI CALORE PARAGRAFO PER PARAGRAFO:")
-    lines.append(f"{'§':<4} | {'Parole':<6} | {'PPL':<7} | {'σ_len':<6} | {'DeBERTa':<8} | {'Rischio AI':<10} | {'Status'}")
-    lines.append("-" * 80)
+    lines.append("-" * 86)
+    lines.append("MATRICE DIAGNOSTICA DISAGGREGATA PER PARAGRAFO:")
+    lines.append(f"{'§':<4} | {'Parole':<6} | {'Cadenza':<7} | {'Surprisal':<9} | {'Sintassi':<8} | {'DeBERTa':<8} | {'Status':<10} | {'Snippet'}")
+    lines.append("-" * 86)
 
     for p in report["paragraphs"]:
         idx_str = f"§{p['index']:02d}"
         p_risk = p["risk_score"]
-        deb_str = f"{p['deberta_score']}%" if p['deberta_score'] is not None else "N/A"
-        
+        deb_val = p.get("deberta_score")
+        deb_str = f"{deb_val:.1f}%" if deb_val is not None else "N/A"
+
+        vec = p.get("vector", {})
+        cad_b = _get_badge(vec.get("cadence", {}).get("status", "safe"))
+        sur_b = _get_badge(vec.get("surprisal", {}).get("status", "safe"))
+        syn_b = _get_badge(vec.get("syntax", {}).get("status", "safe"))
+        deb_b = "\033[92m🟢\033[0m" if (deb_val is None or deb_val < 35) else ("\033[93m🟡\033[0m" if deb_val < 65 else "\033[91m🔴\033[0m")
+
         if p_risk < 25.0:
             status_col = f"\033[92m🟢 {p_risk:4.1f}%\033[0m"
-        elif p_risk < 55.0:
+        elif p_risk < 50.0:
             status_col = f"\033[93m🟡 {p_risk:4.1f}%\033[0m"
         else:
             status_col = f"\033[91m🔴 {p_risk:4.1f}%\033[0m"
 
-        lines.append(f"{idx_str:<4} | {p['word_count']:<6} | {p['perplexity']:<7.1f} | {p['cadence_sigma']:<6.1f} | {deb_str:<8} | {status_col:<19} | {p['snippet']}")
+        lines.append(
+            f"{idx_str:<4} | {p['word_count']:<6} | {cad_b} {p['cadence_sigma']:4.1f} | "
+            f"{sur_b} {p['perplexity']:5.1f} | {syn_b} {len(vec.get('syntax',{}).get('signals',[])):<6} | "
+            f"{deb_b} {deb_str:<6} | {status_col:<19} | {p['snippet']}"
+        )
 
-        if p.get("critical_sentence"):
-            crit = p["critical_sentence"]
-            lines.append(f"     \033[33m└─> Frase più prevedibile (PPL={crit['perplexity']:.1f}):\033[0m")
-            lines.append(f"         \"{crit['text']}\"")
-            if p.get("top_drivers"):
-                lines.append(f"         \033[90m(Driver: {', '.join(p['top_drivers'])})\033[0m")
+        # Se ci sono prescrizioni chirurgiche attive, stampale subito sotto il paragrafo
+        if p.get("prescriptions"):
+            lines.append(f"     \033[1;33m└─> CHIRURGIA DEL TESTO (Prescrizioni Operative):\033[0m")
+            for pres in p["prescriptions"][:3]:
+                lines.append(f"         \033[33m• {pres}\033[0m")
+            if p.get("critical_sentence"):
+                crit = p["critical_sentence"]
+                lines.append(f"         \033[90m[Frase più prevedibile (PPL={crit['perplexity']:.1f}): \"{crit['text'][:75]}...\"]\033[0m")
 
-    lines.append("=" * 80)
+    # Sezione Cross-Validazione Live (se campionata)
+    if report.get("cross_validation_samples"):
+        lines.append("\n" + "=" * 86)
+        lines.append("     \033[1;36mCROSS-VALIDAZIONE ESTERNA LIVE (Campioni Critici su Rete)\033[0m")
+        lines.append("=" * 86)
+        for s in report["cross_validation_samples"]:
+            ext = s["external_res"]
+            score = ext.get("score", "N/A")
+            dets = ext.get("detectors", {})
+            sap = dets.get("sapling", {}).get("overall_ai_score", "N/A")
+            clev = dets.get("cleverhumanizer", {}).get("overall_ai_score", "N/A")
+            zero = dets.get("zerogpt", {}).get("overall_ai_score", "N/A")
+
+            lines.append(f"Paragrafo §{s['index']:02d}: \"{s['snippet']}\"")
+            lines.append(f"  • Rischio Interno Combinato : {s['internal_risk']}%")
+            lines.append(f"  • Consenso Esterno Live    : \033[1m{score}%\033[0m [Sapling: {sap}% | Clever: {clev}% | ZeroGPT: {zero}%]")
+            if ext.get("signals"):
+                for sig in ext["signals"][:2]:
+                    lines.append(f"    └─ {sig}")
+            lines.append("-" * 86)
+
+    lines.append("=" * 86)
     return "\n".join(lines)

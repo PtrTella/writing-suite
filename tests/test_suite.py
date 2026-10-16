@@ -83,6 +83,23 @@ class TestWritingSuiteModern(unittest.TestCase):
         self.assertIn("paragraphs", rep)
         self.assertGreaterEqual(rep["overall_ai_risk"], 50.0, "Testo AI standard deve avere rischio elevato")
 
+    def test_diagnostic_vector_and_syntax_patterns(self):
+        from core.engines import evaluate_paragraph_vector
+        sample_triad = (
+            "When developers invoke package installation, their machines connect to remote edge servers, "
+            "mutable relational databases, and institutional administrators."
+        )
+        res = evaluate_paragraph_vector(sample_triad)
+        self.assertIn("vector", res)
+        self.assertIn("syntax", res["vector"])
+        self.assertIn("cadence", res["vector"])
+        self.assertIn("surprisal", res["vector"])
+        self.assertIn("lexical", res["vector"])
+        self.assertIn("prescriptions", res)
+        # Verifica rilevamento triade
+        syntax_res = res["vector"]["syntax"]
+        self.assertTrue(any("Triadic" in p for p in syntax_res.get("patterns_detected", [])))
+
 
 if __name__ == "__main__":
     unittest.main()
