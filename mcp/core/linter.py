@@ -309,9 +309,36 @@ def lint_text(text: str) -> list[dict]:
 
     # 3. Rilevamento chiusure participiali posticce sistematiche (WS-RID-005)
     # Cattura ", <gerundio> ..." a fine frase prima del punto (stile Copyleaks 'Predictable sentence endings')
+    ADJECTIVAL_EXCLUSIONS = {
+        'operating', 'engineering', 'training', 'underlying', 'computing', 'routing',
+        'existing', 'leading', 'remaining', 'missing', 'upcoming', 'incoming', 'manufacturing',
+        'surrounding', 'preceding', 'following', 'building', 'binding', 'parsing'
+    }
     coda_matches = list(re.finditer(r",\s+(?!(?:according|including|during|concerning|regarding|involving)\b)([a-z]+ing)\b([^.!?\n]{12,}[.!?])", text, re.IGNORECASE))
     if coda_matches:
         for cm in coda_matches:
+            verb = cm.group(1).lower()
+            rest = cm.group(2).strip()
+            
+            # Escludi participi con funzione aggettivale seguiti da sostantivo
+            if verb in ADJECTIVAL_EXCLUSIONS:
+                continue
+                
+            # Escludi clausole racchiuse all'interno di parentesi
+            start_pos = cm.start()
+            pre_text = text[:start_pos]
+            if pre_text.count('(') > pre_text.count(')'):
+                continue
+            if rest.count(')') > rest.count('('):
+                continue
+                
+            # Escludi soggetti al gerundio introdotti da virgola dopo proposizioni preposizionali
+            sent_start = max(pre_text.rfind('.'), pre_text.rfind('!'), pre_text.rfind('?'), pre_text.rfind('\n'))
+            curr_sent_pre = pre_text[sent_start+1:].strip() if sent_start != -1 else pre_text.strip()
+            if re.match(r'^(?:In|During|For|Under|With|After|Before|By|Upon|Without|When|While)\b[^.!?]*$', curr_sent_pre, re.IGNORECASE):
+                if re.search(r'\b(?:unpacks|executes|provides|enables|requires|creates|demands|yields|allows|triggers|relies|stores|records|verifies|inspects)\b', rest, re.IGNORECASE):
+                    continue
+
             findings.append({
                 "id": "WS-RID-005",
                 "line": 1,

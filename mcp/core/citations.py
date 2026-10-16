@@ -30,17 +30,25 @@ UNSUPPORTED_PATTERNS = [
 def extract_citation_keys(text: str) -> set[str]:
     """Estrae tutte le chiavi citazionali presenti nel documento."""
     keys = set()
-    typst_keys = re.findall(r"@([a-zA-Z0-9_:.-]+)", text)
-    keys.update(typst_keys)
+    typst_raw = re.findall(r"@([a-zA-Z0-9_:.-]+)", text)
+    for k in typst_raw:
+        clean_k = k.rstrip(".,;:-")
+        # Escludi etichette di figure, tabelle o sezioni (<fig:...>, <sec:...>, <table-...>, etc.) e percorsi scoped (@openzeppelin/...)
+        if not re.match(r"^(?:fig|sec|tbl|tab|table|eq|listing|app)[-_:]", clean_k, re.I) and not clean_k.startswith("openzeppelin"):
+            keys.add(clean_k)
 
     latex_matches = re.findall(r"\\cite[a-z]*\{([^}]+)\}", text)
     for m in latex_matches:
         for k in m.split(","):
-            if k.strip():
-                keys.add(k.strip())
+            clean_k = k.strip().rstrip(".,;:-")
+            if clean_k:
+                keys.add(clean_k)
 
     pandoc_keys = re.findall(r"\[@([a-zA-Z0-9_:.-]+)\]", text)
-    keys.update(pandoc_keys)
+    for k in pandoc_keys:
+        clean_k = k.strip().rstrip(".,;:-")
+        if clean_k:
+            keys.add(clean_k)
     return keys
 
 def parse_bib_keys(bib_path: str) -> set[str]:

@@ -28,6 +28,7 @@ function usage() {
     echo "Comandi disponibili:"
     echo "  audit <file|cartella>       Esegue l'audit a 7 lenti (Linter, GLTR, GPTZero, MPS Neural, etc.)"
     echo "  suggest <file|testo>        Analizza frase per frase e fornisce suggerimenti di riscrittura azionabili"
+    echo "  citations <file> [bib]      Verifica integrità citazionale, claim non dimostrati e chiavi nel .bib"
     echo "  macro <file>                Analizza la macro-struttura (iper-frammentazione, sezioni corte, fusioni)"
     echo "  humanize <file|cartella>    Riscrive in anello chiuso con Meaning Lock"
     echo "  check-live <file|testo>     Invia a CleverHumanizer.ai Detector via Chromium headless live"
@@ -167,6 +168,39 @@ for rec in res['recommendations']:
         echo "Compilazione Typst in corso per $TARGET..."
         typst compile "$TARGET"
         echo "Compilazione completata con successo! PDF aggiornato."
+        ;;
+    citations)
+        TARGET="$1"
+        BIB="${2:-/Users/tella/Workspace/PyChain/thesis_typst/references.bib}"
+        if [ -z "$TARGET" ]; then
+            echo "Uso: writing-suite citations <file.typ> [references.bib]"
+            exit 1
+        fi
+        "$VENV_PY" -c "
+import sys
+sys.path.insert(0, '$WS_DIR/mcp')
+from core.citations import audit_citations
+with open('$TARGET') as f:
+    text = f.read()
+res = audit_citations(text, '$BIB')
+print(f'=== AUDIT CITAZIONALE E RIGORE SCIENTIFICO: $TARGET ===')
+print(f'Citazioni trovate nel testo: {res[\"total_citations_found\"]}')
+if res['bib_path_provided']:
+    print(f'File .bib verificato: $BIB ({res[\"bib_total_entries\"]} voci)')
+    if res['missing_in_bib']:
+        print(f'🔴 ALLUCINAZIONI / CHIAVI ASSENTI NEL .BIB ({len(res[\"missing_in_bib\"])}):')
+        for k in res['missing_in_bib']:
+            print(f'  ❌ @{k}')
+    else:
+        print('✅ 100% delle citazioni sono verificate nel file .bib!')
+if res['unsupported_claims']:
+    print(f'\n⚠️ AFFERMAZIONI NON DIMOSTRATE O SENZA FONTE ({res[\"unsupported_claims_count\"]}):')
+    for c in res['unsupported_claims']:
+        print(f'  Riga {c[\"line\"]}: [{c[\"type\"]}] \"{c[\"matched_text\"]}\"')
+        print(f'     -> {c[\"message\"]}')
+else:
+    print('✅ Zero affermazioni apodittiche o non dimostrate rilevate!')
+"
         ;;
     *)
         usage

@@ -167,15 +167,22 @@ def evaluate_document(
 
     # Bayesian Multi-Lens Gating per prose assiomatiche / formali (Lamport, Turing, Watson & Crick):
     # I modelli neurali transformer allenati su RAID possono mostrare falsi positivi OOD
+    # Bayesian Multi-Lens Gating per prose assiomatiche / formali (Lamport, Turing, Watson & Crick):
+    # I modelli neurali transformer allenati su RAID possono mostrare falsi positivi OOD
     # su testi accademici formali ricchi di definizioni matematiche e gergo CS.
     # Se il testo ha ZERO tell euristici (score_linter == 0.0) e una distribuzione Zipf
     # tipicamente umana a coda lunga (score_gltr <= 25.0), il punteggio neurale e la cadenza
-    # vengono modulati dall'evidenza statistica lessicale autentica.
+    # vengono modulati dall'evidenza statistica lessicale autentica, ma senza sopprimere
+    # picchi neurali elevati (> 45%) che indicano reale prevedibilità sintattica.
     eff_neural = score_neural
     eff_cadence = score_cadence
     if score_linter == 0.0 and score_gltr <= 25.0:
         if eff_neural is not None:
-            eff_neural = min(score_neural, 0.30 * score_neural + 0.70 * score_gltr)
+            if score_neural <= 40.0:
+                eff_neural = min(score_neural, 0.40 * score_neural + 0.60 * score_gltr)
+            else:
+                # Se DeBERTa rileva forte prevedibilità, non permettiamo di azzerarla con semplici escamotage di linter
+                eff_neural = max(35.0, score_neural - 8.0)
         eff_cadence = min(score_cadence, 45.0)
 
     if eff_neural is not None:
