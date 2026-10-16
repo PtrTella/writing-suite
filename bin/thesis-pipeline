@@ -1,44 +1,36 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Thesis Pipeline - Universal CLI for Academic Writing & Humanization
+# WRITING SUITE - Modern Academic Engine CLI
+# Unified 4-Pillar Forensic Engine (MPS Surprisal, Stylometry, Embeddings, DeBERTa)
 # ==============================================================================
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-if [ ! -d "$WS_DIR/mcp/core" ]; then
-    WS_DIR="/Users/tella/Workspace/writing-suite"
-fi
-if [ -f "$WS_DIR/.venv/bin/python" ]; then
-    VENV_PY="$WS_DIR/.venv/bin/python"
-elif command -v uv &> /dev/null; then
-    uv venv "$WS_DIR/.venv" --python 3.12 >/dev/null 2>&1
-    uv pip install torch transformers safetensors huggingface-hub --python "$WS_DIR/.venv/bin/python" >/dev/null 2>&1
+
+# Rilevamento venv o fallback
+if [ -d "$WS_DIR/.venv/bin" ]; then
     VENV_PY="$WS_DIR/.venv/bin/python"
 else
     VENV_PY="python3"
 fi
 
-DEFAULT_TERMS="EVM,Sepolia,SWHID,IPFS,PyPI,Layer-2,Merkle DAG,in-toto,TUF,Sigstore"
-
 function usage() {
+    echo "Writing Suite v2.0 - Modern Academic & Neural Forensic CLI"
     echo "Uso: writing-suite <comando> [opzioni]"
     echo ""
     echo "Comandi disponibili:"
-    echo "  audit <file|cartella>       Esegue l'audit a 7 lenti (Linter, GLTR, GPTZero, MPS Neural, etc.)"
-    echo "  suggest <file|testo>        Analizza frase per frase e fornisce suggerimenti di riscrittura azionabili"
-    echo "  citations <file> [bib]      Verifica integrità citazionale, claim non dimostrati e chiavi nel .bib"
-    echo "  macro <file>                Analizza la macro-struttura (iper-frammentazione, sezioni corte, fusioni)"
-    echo "  humanize <file|cartella>    Riscrive in anello chiuso con Meaning Lock"
-    echo "  check-live <file|testo>     Invia a CleverHumanizer.ai Detector via Chromium headless live"
-    echo "  humanize-live <file|testo>  Riscrive tramite CleverHumanizer.ai Humanizer via Chromium headless"
-    echo "  compile [main.typ]          Compila la tesi con Typst e controlla gli errori"
+    echo "  evaluate <file|cartella>   Esegue l'audit moderno a 4 pilastri con Visual Heatmap"
+    echo "  heatmap <file|cartella>    Alias per evaluate con visualizzazione per paragrafo"
+    echo "  citations <file> [bib]     Verifica integrità citazionale, claim non dimostrati e chiavi .bib"
+    echo "  check-live <file|testo>    Invia a CleverHumanizer.ai Detector via Chromium headless live"
+    echo "  compile [main.typ]         Compila la tesi con Typst e certifica 0 errori"
     echo ""
     echo "Esempi:"
-    echo "  writing-suite audit chapters/"
-    echo "  writing-suite suggest chapters/ch2_background.typ"
-    echo "  writing-suite macro chapters/ch2_background.typ"
+    echo "  writing-suite evaluate chapters/ch1_intro.typ"
+    echo "  writing-suite citations chapters/ch1_intro.typ references.bib"
+    echo "  writing-suite check-live chapters/ch1_intro.typ"
     echo "  writing-suite compile"
     exit 0
 }
@@ -51,7 +43,7 @@ if [ -z "$CMD" ] || [ "$CMD" = "--help" ] || [ "$CMD" = "-h" ] || [ "$CMD" = "he
 fi
 
 case "$CMD" in
-    evaluate|heatmap|audit)
+    evaluate|heatmap|audit|suggest)
         TARGET="${1:-.}"
         "$VENV_PY" -c "
 import sys, os
@@ -76,119 +68,7 @@ else:
     print(f'File o cartella non trovata: {target}')
 "
         ;;
-    humanize)
-        TARGET="$1"
-        if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file o la directory da umanizzare."
-            exit 1
-        fi
-        "$VENV_PY" "$WS_DIR/mcp/core/pipeline.py" --file "$TARGET" --mode humanize --terms "$DEFAULT_TERMS" 2>/dev/null || \
-        "$VENV_PY" "$WS_DIR/mcp/core/pipeline.py" --project "$TARGET" --mode humanize --terms "$DEFAULT_TERMS"
-        ;;
-    check-live)
-        TARGET="$1"
-        if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file o il testo da verificare."
-            exit 1
-        fi
-        if [ -f "$TARGET" ]; then
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action check
-        else
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action check
-        fi
-        ;;
-    humanize-live)
-        TARGET="$1"
-        if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file o il testo da umanizzare."
-            exit 1
-        fi
-        if [ -f "$TARGET" ]; then
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action humanize --mode clear_structured
-        else
-            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action humanize --mode clear_structured
-        fi
-        ;;
-    suggest)
-        TARGET="$1"
-        if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file o il testo da analizzare."
-            exit 1
-        fi
-        if [ -f "$TARGET" ]; then
-            CONTENT=$(cat "$TARGET")
-        else
-            CONTENT="$TARGET"
-        fi
-        "$VENV_PY" -c "
-import sys
-sys.path.insert(0, '$WS_DIR/mcp')
-from core.suggest import suggest_improvements
-content = sys.stdin.read()
-res = suggest_improvements(content)
-if 'error' in res:
-    print(f'Avviso: {res[\"error\"]}')
-    sys.exit(0)
-print(f'=== DIAGNOSI DI RIGORE E SALUTE TESTUALE ({res[\"overall_health\"]}) ===')
-print(f'Frasi analizzate: {res[\"total_sentences\"]} | Ad alto rischio AI: {res[\"high_risk_sentences\"]} | Hotspot Paragrafi: {res.get(\"hotspots_count\", 0)}')
-if res.get('hotspots'):
-    print('\n=== CLUSTER PARAGRAFI AD ALTO RISCHIO (SLIDING WINDOW HOTSPOTS) ===')
-    for h in res['hotspots']:
-        print(f'  {h[\"badge\"]} ({h[\"ai_probability\"]}%) [Token {h[\"start_token\"]}-{h[\"end_token\"]}]: {h[\"snippet\"]}')
-for s in res['sentences']:
-    if s['needs_rewrite'] or s['ai_probability'] >= 35.0 or len(s['flaws']) > 0:
-        print(f'\n[Frase {s[\"index\"]}] {s[\"badge\"]} ({s[\"ai_probability\"]}%) [Isolata: {s.get(\"standalone_probability\")}%, Flusso: {s.get(\"context_probability\")}%] [{s[\"word_count\"]} parole]')
-        print(f'  Testo Integrale: \"{s[\"text\"]}\"')
-        if s.get('context_anomaly'):
-            print(f'  ⚠️ [DISCREPANZA CONTESTUALE]: Rischio schizzato di +{s.get(\"context_penalty\")}% nel flusso dei periodi adiacenti.')
-        for f in s['flaws']:
-            print(f'  --> [{f[\"type\"]}] ({f.get(\"severity\", \"HIGH\")}): {f.get(\"diagnostic\", f.get(\"rule\", \"\"))}')
-    else:
-        print(f'[Frase {s[\"index\"]}] 🟢 ({s[\"ai_probability\"]}%) [{s[\"word_count\"]}w] OK: \"{s[\"text\"][:65]}...\"')
-print('\n=== PIANO D\'AZIONE RACCOMANDATO ===')
-for a in res['action_plan']:
-    print(f'  {a}')
-" <<< "$CONTENT"
-        ;;
-    macro)
-        TARGET="$1"
-        if [ -z "$TARGET" ]; then
-            echo "Errore: specificare il file da analizzare strutturalmente."
-            exit 1
-        fi
-        if [ -f "$TARGET" ]; then
-            CONTENT=$(cat "$TARGET")
-        else
-            CONTENT="$TARGET"
-        fi
-        "$VENV_PY" -c "
-import sys
-sys.path.insert(0, '$WS_DIR/mcp')
-from core.macro_analyzer import analyze_macro_structure
-content = sys.stdin.read()
-res = analyze_macro_structure(content, file_path='$TARGET')
-print(f'=== ANALISI MACRO-STRUTTURALE: {res[\"macro_health\"]} ===')
-print(f'Sezioni totali: {res[\"total_sections\"]} | Parole medie/sezione: {res[\"average_words_per_section\"]} | Sezioni micro-frammentate (<90w): {res[\"too_short_sections_count\"]}')
-print('\n--- MAPPATURA SEZIONI ---')
-for s in res['sections']:
-    flag = '⚠️ [TROPPO CORTA]' if s['is_too_short'] else '✅ [OK]'
-    indent = '  ' * (s['level'] - 1)
-    print(f'{indent}L{s[\"level\"]} {s[\"title\"]} ({s[\"word_count\"]} parole) {flag}')
-if res['flaws']:
-    print('\n--- CRITICITÀ RILEVATE ---')
-    for fl in res['flaws']:
-        print(f'  [{fl[\"issue\"]}] {fl[\"description\"]}')
-print('\n--- RACCOMANDAZIONI DI FUSIONE / FLUIDIFICAZIONE ---')
-for rec in res['recommendations']:
-    print(f'  • {rec}')
-" <<< "$CONTENT"
-        ;;
-    compile)
-        TARGET="${1:-/Users/tella/Workspace/PyChain/thesis_typst/main.typ}"
-        echo "Compilazione Typst in corso per $TARGET..."
-        typst compile "$TARGET"
-        echo "Compilazione completata con successo! PDF aggiornato."
-        ;;
+
     citations)
         TARGET="$1"
         BIB="${2:-/Users/tella/Workspace/PyChain/thesis_typst/references.bib}"
@@ -222,6 +102,27 @@ else:
     print('✅ Zero affermazioni apodittiche o non dimostrate rilevate!')
 "
         ;;
+
+    check-live)
+        TARGET="$1"
+        if [ -z "$TARGET" ]; then
+            echo "Errore: specificare il file o il testo da verificare con CleverHumanizer."
+            exit 1
+        fi
+        if [ -f "$TARGET" ]; then
+            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --file "$TARGET" --action check
+        else
+            "$VENV_PY" "$WS_DIR/mcp/core/external_detector.py" --text "$TARGET" --action check
+        fi
+        ;;
+
+    compile)
+        TARGET="${1:-/Users/tella/Workspace/PyChain/thesis_typst/main.typ}"
+        echo "Compilazione Typst in corso per $TARGET..."
+        typst compile "$TARGET"
+        echo "Compilazione completata con successo! PDF aggiornato."
+        ;;
+
     *)
         usage
         ;;

@@ -69,8 +69,8 @@ def evaluate_paragraph(paragraph: str, para_index: int = 1) -> Dict[str, Any]:
     if p4_risk is not None:
         composite = (
             (0.35 * p1_risk) +
-            (0.30 * p4_risk) +
-            (0.20 * p2_risk) +
+            (0.35 * p4_risk) +
+            (0.15 * p2_risk) +
             (0.15 * p3_risk)
         )
     else:
@@ -80,9 +80,25 @@ def evaluate_paragraph(paragraph: str, para_index: int = 1) -> Dict[str, Any]:
             (0.20 * p3_risk)
         )
 
-    # Correzione congiunta: se perplessità è eccezionalmente alta (> 100), il testo è denso e umano
-    if ppl >= 90.0:
-        composite = max(5.0, composite - 15.0)
+    # Multi-Lens Forensic Synergy (non permettere che un picco di robotismo venga diluito):
+    # 1. Se DeBERTa rileva forte artificialità (> 75%) e la cadenza è piatta (sigma_len < 5.0):
+    if p4_risk is not None and p4_risk >= 75.0 and sigma_len < 5.0:
+        composite = max(composite, 0.80 * p4_risk + 0.20 * p2_risk)
+
+    # 2. Se Perplessità è bassa (PPL < 30 -> p1_risk > 65%) e DeBERTa > 60%:
+    if p1_risk >= 65.0 and p4_risk is not None and p4_risk >= 60.0:
+        composite = max(composite, 82.0)
+
+    # 3. Disinnesco dei Falsi Positivi OOD (stile Di Cosmo):
+    # Se il testo ha cadenza fortemente asimmetrica (sigma_len >= 9.5), diversità lessicale ricca (MTLD >= 70)
+    # e perplessità naturale (PPL >= 45), allora un picco di DeBERTa isolato dovuto a gergo tecnico è un falso allarme
+    if sigma_len >= 9.5 and mtld >= 70.0 and ppl >= 45.0:
+        if p4_risk is not None and p4_risk > 65.0:
+            composite = min(composite, 25.0)
+
+    # Correzione congiunta su perplessità estrema
+    if ppl >= 110.0 and sigma_len >= 8.0:
+        composite = max(5.0, composite - 12.0)
     elif ppl <= 22.0:
         composite = min(98.0, composite + 15.0)
 
@@ -127,7 +143,6 @@ def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict
     total_words = len(extract_words(cleaned))
 
     if not paragraphs:
-        # Fallback a testo singolo
         single_eval = evaluate_paragraph(cleaned, 1)
         paragraphs_eval = [single_eval]
     else:
@@ -136,11 +151,23 @@ def evaluate_document_modern(text: str, file_path: Optional[str] = None) -> Dict
     # Media ponderata per lunghezza dei paragrafi
     total_para_words = sum(p["word_count"] for p in paragraphs_eval)
     if total_para_words > 0:
-        overall_risk = sum(p["risk_score"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+        mean_risk = sum(p["risk_score"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_ppl = sum(p["perplexity"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_burstiness = sum(p["burstiness"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_sigma = sum(p["cadence_sigma"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
         avg_mtld = sum(p["mtld"] * (p["word_count"] / total_para_words) for p in paragraphs_eval)
+
+        # Aggregazione Multi-Scala (stile Copyleaks / RAID):
+        # Impedisce che paragrafi verdi nascondano hotspot ad alto rischio
+        sorted_risks = sorted([p["risk_score"] for p in paragraphs_eval])
+        p80_idx = min(len(sorted_risks) - 1, int(len(sorted_risks) * 0.80))
+        p80_risk = sorted_risks[p80_idx]
+        worst_risk = sorted_risks[-1]
+
+        if worst_risk >= 50.0:
+            overall_risk = (0.45 * mean_risk) + (0.35 * p80_risk) + (0.20 * worst_risk)
+        else:
+            overall_risk = (0.70 * mean_risk) + (0.30 * p80_risk)
     else:
         overall_risk = 20.0
         avg_ppl = 80.0

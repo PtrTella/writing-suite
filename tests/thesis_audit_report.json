@@ -1,0 +1,2814 @@
+{
+  "local_chapters": [
+    {
+      "file": "ch1_intro.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch1_intro.typ",
+      "words": 2961,
+      "overall": 40.0,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 27.3,
+      "linter": 83.1,
+      "cadence": 46.5,
+      "gltr": 1.4,
+      "findings_count": 33,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", Hugging Face Transformers, and distributed inference engines), the software supply chain has become a primary target for sophisticated adversaries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", running a single `pip install` command unpacks pre-compiled binary wheels (`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", forcing production systems to inherit the operational habits, vulnerability lifecycles, and maintainer security postures of every direct and transitive library across their software bill of materials.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reconciling ledger throughput constraints with large software payloads.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", delegating physical distribution to IPFS @benet2014ipfs and archival persistence to Software Heritage @dicosmo2020swhid.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", halting execution whenever incoming payload data deviates from the authoritative registry state.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", operating system package managers, and language-specific application registries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", inspecting source files before executing compilers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", engineering teams could no longer compile every dependency from source.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", prioritizing delivery speed over local inspection, so that modern package resolvers pull third-party archives across the internet without authenticating their internal contents.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", automating dependency graph resolution for operating system components.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", creating an acute friction between operating system stability and application iteration speed.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", conflating transport encryption with data integrity: channel encryption authenticates the network endpoint while remaining completely oblivious to payload tampering or malicious modifications on the origin server.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", siphoning secrets long before security teams observe anomalous network traffic.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", illustrating the four structural failure modes of centralized registries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing automated CI/CD builds across thousands of organizations to fail within minutes: major frameworks including React and Babel stopped compiling because their resolvers could no longer retrieve the missing dependency.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", leaving repository state vulnerable to unilateral tampering, legal coercion, and unexpected deletion.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", releasing the identifier back into the public pool for immediate re-registration.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", avoiding the operational friction of workstation keyrings.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", replacing private database records with on-chain transactions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", making frequent automated deployments economically impossible for open-source maintainers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", breaking package availability over time.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", offering no native abstractions for package managers in mainstream scripting ecosystems such as Python or JavaScript.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", creating central points of failure and driving up ledger costs.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", transforming the transport swarm into an untrusted conduit where poisoned CDN caches and rogue proxy nodes are rejected deterministically without relying on central certificate authorities.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", treating PyPI purely as an optional compatibility mirror.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording two distinct cryptographic commitments on-chain for every release: the container multihash ($H_(\"CID\")$) for bit-level archive integrity verification, and the directory Merkle DAG hash ($H_(\"SWHID\")$) for permanent semantic source code provenance anchored in Software Heritage.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing maliciously crafted tarballs from escaping destination boundaries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", examining the Ethereum Virtual Machine (EVM), state transition functions, Layer-2 rollup mechanics, EIP-4844 blob storage, IPFS content addressing, Kademlia DHT routing, the ISO/IEC 18670 SWHID standard, and AST static analysis.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", mapping defensive mechanisms against the Ladisa et al.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", comparing TUF, in-toto, and Sigstore, and analyzing foundational research by Stefano Zacchiroli on software provenance and Stefano Ferretti on distributed P2P indexing.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", analyzing latency trade-offs, Multicall dependency graph resolution, heavy-tail cryptographic hashing, gas profiling, state growth projections, and simulated peer churn.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 3.7,
+          "matched_text": "59 due punti in 125 frasi (densità: 0.47 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch2_background.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch2_background.typ",
+      "words": 3417,
+      "overall": 44.4,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 41.6,
+      "linter": 79.0,
+      "cadence": 47.4,
+      "gltr": 0.8,
+      "findings_count": 33,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", proving that a queried path does not exist in the state.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling light clients to verify package registrations via logarithmic cryptographic inclusion proofs ($cal(O)(log N)$ complexity).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", consuming 1 byte) and `timestamp` is a 64-bit integer (`uint64`, consuming 8 bytes), their combined footprint totals 9 bytes (72 bits), which fits comfortably within a single 256-bit word (32 bytes).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", saving 20,000 gas units per release (an 18.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", bidding competition drives Layer-1 base fees upward, historically escalating simple smart contract execution fees to between \\$15 and \\$50 USD.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing verifiers to challenge fraudulent state roots via interactive bisection proofs.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", achieving immediate finality without challenge delays.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", competing directly with standard user transactions for scarce execution space.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing PyChain to register release commitments for approximately \\$0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", computing an identical identifier $k$ from modified content $m' !",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling developers to adopt newer hash algorithms without invalidating legacy package references.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", delegating multihash reconstruction and multibase encoding to client-side runtime logic.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", modeling hierarchical filesystems as Merkle Directed Acyclic Graphs (DAGs) that decompose archives into discrete, cryptographically verified nodes @benet2014ipfs.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", computing its cryptographic multihash to establish an immutable identity that clients can verify independently upon receipt before reassembling the overarching file stream.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", creating an authenticated directed acyclic graph that preserves filesystem metadata, directory structures, and file permission modes.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", hashing each fragment upon arrival and writing it directly to disk.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", projecting both participating nodes and published content records into a shared 256-bit cryptographic identifier space @maymounkov2002kademlia.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", routing hops draw monotonically closer to the target key with each iteration.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", cutting the remaining distance in half at each step until resolving the content address within $cal(O)(log N)$ hops across $N$ overlay nodes.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", contrasting sharply with commercial cloud registries backed by corporate service level agreements, redundant server clusters, and dedicated fiber backbones.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", leaving build systems stranded when rare packages lack active seeders.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", deduplicating all artifacts into a unified, content-addressed Merkle graph spanning billions of software nodes.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", capturing tree state, author, and log message.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing malicious setup hooks to sweep local SSH keys, environment secrets, and cloud credentials before any runtime container boundary takes effect.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", analyzing code structures before allowing an archive to unpack.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", transforming arbitrary Python source files into structured in-memory syntax graphs where nodes correspond to formal linguistic constructs, including function definitions (`FunctionDef`), module imports (`Import`, `ImportFrom`), invocations (`Call`), and expressions (`Expr`).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", avoiding the severe blind spots of regular-expression scanners: text-based pattern matchers produce high rates of false positives and fail against simple obfuscation tactics, including string slicing, variable renaming, or multi-line formatting.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling reliable identification of dangerous operational calls.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", ping external command-and-control servers, or siphon `.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", executing payload code before the developer writes a single `import` statement @duan2020measuring.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", instantiating arbitrary system processes during stream reconstruction.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", aborting installation before untrusted code can compromise the host machine.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 5.0,
+          "matched_text": "106 due punti in 136 frasi (densità: 0.78 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch3_related_work.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch3_related_work.typ",
+      "words": 2976,
+      "overall": 39.6,
+      "badge": "🟢",
+      "verdict": "TESTO MODERATAMENTE NATURALE CON LIEVI TIC STATISTICI",
+      "neural": 26.8,
+      "linter": 81.2,
+      "cadence": 58.7,
+      "gltr": 1.6,
+      "findings_count": 31,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", using on-chain invariants to replace administrative discretion with verifiable state transitions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", executing arbitrary installer scripts with user privileges.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", warning the maintainer and requiring explicit cryptographic confirmation whenever a candidate name closely mirrors an active project.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing third parties from spoofing or shadowing namespace records.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", rendering name reclamation impossible.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", locking the distribution archive's IPFS hash ($H_(\"CID\")$) to the Software Heritage directory Merkle DAG ($H_(\"SWHID\")$) computed from the audited source repository.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", giving package managers verifiable evidence that release binaries trace back to approved source trees.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", locking SHA-256 payload digests and file sizes to ensure binary integrity.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", blocking mix-and-match attacks where attackers serve outdated packages alongside current releases.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", protecting client package managers from freeze attacks where adversaries suppress critical updates.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", dispensing with dedicated online signing servers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", packaging, and testing.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing intermediate mirrors from modifying or suppressing release artifacts.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", issuing short-lived X.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing a public, tamper-evident audit trail.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", tying developer authority to enterprise identity providers like Google, Microsoft, or GitHub.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reverting invalid transactions at zero gas cost to downstream clients.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", guaranteeing that provenance cannot be forged even by compromised project maintainers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", defining EthPM v2 and v3.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", averaging between \\$15 and \\$80 USD per transaction during periods of routine network demand.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", breaking builds across downstream CI environments.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", packaging client verification routines into the `pic` CLI provides developers with a standard Python packaging workflow compatible with virtual environments and existing dependency structures.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing downstream verifiers to establish unbroken provenance chains back to origin repositories.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", zeroing user and group identifiers, canonicalizing file permissions, and sorting directory entries prior to archive creation, PyChain ensures that independent developers compiling identical source trees obtain bit-for-bit identical archives and matching IPFS Content Identifiers ($H_(\"CID\")$).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", proving that package upgradeability and co-installability are NP-complete problems @mancoosi2010sat.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", giving client resolvers an unalterable dependency tree for SAT evaluation.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", delivering zero-trust verification without ledger bloat.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling multi-attribute lookups in $cal(O)(log N)$ time without central indexes.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing the foundation for decentralized package search.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", providing a decentralized, zero-trust alternative to conventional registries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 4.2,
+          "matched_text": "78 due punti in 150 frasi (densità: 0.52 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch4_threat_model.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch4_threat_model.typ",
+      "words": 3707,
+      "overall": 41.1,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 37.1,
+      "linter": 78.2,
+      "cadence": 41.3,
+      "gltr": 1.0,
+      "findings_count": 35,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", exposing millions of downstream systems to unvetted malicious payloads.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", defining adversary capabilities, mapping component trust boundaries, formalizing eight software supply chain attack vectors, providing formal security theorems with proof sketches, and quantifying the economic costs imposed on adversaries by the Ethereum Virtual Machine.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", operating within an untrusted, geographically distributed software supply chain environment @cappos2008package, @ladisa2023taxonomy.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", caching proxies, and off-chain relayers are classified as untrusted by default.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", producing modified byte sequence $A\\' !",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", waiting passively for developers or continuous integration pipelines to misspell an imported requirement.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", rendering an interactive warning banner displaying the target\\'s on-chain publisher address, total historical downloads, and registration timestamp.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", passing `--extra-index-url https://pypi.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", protecting internal consumers against shadowing.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", returning it to the unallocated pool.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing attackers to overwrite distribution tarballs in-place while leaving file URLs and database metadata unchanged.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", extracting an unvetted archive with legacy unconstrained routines allows an adversary to overwrite arbitrary files on the host filesystem, potentially injecting SSH authorized keys, altering shell profile scripts, or implanting persistent cron jobs outside the designated virtual environment.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", raising an explicit `tarfile.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", raising an immediate `OutsideDestinationError` if the destination path escapes `target_dir`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing adversaries from synthesizing device nodes that circumvent operating system permissions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", eliminating symlink-based filesystem escape vectors.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", phishing campaigns targeting top package maintainers, or unencrypted tokens harvested from shell histories and exposed CI variables.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing unauthorized local process access.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing a release can require $m$-of-$n$ cryptographic signatures from distributed core maintainers, preventing any single compromised laptop from releasing backdoored code.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing denial-of-service timeouts.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", querying diverse public HTTP IPFS gateways across distinct autonomous systems and falling back to the institutional Software Heritage Vault API using the on-chain SWHID.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", bypassing naive deduplication filters.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", rendering squatting economically futile.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing the transaction to revert immediately.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing version $v$ executes `publishVersion(string memory name, string memory version, .",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", modifying an existing version storage slot requires either a successful 51% consensus reorganization or an arbitrary storage-write vulnerability in the underlying virtual machine, neither of which is achievable under our computational hardness assumptions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing that published release records remain strictly immutable across the decentralized history of the ledger.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing the equality $h\\' == H_(\"CID\")$ necessitates discovering a second preimage for $H_(\"CID\")$ under the cryptographic compression function, an intractable task that requires inverting the one-way permutation over arbitrary length message inputs.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", guaranteeing that the client verification condition $h\\' == H_(\"CID\")$ evaluates to `false` and terminates installation before any unvetted byte reaches the host filesystem.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing the recovered address under ECDSA unforgeability to diverge from the authorized notary key and triggering an immediate transaction revert with `Invalid notary signature`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", having been written to persistent EVM storage upon initial execution, forces every subsequent invocation to revert with `Notary proof already consumed`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing that claim authorization is strictly replay-resistant and front-running immune.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling automated distributed scanning and persistent brute-force probing against centralized authentication endpoints.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", rendering brute-force transaction flooding economically impractical on the base layer.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 5.0,
+          "matched_text": "129 due punti in 214 frasi (densità: 0.60 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch5_architecture.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch5_architecture.typ",
+      "words": 5459,
+      "overall": 42.9,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 42.6,
+      "linter": 78.9,
+      "cadence": 34.8,
+      "gltr": 0.7,
+      "findings_count": 53,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", delegating storage entirely to uncoordinated peer-to-peer swarms leaves developers vulnerable to peer churn and mutable pointer poisoning.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", binding each semantic version string (such as `\"1.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing economic exhaustion during release cycles.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", leaving 23 unallocated bytes within that 32-byte word.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", coalescing the single-byte lifecycle enumeration with the eight-byte publication timestamp into a single 32-byte memory slot eliminates an entire persistent write operation across every published release, amortizing infrastructural gas overhead across millions of cumulative transactions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", bypassing naive deduplication filters.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", tricking naive deduplication filters into executing replay operations unless the contract delegates recovery to audited libraries that strictly enforce upper-bound constraints.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", ensuring failed recoveries revert deterministically.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", stripping squatting attacks of their financial leverage.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing out-of-gas reverts.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording a static security assertion on an immutable distributed ledger creates an architectural dilemma: downstream developers might mistakenly interpret a historical `SAFE` status as an enduring guarantee of integrity, even after critical zero-day exploits or transitive supply chain backdoors have been disclosed across vulnerability tracking databases.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", violating the permissionless principles of decentralized software commons.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording only immutable release metadata and ownership state.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing a decentralized caching mesh.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reconstituting the canonical source directory directly from immutable cold archival storage.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enforcing local multihash verification and PEP 706 sandboxed archive extraction.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", covering version deprecation, reactivation, and ownership transfers, are managed by `AdminMixin`, while `ViewerMixin` inspects on-chain metadata and `RecoveryMixin` coordinates automated disaster recovery by re-seeding lost IPFS blocks from Software Heritage.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", tracking which nonces are confirmed, which are pending in validator mempools, and which have been dropped due to peer eviction creates severe race conditions.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", deadlocking the relayer service.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", violating the foundational principle of a censorship-resistant software commons.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing a release consumed between \\$15 and \\$80 USD in transaction fees, making developer-subsidized relayers seem necessary.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", rendering third-party fee sponsorship obsolete.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing via individual transactions dissipates $k times 21,000$ gas purely in transaction envelope overhead.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", breaking downstream client builds.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reducing cumulative publication gas fees by 40% to 65% for monorepo deployments.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing inconsistent, partially published dependency trees from entering the decentralized registry.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording the metadata on-chain under a designated foundation address.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", operating in the high-speed warm cache state ($0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", presenting a valid cryptographic proof reclaims ownership of the package instantly, revoking the bridge's administrative control and restoring sovereign custody to the developer.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", relying exclusively on container multihashes makes it impossible to distinguish between harmless compression variance and malicious source code tampering.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording two distinct cryptographic commitments on-chain for each published release.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", verifying transport integrity.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", capturing the intrinsic identity of the source code itself.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", zeroing user and group IDs, and sorting directory entries produces identical archive files and identical CIDs across different build environments, eliminating spurious hash divergences across independent compilation runners.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reconstituting the canonical source tree directly from the permanent global archive and asserting local SHA-256 multihash equality before any uncompressed byte touches the destination file system.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing corrupted or manipulated bytes from persisting on disk.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", returning the IPFS multihash (CID).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", executing `publishVersion()`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", completing publication in under 3 seconds without central relayer queues.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", retrieving the release record (`ipfsHash`, `metadataHash`, `swhid`, `status`, `timestamp`).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", fetching the archive from the local IPFS daemon, public gateways, or Software Heritage Vault.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", completing installation in approximately 0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", pulling preserved source trees from Software Heritage and re-pinning them to IPFS.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing malicious artifacts from running on downstream developer machines.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", eliminating network traffic and preventing denial-of-service or side-channel leakage.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", guaranteeing that path traversal exploits cannot write outside `target_dir`.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", eliminating variations caused by underlying filesystem directory traversal order.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", stripping developer-specific environment metadata.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", normalizing file ownership identifiers to zero, standardizing permission bits, and enforcing strict lexicographical inode sorting prior to archive serialization, Algorithm 2 guarantees that independent developers compiling identical source code trees across heterogeneous operating systems compute mathematically indistinguishable container multihashes and source Merkle DAG identifiers, establishing verifiable build parity across the decentralized ecosystem.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", completing in fractions of a second for standard open-source libraries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", helping catch malicious scripts that might otherwise execute during `setup.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", ensuring full recoverability from primary source artifacts.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 5.0,
+          "matched_text": "241 due punti in 298 frasi (densità: 0.81 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch6_evaluation.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch6_evaluation.typ",
+      "words": 2888,
+      "overall": 40.0,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 32.7,
+      "linter": 85.1,
+      "cadence": 41.3,
+      "gltr": 3.9,
+      "findings_count": 34,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", streaming cryptographic verification, and local operating system sandbox boundaries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", contrasting sequential RPC queries with batched Multicall requests.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", ensuring deterministic dependency resolution and isolated execution boundaries.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", remaining well within the 24,576-byte ceiling established by EIP-170.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", aborting the installation pipeline before uncompressed contents can be written to disk.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", detecting and neutralizing malicious edge caches, modified proxy responses, and transport bit-flips in 14.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preserving package availability without human intervention or compromise of cryptographic invariants.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", executing 10,000 adversarial probes incurs over \\$15,800 USD in wasted gas.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", illustrating why on-chain economic deterrence must be paired with application-layer validation and notary rate limiting.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing that the smart contract architecture behaves deterministically under boundary conditions with zero dependency on mock contracts.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", verifying that large registry queries do not exceed EVM call gas limits.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", resolving on-chain metadata via RPC and retrieving cached blocks in *0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", outperforming the centralized CDN (*180 ms*) by serving content directly from local disk.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", dropping to *59 ms to 61 ms* once cached.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", demonstrating that reliable software distribution in production requires co-locating local Kubo daemons or deploying authenticated IPFS cluster nodes rather than relying on shared public infrastructure.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", querying packages sequentially adds roughly 300 ms per dependency, requiring over 15 seconds for a tree of 50 packages and 90 seconds for 100 packages.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", batching queries with `Multicall` combines multiple lookups into a single RPC payload, completing resolution of 100 packages in *6.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", batching reduces network wait time by a factor of $N$.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing developer machines to validate even massive 500-megabyte distribution archives in roughly a fifth of a second while maintaining a strictly bounded memory footprint that never interferes with concurrent development workflows.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", adding little perceptible overhead to the installation process.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", demonstrating that decentralized cryptographic provenance can be integrated into high-frequency continuous integration pipelines without imposing financial burdens on open-source authors.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", registering the top 1,000 Python packages on a rollup requires approximately *\\$46.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", making decentralized package management affordable for developer workflows.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", indexing the entire five-million-release catalog of PyPI requires approximately 1.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", proving that decentralized registries remain scalable across decadal operational horizons without triggering validator storage exhaustion.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", assuming an empirical IPFS pin half-life of 1.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", anchoring releases to Software Heritage source Merkle DAGs provides an institutional safety net that preserves package availability above 99.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", employing `Multicall3` RPC batching allows resolving complex dependency DAGs across 100 transitive packages in only 6.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", registering a package namespace and deploying its initial release costs approximately \\$14.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", creating an unacceptable barrier to entry.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", recording 5 million releases (the entire historical volume of PyPI) requires only 1.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", confirming that decentralized package governance does not lead to state bloat.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", maintaining package availability above 99.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 5.0,
+          "matched_text": "128 due punti in 156 frasi (densità: 0.82 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    },
+    {
+      "file": "ch7_discussion.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch7_discussion.typ",
+      "words": 3194,
+      "overall": 55.6,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 72.7,
+      "linter": 69.4,
+      "cadence": 32.4,
+      "gltr": 1.4,
+      "findings_count": 24,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", redistributing operational responsibilities between software authors, automated CI/CD pipelines, consensus validators, and local consumer workstations.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", requiring only 214 bytes per release.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", compelling future iterations of the architecture to transition toward zero-knowledge cryptographic proofs that verify maintainer control over external repository sessions directly on-chain without exposing private access tokens or trusting intermediate servers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", combining refundable economic staking bonds with Schelling-point jury arbitration and Harberger decay taxation to ensure that namespaces remain accessible to authentic maintainers while penalizing malicious squatters.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", registering a package costs approximately \\$0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", releasing abandoned identifiers back to the public domain.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing developers to execute rich, free-text queries across descriptions, author metadata, and project tags.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling nodes to route multi-keyword queries across distributed hash tables without centralized search backends.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing requires signing raw EVM transactions with a private key over the secp256k1 elliptic curve.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", creating a critical operational vulnerability that necessitates evolving toward account abstraction, hardware-backed security enclaves, and multi-party threshold signature schemes that distribute authorization across engineering teams without exposing raw private keys to local workstation malware.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", storing unencrypted private keys on developer laptops introduces severe vulnerability to local info-stealer malware.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", publishing releases automatically often requires injecting private keys as pipeline secrets, creating attractive targets for build runner compromise.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", adopting Threshold Signature Schemes (TSS) where publishing authority is distributed across multiple engineering workstations, and leveraging smart contract account abstraction to support social recovery mechanisms.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing the developer to generate a zero-knowledge proof that attests to their administrative repository role without revealing sensitive authorization headers or allowing either party to forge arbitrary server responses.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing either party from forging ciphertext.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", granting package ownership without centralized bridge servers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling developers to publish signed packages through standard command-line tools without requiring cryptocurrency holdings or manual gas fee management.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", insulating developer tooling from external DeFi volatility.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", integrating ERC-4337 Account Abstraction eliminates the need for developers to manage cryptocurrency balances.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", acquiring native tokens, or managing gas limits, while retaining complete cryptographic sovereignty.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", resolving dependency trees with verified links at each step without parsing unauthenticated text files.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", supporting keyword search with $cal(O)(log N)$ routing hops @ferretti2020hypfs.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", providing GraphQL APIs for package search, version history, and download statistics @thegraph2020.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", capturing account age, commit frequency, reverse dependency count, and static AST security scores.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        }
+      ]
+    },
+    {
+      "file": "ch8_conclusions.typ",
+      "path": "/Users/tella/Workspace/PyChain/thesis_typst/chapters/ch8_conclusions.typ",
+      "words": 1589,
+      "overall": 41.1,
+      "badge": "🟡",
+      "verdict": "PROBABILE TESTO MISTO O PESANTEMENTE EDITATO DA AI",
+      "neural": 35.1,
+      "linter": 85.3,
+      "cadence": 44.8,
+      "gltr": 0.7,
+      "findings_count": 19,
+      "findings": [
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", enabling developers worldwide to share and compose libraries with extraordinary velocity.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", distributing physical archive payloads across the InterPlanetary File System (IPFS), and securing permanent source code provenance through Software Heritage (SWH), PyChain replaces implicit organizational trust with verifiable cryptographic proofs of software authenticity.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", overcoming the ephemeral link rot that caused early peer-to-peer repositories to stagnate.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", demonstrating that combining peer-to-peer transport with public archival infrastructure provides sustainable resilience.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", preventing unauthorized file writes outside the target virtual environment.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", causing client-side streaming verification to reject the download before uncompressed bytes reach the host filesystem.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", translating to approximately *\\$0.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", allowing developers to sign and broadcast releases directly from their own accounts without relying on intermediary relayers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", reducing network round-trips by 92.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", matching the speed of traditional `pip` while providing cryptographic verification.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", outperforming centralized Web2 CDNs (180 ms).",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", streaming canonical source trees and preserving build reproducibility without manual intervention.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", establishing end-to-end traceability between binary archives and public source repositories.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", replacing centralized dispatchers with direct, gas-efficient Layer-2 publishing.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", ensuring continuous availability under network churn.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", making continuous deployment financially impossible for open-source maintainers.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", leading to broken downloads when maintainers took their laptops offline.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-RID-005",
+          "line": 1,
+          "name": "Chiusura participiale posticcia a fine frase (-ing coda)",
+          "severity": "HIGH",
+          "category": "Riders Participiali",
+          "weight": 2.5,
+          "matched_text": ", spanning medical devices, financial networks, and autonomous artificial intelligence, transitioning toward zero-trust, cryptographically sovereign package distribution will be essential to ensuring the long-term resilience, integrity, and independence of the global software commons.",
+          "explanation": "Clausola participiale '-ing' agganciata con virgola in chiusura di periodo, pattern di conclusione altamente predicibile dei modelli linguistici."
+        },
+        {
+          "id": "WS-SYN-010",
+          "line": 1,
+          "name": "Eccessiva densità di due punti (Elaboration Addiction da modello)",
+          "severity": "HIGH",
+          "category": "Sintassi da Modello",
+          "weight": 3.4,
+          "matched_text": "30 due punti in 68 frasi (densità: 0.44 per frase)",
+          "explanation": "Uso compulsivo dei due punti come connettore di elaborazione binaria [affermazione]: [spiegazione], tipico tic dei generatori neurali."
+        }
+      ]
+    }
+  ],
+  "live_cross_validation": [
+    {
+      "chapter": "ch1_intro.typ",
+      "section": "Ch1 Sec 1.0 (Motivation & Zero-Trust)",
+      "local_score": 68.0,
+      "local_badge": "🔴",
+      "live_score": 14.0,
+      "live_badge": "🟢",
+      "patterns": [],
+      "verdict": "The text is clearly human overall, with close to half of the sentences marked in yellow as possible AI."
+    },
+    {
+      "chapter": "ch2_background.typ",
+      "section": "Ch2 Sec 2.0 (Decentralized Trade-offs)",
+      "local_score": 10.7,
+      "local_badge": "🟢",
+      "live_score": 94.0,
+      "live_badge": "🔴",
+      "patterns": [
+        "Lack of personal voice",
+        "Predictable sentence endings",
+        "Repetitive sentence patterns",
+        "Repetitive keyword usage",
+        "Similar sentence rhythms"
+      ],
+      "verdict": "The overall writing is overwhelmingly AI-like, with a few sentences highlighted in yellow as possibly human."
+    },
+    {
+      "chapter": "ch4_threat_model.typ",
+      "section": "Ch4 Sec 4.0 (Perimeter Model Collapse)",
+      "local_score": 96.1,
+      "local_badge": "🔴",
+      "live_score": 94.0,
+      "live_badge": "🔴",
+      "patterns": [
+        "Lack of personal voice",
+        "Similar sentence rhythms",
+        "Predictable sentence endings",
+        "Uniform sentence length",
+        "Repetitive sentence patterns"
+      ],
+      "verdict": "The overall writing is overwhelmingly AI-like, with a few sentences highlighted in yellow as possibly human."
+    },
+    {
+      "chapter": "ch5_architecture.typ",
+      "section": "Ch5 Sec 5.0 (Architectural Tension)",
+      "local_score": 24.9,
+      "local_badge": "🟢",
+      "live_score": 99.0,
+      "live_badge": "🔴",
+      "patterns": [
+        "Lack of personal voice",
+        "Predictable sentence endings",
+        "Repetitive sentence patterns",
+        "Lack of specific details",
+        "Repetitive keyword usage"
+      ],
+      "verdict": "The text is most probably AI-generated."
+    },
+    {
+      "chapter": "ch8_conclusions.typ",
+      "section": "Ch8 Sec 8.0 (Legacy Registry Limits)",
+      "local_score": 9.9,
+      "local_badge": "🟢",
+      "live_score": 27.0,
+      "live_badge": "🟡",
+      "patterns": [],
+      "verdict": "The text is mostly human overall, with almost every sentence marked in yellow as possible AI."
+    }
+  ]
+}

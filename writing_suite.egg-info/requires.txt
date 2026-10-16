@@ -1,0 +1,11 @@
+torch>=2.2.0
+transformers>=4.38.0
+safetensors>=0.4.0
+huggingface-hub>=0.20.0
+numpy>=1.24.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+
+[live]
+playwright>=1.40.0
