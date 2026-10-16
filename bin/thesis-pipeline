@@ -51,10 +51,30 @@ if [ -z "$CMD" ] || [ "$CMD" = "--help" ] || [ "$CMD" = "-h" ] || [ "$CMD" = "he
 fi
 
 case "$CMD" in
-    audit|evaluate)
+    evaluate|heatmap|audit)
         TARGET="${1:-.}"
-        "$VENV_PY" "$WS_DIR/mcp/core/pipeline.py" --project "$TARGET" --mode audit --terms "$DEFAULT_TERMS" 2>/dev/null || \
-        "$VENV_PY" "$WS_DIR/mcp/core/pipeline.py" --file "$TARGET" --mode audit --terms "$DEFAULT_TERMS"
+        "$VENV_PY" -c "
+import sys, os
+sys.path.insert(0, '$WS_DIR/mcp')
+from core.modern_evaluator import evaluate_document_modern, render_heatmap_cli
+
+target = '$TARGET'
+if os.path.isdir(target):
+    files = sorted([os.path.join(target, f) for f in os.listdir(target) if f.endswith(('.typ', '.tex', '.md'))])
+    for f_path in files:
+        with open(f_path) as f:
+            text = f.read()
+        rep = evaluate_document_modern(text, f_path)
+        print(render_heatmap_cli(rep))
+        print('\n')
+elif os.path.isfile(target):
+    with open(target) as f:
+        text = f.read()
+    rep = evaluate_document_modern(text, target)
+    print(render_heatmap_cli(rep))
+else:
+    print(f'File o cartella non trovata: {target}')
+"
         ;;
     humanize)
         TARGET="$1"
