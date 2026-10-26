@@ -33,8 +33,8 @@ def extract_citation_keys(text: str) -> set[str]:
     typst_raw = re.findall(r"@([a-zA-Z0-9_:.-]+)", text)
     for k in typst_raw:
         clean_k = k.rstrip(".,;:-")
-        # Escludi etichette di figure, tabelle o sezioni (<fig:...>, <sec:...>, <table-...>, etc.) e percorsi scoped (@openzeppelin/...)
-        if not re.match(r"^(?:fig|sec|tbl|tab|table|eq|listing|app)[-_:]", clean_k, re.I) and not clean_k.startswith("openzeppelin"):
+        # Escludi etichette di figure, tabelle, capitoli o sezioni (<ch-...>, <fig:...>, <sec:...>, etc.) e percorsi scoped (@openzeppelin/...)
+        if not re.match(r"^(?:ch|fig|sec|tbl|tab|table|eq|listing|app)[-_:]", clean_k, re.I) and not clean_k.startswith("openzeppelin"):
             keys.add(clean_k)
 
     latex_matches = re.findall(r"\\cite[a-z]*\{([^}]+)\}", text)

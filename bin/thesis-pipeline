@@ -25,10 +25,11 @@ fi
 
 
 function usage() {
-    echo "Writing Suite v2.0 - Modern Academic & Neural Forensic CLI"
+    echo "Writing Suite v3.2 - Modern Academic & Neural Forensic CLI"
     echo "Uso: writing-suite <comando> [opzioni]"
     echo ""
     echo "Comandi disponibili:"
+    echo "  assist <file> [N] [--copy] Genera prompt chirurgici per Claude/GPT/Gemini + Fact-Checking"
     echo "  evaluate <file|cartella>   Esegue l'audit moderno a 4 pilastri con Visual Heatmap"
     echo "  heatmap <file|cartella>    Alias per evaluate con visualizzazione per paragrafo"
     echo "  citations <file> [bib]     Verifica integrità citazionale, claim non dimostrati e chiavi .bib"
@@ -36,9 +37,10 @@ function usage() {
     echo "  compile [main.typ]         Compila la tesi con Typst e certifica 0 errori"
     echo ""
     echo "Esempi:"
+    echo "  writing-suite assist chapters/ch2_background.typ --copy"
+    echo "  writing-suite assist chapters/ch2_background.typ 3"
     echo "  writing-suite evaluate chapters/ch1_intro.typ"
     echo "  writing-suite citations chapters/ch1_intro.typ references.bib"
-    echo "  writing-suite check-live chapters/ch1_intro.typ"
     echo "  writing-suite compile"
     exit 0
 }
@@ -52,12 +54,20 @@ fi
 
 case "$CMD" in
     evaluate|heatmap|audit|suggest)
-        TARGET="${1:-.}"
+        RAW_TARGET="${1:-.}"
         CROSS_VAL="False"
         if [ "$2" = "--cross-validate" ] || [ "$2" = "--live" ] || [ "$1" = "--cross-validate" ]; then
             CROSS_VAL="True"
-            if [ "$1" = "--cross-validate" ]; then TARGET="."; fi
+            if [ "$1" = "--cross-validate" ]; then RAW_TARGET="."; fi
         fi
+
+        # Risolvi sempre in percorso assoluto rispetto alla directory del chiamante
+        if [[ "$RAW_TARGET" = /* ]]; then
+            TARGET="$RAW_TARGET"
+        else
+            TARGET="$(pwd)/$RAW_TARGET"
+        fi
+
         $RUN_CMD -c "
 import sys, os
 sys.path.insert(0, '$WS_DIR/mcp')
@@ -65,55 +75,132 @@ from core.modern_evaluator import evaluate_document_modern, render_heatmap_cli
 
 target = '$TARGET'
 cross_val = ($CROSS_VAL == True)
-if os.path.isdir(target):
-    files = sorted([os.path.join(target, f) for f in os.listdir(target) if f.endswith(('.typ', '.tex', '.md'))])
-    for f_path in files:
-        with open(f_path) as f:
+try:
+    if os.path.isdir(target):
+        files = sorted([os.path.join(target, f) for f in os.listdir(target) if f.endswith(('.typ', '.tex', '.md'))])
+        for f_path in files:
+            with open(f_path) as f:
+                text = f.read()
+            rep = evaluate_document_modern(text, f_path, cross_validate=cross_val)
+            print(render_heatmap_cli(rep))
+            print('\n')
+    elif os.path.isfile(target):
+        with open(target) as f:
             text = f.read()
-        rep = evaluate_document_modern(text, f_path, cross_validate=cross_val)
+        rep = evaluate_document_modern(text, target, cross_validate=cross_val)
         print(render_heatmap_cli(rep))
-        print('\n')
-elif os.path.isfile(target):
-    with open(target) as f:
-        text = f.read()
-    rep = evaluate_document_modern(text, target, cross_validate=cross_val)
-    print(render_heatmap_cli(rep))
-else:
-    print(f'File o cartella non trovata: {target}')
+    else:
+        print(f'File o cartella non trovata: {target}')
+except PermissionError as pe:
+    print(f'Errore di permessi/sandbox nell\'accesso a {target}: {pe}')
+"
+        ;;
+
+    assist|rewrite-prompt|prompt|factcheck)
+        RAW_TARGET="$1"
+        shift || true
+        TARGET_PARA=""
+        SHOW_ALL="False"
+        COPY_CLIP="False"
+        BIB_PATH=""
+
+        while [ "$#" -gt 0 ]; do
+            case "$1" in
+                --all|-a)
+                    SHOW_ALL="True"
+                    ;;
+                --copy|-c)
+                    COPY_CLIP="True"
+                    ;;
+                --bib)
+                    shift
+                    BIB_PATH="$1"
+                    ;;
+                [0-9]*)
+                    TARGET_PARA="$1"
+                    ;;
+                *)
+                    ;;
+            esac
+            shift || true
+        done
+
+        if [ -z "$RAW_TARGET" ]; then
+            echo "Uso: writing-suite assist <file.typ> [paragrafo] [--all] [--copy]"
+            exit 1
+        fi
+
+        if [[ "$RAW_TARGET" = /* ]]; then
+            TARGET="$RAW_TARGET"
+        else
+            TARGET="$(pwd)/$RAW_TARGET"
+        fi
+
+        $RUN_CMD -c "
+import sys
+sys.path.insert(0, '$WS_DIR/mcp')
+from core.assistant import run_assistant, render_assistant_cli
+
+target_para = int('$TARGET_PARA') if '$TARGET_PARA' else None
+copy_flag = ('$COPY_CLIP' == 'True')
+show_all = ('$SHOW_ALL' == 'True')
+bib_path = '$BIB_PATH' if '$BIB_PATH' else None
+
+try:
+    res = run_assistant('$TARGET', bib_path=bib_path, target_para=target_para, copy_to_clipboard=copy_flag)
+    print(render_assistant_cli(res, show_prompt_for_all=show_all))
+except Exception as e:
+    print(f'Errore assistente: {e}')
 "
         ;;
 
     citations)
-        TARGET="$1"
-        BIB="${2:-/Users/tella/Workspace/PyChain/thesis_typst/references.bib}"
-        if [ -z "$TARGET" ]; then
+        RAW_TARGET="$1"
+        if [ -z "$RAW_TARGET" ]; then
             echo "Uso: writing-suite citations <file.typ> [references.bib]"
             exit 1
+        fi
+        if [[ "$RAW_TARGET" = /* ]]; then
+            TARGET="$RAW_TARGET"
+        else
+            TARGET="$(pwd)/$RAW_TARGET"
+        fi
+
+        RAW_BIB="${2:-/Users/tella/Workspace/PyChain/thesis_typst/references.bib}"
+        if [[ "$RAW_BIB" = /* ]]; then
+            BIB="$RAW_BIB"
+        else
+            BIB="$(pwd)/$RAW_BIB"
         fi
         $RUN_CMD -c "
 import sys
 sys.path.insert(0, '$WS_DIR/mcp')
 from core.citations import audit_citations
-with open('$TARGET') as f:
-    text = f.read()
-res = audit_citations(text, '$BIB')
-print(f'=== AUDIT CITAZIONALE E RIGORE SCIENTIFICO: $TARGET ===')
-print(f'Citazioni trovate nel testo: {res[\"total_citations_found\"]}')
-if res['bib_path_provided']:
-    print(f'File .bib verificato: $BIB ({res[\"bib_total_entries\"]} voci)')
-    if res['missing_in_bib']:
-        print(f'🔴 ALLUCINAZIONI / CHIAVI ASSENTI NEL .BIB ({len(res[\"missing_in_bib\"])}):')
-        for k in res['missing_in_bib']:
-            print(f'  ❌ @{k}')
+try:
+    with open('$TARGET') as f:
+        text = f.read()
+    res = audit_citations(text, '$BIB')
+    print(f'=== AUDIT CITAZIONALE E RIGORE SCIENTIFICO: $TARGET ===')
+    print(f'Citazioni trovate nel testo: {res[\"total_citations_found\"]}')
+    if res['bib_path_provided']:
+        print(f'File .bib verificato: $BIB ({res[\"bib_total_entries\"]} voci)')
+        if res['missing_in_bib']:
+            print(f'🔴 ALLUCINAZIONI / CHIAVI ASSENTI NEL .BIB ({len(res[\"missing_in_bib\"])}):')
+            for k in res['missing_in_bib']:
+                print(f'  ❌ @{k}')
+        else:
+            print('✅ 100% delle citazioni sono verificate nel file .bib!')
+    if res['unsupported_claims']:
+        print(f'\n⚠️ AFFERMAZIONI NON DIMOSTRATE O SENZA FONTE ({res[\"unsupported_claims_count\"]}):')
+        for c in res['unsupported_claims']:
+            print(f'  Riga {c[\"line\"]}: [{c[\"type\"]}] \"{c[\"matched_text\"]}\"')
+            print(f'     -> {c[\"message\"]}')
     else:
-        print('✅ 100% delle citazioni sono verificate nel file .bib!')
-if res['unsupported_claims']:
-    print(f'\n⚠️ AFFERMAZIONI NON DIMOSTRATE O SENZA FONTE ({res[\"unsupported_claims_count\"]}):')
-    for c in res['unsupported_claims']:
-        print(f'  Riga {c[\"line\"]}: [{c[\"type\"]}] \"{c[\"matched_text\"]}\"')
-        print(f'     -> {c[\"message\"]}')
-else:
-    print('✅ Zero affermazioni apodittiche o non dimostrate rilevate!')
+        print('✅ Zero affermazioni apodittiche o non dimostrate rilevate!')
+except PermissionError as pe:
+    print(f'Errore di permessi/sandbox: {pe}')
+except FileNotFoundError as fe:
+    print(f'File non trovato: {fe}')
 "
         ;;
 

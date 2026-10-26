@@ -63,7 +63,19 @@ Writing Suite evaluates every paragraph through independent, specialized diagnos
 
 Always execute commands using `uv run` in `/Users/tella/Workspace/writing-suite`:
 
-### A. Document Evaluation & Disaggregated Heatmap
+### A. Writing Assistant, Fact-Checker & Multi-LLM Prompt Maker
+```bash
+uv run --directory /Users/tella/Workspace/writing-suite bin/writing-suite assist "<path/to/file.typ>" [paragrafo_idx] [--copy] [--all]
+```
+* **Cos'è**: Il ponte diretto tra la writing-suite e i tuoi modelli di scrittura (Claude, ChatGPT, Gemini).
+* **Cosa fa**:
+  1. Esegue il **fact-checking** completo delle citazioni incrociando il testo con `references.bib` (scova broken references e claim non supportati).
+  2. Isola i paragrafi sintetici/robotici (con cadenza metronomica $\sigma_{\text{len}} < 6.0$ o pattern AI).
+  3. Suggerisce fonti pertinenti dal file `.bib` per la tematica trattata.
+  4. Genera un **Prompt Chirurgico pronto all'uso** contenente il testo, i vincoli IEEE S&P e il Meaning Lock.
+  5. Se usi `--copy`, copia istantaneamente il prompt negli appunti di macOS (`pbcopy`) per incollarlo con `Cmd+V` in Claude, ChatGPT o Gemini!
+
+### B. Document Evaluation & Disaggregated Heatmap
 ```bash
 uv run --directory /Users/tella/Workspace/writing-suite bin/writing-suite evaluate "<path/to/file.typ>"
 ```
