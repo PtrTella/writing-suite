@@ -2,6 +2,7 @@ README.md
 pyproject.toml
 mcp/server.py
 mcp/core/__init__.py
+mcp/core/assistant.py
 mcp/core/citations.py
 mcp/core/cleaner.py
 mcp/core/embedding_classifier.py
